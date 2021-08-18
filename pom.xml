@@ -13,4 +13,15 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.seovic.maven.plugins</groupId>
+                <artifactId>npm-maven-plugin</artifactId>
+                <version>1.0.4</version>
+                <extensions>true</extensions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
