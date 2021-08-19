@@ -5,7 +5,8 @@ import javax.sound.sampled.Control;
 public abstract class Pokemon {
     public static Species species;
     public static pokemonType type1, type2;
-    public static int baseAtk, baseDef, baseSpA, baseSpD, baseSpe;
+    public static int baseHP, baseAtk, baseDef, baseSpA, baseSpD, baseSpe;
+    public static int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
 
     private static class Species {
 
