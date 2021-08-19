@@ -1,4 +1,4 @@
-package com.abrastat;
+package com.abrastat.general;
 
 import javax.sound.sampled.Control;
 

@@ -1,6 +1,6 @@
 package com.abrastat.gsc;
 
-import com.abrastat.Type;
+import com.abrastat.general.Type;
 
 public class TypeEffectiveness {
 
