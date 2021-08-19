@@ -1,6 +1,7 @@
 .idea/
 node_modules/
+target/
 package.json
 package-lock.json
 pokemon-showdown/
-DS_Store
+.DS_Store

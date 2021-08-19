@@ -1,2 +1,5 @@
-package com.abrastat;public interface Item {
+package com.abrastat;
+
+public abstract class Item {
+    public static boolean canBeHeld, hasEffect;
 }

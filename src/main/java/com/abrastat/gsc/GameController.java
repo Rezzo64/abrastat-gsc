@@ -1,2 +1,4 @@
-package com.abrastat.gsc;public class GameController {
+package com.abrastat.gsc;
+
+public class GameController {
 }
