@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public final class Type {
 
-    /* Pokemon and move type definitions are static and narrow,
+    /* Pokemon types and move types definitions are static and narrow,
     // so I've decided to just implement them in a class rather than
     // reading the JSON and importing them.
     */
@@ -28,24 +28,38 @@ public final class Type {
     private static final Type STEEL = new Type();
     private static final Type FAIRY = new Type();
 
-    //Cast types to arrayList for use
-    private static final HashMap<Integer, Type> ALLTYPES = new HashMap<Integer, Type>()   {
+    // Cast types to hashmap for use
+    private static final HashMap<Integer, Type> ALLTYPES
+            = new HashMap<>() {
         {
             put(0, null);
-            put(1, NORMAL);put(2, FIRE);put(3, WATER);
-            put(4, ELECTRIC);put(5, GRASS);put(6, ICE);
-            put(7, FIGHTING);put(8, POISON);put(9, GROUND);
-            put(10, FLYING);put(11, PSYCHIC);put(12, BUG);
-            put(13, ROCK);put(14, GHOST);put(15, DRAGON);
-            put(16, DARK);put(17, STEEL);put(18, FAIRY);
-        }};
+            put(1, NORMAL);
+            put(2, FIRE);
+            put(3, WATER);
+            put(4, ELECTRIC);
+            put(5, GRASS);
+            put(6, ICE);
+            put(7, FIGHTING);
+            put(8, POISON);
+            put(9, GROUND);
+            put(10, FLYING);
+            put(11, PSYCHIC);
+            put(12, BUG);
+            put(13, ROCK);
+            put(14, GHOST);
+            put(15, DRAGON);
+            put(16, DARK);
+            put(17, STEEL);
+            put(18, FAIRY);
+        }
+    };
 
-    public static final int SUPER_EFFECTIVE = 2;
-    public static final int NOT_VERY_EFFECTIVE = 1;
-    public static final int NON_EFFECTIVE = 0;
+    public static final double SUPER_EFFECTIVE = 2;
+    public static final double NOT_VERY_EFFECTIVE = 0.5;
+    public static final double NON_EFFECTIVE = 0;
 
     //returns relevant types depending on generation
-    public HashMap<Integer, Type> getTypes(int gen)    {
+    public static HashMap<Integer, Type> getTypes(int gen)    {
 
         if (gen > 5)    {
             return ALLTYPES;
@@ -75,6 +89,10 @@ public final class Type {
             ALLTYPES.remove(18);
         }
         return ALLTYPES;
+    }
+
+    public static HashMap<Integer, Type> getTypes(Format format)   {
+        return getTypes(format.hashCode());
     }
 }
 

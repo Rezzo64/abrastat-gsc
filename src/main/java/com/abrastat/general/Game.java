@@ -23,5 +23,14 @@ public class Game {
             gameFormat = new Format(3);
         }
     }
+
+    public Game(int gen)    {
+        gameFormat = new Format(gen);
+    }
+
+    public Game()   {
+        gameFormat = new Format();
+    }
+
 }
 
