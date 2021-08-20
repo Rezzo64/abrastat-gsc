@@ -1,5 +1,7 @@
 package com.abrastat.general;
 
+import java.util.HashMap;
+
 public final class Format {
 
     //Just the first 3 for now.
