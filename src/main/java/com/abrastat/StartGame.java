@@ -10,7 +10,7 @@ public class StartGame {
     public static void main(String[] args) {
 
         System.out.println("Game started...");
-        Game currentGame = new Game(GSC);
+        Game currentGame = new GSCGame(GSC);
     }
 
 }

@@ -11,20 +11,21 @@ public final class Format {
 
     public Format getFormat()    {  return format;  }
 
-    public void setFormatAsRBY()  {
-        this.format = RBY;
-    }
-
-    public void setFormatAsGSC()    {
-        this.format = GSC;
-    }
-
-    public void setFormatAsADV()    {
-        this.format = ADV;
-    }
-
     public Format(int gen)  {
-
+        switch(gen) {
+            case 1:
+                this.format = RBY;
+                // call method to implement RBY battle mechanics here
+                break;
+            case 2:
+                this.format = GSC;
+                // TODO call method to implement GSC battle mechanics here
+                break;
+            case 3:
+                this.format = ADV;
+                // call method to implement ADV battle mechanics here
+                break;
+        }
     }
 
     public Format() {

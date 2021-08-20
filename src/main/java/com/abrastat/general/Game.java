@@ -17,13 +17,10 @@ public class Game {
         //Deciding which gen format to run battle mechanics for
         if (RBY.equals(format)) {
             gameFormat = new Format(1);
-            gameFormat.setFormatAsRBY();
         } else if (GSC.equals(format)) {
             gameFormat = new Format(2);
-            gameFormat.setFormatAsGSC();
         } else if (ADV.equals(format)) {
             gameFormat = new Format(3);
-            gameFormat.setFormatAsADV();
         }
     }
 }
