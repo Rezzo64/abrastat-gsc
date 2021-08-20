@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//TODO implement TDD for the type effectiveness
 class TypeEffectivenessTest {
     @BeforeEach
         void setUp() {

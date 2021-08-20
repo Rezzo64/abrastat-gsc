@@ -13,7 +13,6 @@ public abstract class Game {
     public Game() {
         this.PlayerA = PlayerA;
         this.PlayerB = PlayerB;
-
         //Deciding which gen format to run battle mechanics for
     }
 
