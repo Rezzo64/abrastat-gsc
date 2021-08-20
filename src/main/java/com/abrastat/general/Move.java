@@ -1,7 +1,7 @@
 package com.abrastat.general;
 
 public abstract class Move {
-    public static Type moveType;
+    public static Type moveTypes;
     public static byte accuracy;
     public static boolean isAttack, isStatus, hasSecondary;
 

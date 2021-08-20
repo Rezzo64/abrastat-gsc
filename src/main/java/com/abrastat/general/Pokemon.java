@@ -1,7 +1,5 @@
 package com.abrastat.general;
 
-import javax.sound.sampled.Control;
-
 public abstract class Pokemon {
     private static Species species;
     private static Gender gender;

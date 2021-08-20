@@ -1,98 +1,88 @@
 package com.abrastat.general;
 
-import java.util.HashMap;
+public enum Type {
+    NONE("None", 0),
+    NORMAL("Normal", 1),
+    FIRE("Fire", 2),
+    WATER("Water", 3),
+    ELECTRIC("Electric", 4),
+    GRASS("Grass", 5),
+    ICE("Ice", 6),
+    FIGHTING("Fighting", 7),
+    POISON("Poison", 8),
+    GROUND("Ground", 9),
+    FLYING("Flying", 10),
+    PSYCHIC("Psychic", 11),
+    BUG("Bug", 12),
+    ROCK("Rock", 13),
+    GHOST("Ghost", 14),
+    DRAGON("Dragon", 15),
+    DARK("Dark", 16),
+    STEEL("Steel", 17),
+    FAIRY("Fairy", 18);
 
-public final class Type {
+    final String NAME;
+    final int INDEX;
 
-    /* Pokemon types and move types definitions are static and narrow,
-    // so I've decided to just implement them in a class rather than
-    // reading the JSON and importing them.
-    */
-
-    private static final Type NORMAL = new Type();
-    private static final Type FIRE = new Type();
-    private static final Type WATER = new Type();
-    private static final Type ELECTRIC = new Type();
-    private static final Type GRASS = new Type();
-    private static final Type ICE = new Type();
-    private static final Type FIGHTING = new Type();
-    private static final Type POISON = new Type();
-    private static final Type GROUND = new Type();
-    private static final Type FLYING = new Type();
-    private static final Type PSYCHIC = new Type();
-    private static final Type BUG = new Type();
-    private static final Type ROCK = new Type();
-    private static final Type GHOST = new Type();
-    private static final Type DRAGON = new Type();
-    private static final Type DARK = new Type();
-    private static final Type STEEL = new Type();
-    private static final Type FAIRY = new Type();
-
-    // Cast types to hashmap for use
-    private static final HashMap<Integer, Type> ALLTYPES
-            = new HashMap<>() {
-        {
-            put(0, null);
-            put(1, NORMAL);
-            put(2, FIRE);
-            put(3, WATER);
-            put(4, ELECTRIC);
-            put(5, GRASS);
-            put(6, ICE);
-            put(7, FIGHTING);
-            put(8, POISON);
-            put(9, GROUND);
-            put(10, FLYING);
-            put(11, PSYCHIC);
-            put(12, BUG);
-            put(13, ROCK);
-            put(14, GHOST);
-            put(15, DRAGON);
-            put(16, DARK);
-            put(17, STEEL);
-            put(18, FAIRY);
-        }
-    };
-
-    public static final double SUPER_EFFECTIVE = 2;
-    public static final double NOT_VERY_EFFECTIVE = 0.5;
-    public static final double NON_EFFECTIVE = 0;
-
-    //returns relevant types depending on generation
-    public static HashMap<Integer, Type> getTypes(int gen)    {
-
-        if (gen > 5)    {
-            return ALLTYPES;
-        }
-
-        try{
-            if (gen < 1)    {
-                throw new IllegalArgumentException(
-                        "generation value is somehow less than 1! " +
-                        "Defaulting to the newest generation type list.");
-            }
-        }   catch(IllegalArgumentException e)   {
-                return ALLTYPES;
-        }
-
-
-        if (gen == 1) {
-
-            // remove dark & ghost for RBY
-            ALLTYPES.remove(16);
-            ALLTYPES.remove(17);
-        }
-
-        if (gen <= 5)  {
-
-            // remove fairy for gens 1-5
-            ALLTYPES.remove(18);
-        }
-        return ALLTYPES;
+    Type(String name, int index) {
+        this.NAME = name;
+        this.INDEX = index;
     }
 
-    public static HashMap<Integer, Type> getTypes(Format format)   {
-        return getTypes(format.hashCode());
+//      Not convinced I'll ever need this...
+//      Set "None" as secondary typing if Mon has only one type
+
+    public void setTypes(Type type1, Type type2)    {
+        this.setTypes(type1);
+        this.setTypes(type2);
+    }
+
+    private void setTypes(Type type)   {
+        switch(type)    {
+            case NONE:
+                type = NONE;
+                break;
+            case NORMAL:
+                type = NORMAL;
+                break;
+            case FIRE:
+                type = FIRE;
+                break;
+            case WATER:
+                type = WATER;
+                break;
+            case ELECTRIC:
+                type = ELECTRIC;
+                break;
+            case GRASS:
+                type = GRASS;
+            case ICE:
+                type = ICE;
+            case FIGHTING:
+                type = FIGHTING;
+            case POISON:
+                type = POISON;
+            case GROUND:
+                type = GROUND;
+            case FLYING:
+                type = FLYING;
+            case PSYCHIC:
+                type = PSYCHIC;
+            case BUG:
+                type = BUG;
+            case ROCK:
+                type = ROCK;
+            case GHOST:
+                type = GHOST;
+            case DRAGON:
+                type = DRAGON;
+            case DARK:
+                type = DARK;
+            case STEEL:
+                type = STEEL;
+            case FAIRY:
+                type = FAIRY;
+        }
     }
 }
 
