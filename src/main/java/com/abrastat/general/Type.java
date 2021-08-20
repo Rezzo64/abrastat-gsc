@@ -1,6 +1,6 @@
 package com.abrastat.general;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class Type {
 
@@ -29,14 +29,15 @@ public final class Type {
     private static final Type FAIRY = new Type();
 
     //Cast types to arrayList for use
-    private static final ArrayList<Type> ALLTYPES = new ArrayList<Type>()   {
+    private static final HashMap<Integer, Type> ALLTYPES = new HashMap<Integer, Type>()   {
         {
-            add(NORMAL);add(FIRE);add(WATER);
-            add(ELECTRIC);add(GRASS);add(ICE);
-            add(FIGHTING);add(POISON);add(GROUND);
-            add(FLYING);add(PSYCHIC);add(BUG);
-            add(ROCK);add(GHOST);add(DRAGON);
-            add(DARK);add(STEEL);add(FAIRY);
+            put(0, null);
+            put(1, NORMAL);put(2, FIRE);put(3, WATER);
+            put(4, ELECTRIC);put(5, GRASS);put(6, ICE);
+            put(7, FIGHTING);put(8, POISON);put(9, GROUND);
+            put(10, FLYING);put(11, PSYCHIC);put(12, BUG);
+            put(13, ROCK);put(14, GHOST);put(15, DRAGON);
+            put(16, DARK);put(17, STEEL);put(18, FAIRY);
         }};
 
     public static final int SUPER_EFFECTIVE = 2;
@@ -44,18 +45,36 @@ public final class Type {
     public static final int NON_EFFECTIVE = 0;
 
     //returns relevant types depending on generation
-    public ArrayList<Type> getTypes(int gen)    {
-        if (gen < 1)    {
-            throw new IllegalArgumentException(
-                    "generation value is somehow less than zero! " +
-                    "Defaulting to newest generation type chart...");
+    public HashMap<Integer, Type> getTypes(int gen)    {
+
+        if (gen > 5)    {
+            return ALLTYPES;
         }
+
+        try{
+            if (gen < 1)    {
+                throw new IllegalArgumentException(
+                        "generation value is somehow less than 1! " +
+                        "Defaulting to the newest generation type list.");
+            }
+        }   catch(IllegalArgumentException e)   {
+                return ALLTYPES;
+        }
+
+
         if (gen == 1) {
-            return new ArrayList<Type>(ALLTYPES.subList(0, 14));
+
+            // remove dark & ghost for RBY
+            ALLTYPES.remove(16);
+            ALLTYPES.remove(17);
         }
-        else if (gen <= 5)  {
-            return new ArrayList<Type>(ALLTYPES.subList(0, 16));
+
+        if (gen <= 5)  {
+
+            // remove fairy for gens 1-5
+            ALLTYPES.remove(18);
         }
         return ALLTYPES;
     }
 }
+
