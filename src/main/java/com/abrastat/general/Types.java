@@ -9,25 +9,29 @@ public final class Types {
     // reading the JSON and importing them.
     */
 
-    enum Type {
-        NORMAL,
-        FIRE,
-        WATER,
-        ELECTRIC,
-        GRASS,
-        ICE,
-        FIGHTING,
-        POISON,
-        GROUND,
-        FLYING,
-        PSYCHIC,
-        BUG,
-        ROCK,
-        GHOST,
-        DRAGON,
-        DARK,
-        STEEL,
-        FAIRY
+    public enum Type {
+        NORMAL("Normal"),
+        FIRE("Fire"),
+        WATER("Water"),
+        ELECTRIC("Electric"),
+        GRASS("Grass"),
+        ICE("Ice"),
+        FIGHTING("Fighting"),
+        POISON("Poison"),
+        GROUND("Ground"),
+        FLYING("Flying"),
+        PSYCHIC("Psychic"),
+        BUG("Bug"),
+        ROCK("Rock"),
+        GHOST("Ghost"),
+        DRAGON("Dragon"),
+        DARK("Dark"),
+        STEEL("Steel"),
+        FAIRY("Fairy");
+
+        Type(String name) {
+            this.name();
+        }
     }
 //    private static final Type NORMAL = new Type();
 //    private static final Type FIRE = new Type();
@@ -48,7 +52,7 @@ public final class Types {
 //    private static final Type STEEL = new Type();
 //    private static final Type FAIRY = new Type();
 
-    // Cast types to hashmap for use
+    // Cast types to hashmap for use. TODO Might not need this
     private static final HashMap<Integer, Type> ALLTYPES
             = new HashMap<>() {
         {
@@ -74,9 +78,9 @@ public final class Types {
         }
     };
 
-    public static final double SUPER_EFFECTIVE = 2;
-    public static final double NOT_VERY_EFFECTIVE = 0.5;
-    public static final double NON_EFFECTIVE = 0;
+    static final double SUPER_EFFECTIVE = 2;
+    static final double NOT_VERY_EFFECTIVE = 0.5;
+    static final double NON_EFFECTIVE = 0;
 
     //returns relevant types depending on generation
     public static HashMap<Integer, Type> getTypes(int gen)    {
@@ -111,7 +115,7 @@ public final class Types {
         return ALLTYPES;
     }
 
-    public static HashMap<Integer, ?> getTypes(Format format)   {
+    public static HashMap<Integer, Type> getTypes(Format format)   {
         return getTypes(format.hashCode());
     }
 }

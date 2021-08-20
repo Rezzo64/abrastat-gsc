@@ -1,21 +1,22 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.Types;
+import com.abrastat.general.Types.Type;
 
 import java.util.HashMap;
 
 import com.google.common.collect.*;
 
-public class TypeEffectiveness {
+public class TypeEffectiveness  {
 
 
-    private static final HashMap<Integer, ?> GSCTYPES =
+    private static final HashMap<Integer, Type> GSCTYPES =
             Types.getTypes(2);
 
     // Row = attacking type
     // Column = defending type
     // Value = damage multiplier
-    private final Table<Types, Types, Double> typeChart =
+    private final Table<Type, Type, Double> typeChart =
             HashBasedTable.create();
 
 
