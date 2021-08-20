@@ -9,72 +9,49 @@ public final class Types {
     // reading the JSON and importing them.
     */
 
-    public enum Type {
-        NORMAL("Normal"),
-        FIRE("Fire"),
-        WATER("Water"),
-        ELECTRIC("Electric"),
-        GRASS("Grass"),
-        ICE("Ice"),
-        FIGHTING("Fighting"),
-        POISON("Poison"),
-        GROUND("Ground"),
-        FLYING("Flying"),
-        PSYCHIC("Psychic"),
-        BUG("Bug"),
-        ROCK("Rock"),
-        GHOST("Ghost"),
-        DRAGON("Dragon"),
-        DARK("Dark"),
-        STEEL("Steel"),
-        FAIRY("Fairy");
 
-        Type(String name) {
-            this.name();
-        }
-    }
-//    private static final Type NORMAL = new Type();
-//    private static final Type FIRE = new Type();
-//    private static final Type WATER = new Type();
-//    private static final Type ELECTRIC = new Type();
-//    private static final Type GRASS = new Type();
-//    private static final Type ICE = new Type();
-//    private static final Type FIGHTING = new Type();
-//    private static final Type POISON = new Type();
-//    private static final Type GROUND = new Type();
-//    private static final Type FLYING = new Type();
-//    private static final Type PSYCHIC = new Type();
-//    private static final Type BUG = new Type();
-//    private static final Type ROCK = new Type();
-//    private static final Type GHOST = new Type();
-//    private static final Type DRAGON = new Type();
-//    private static final Type DARK = new Type();
-//    private static final Type STEEL = new Type();
-//    private static final Type FAIRY = new Type();
+    private static final Types NORMAL = new Types();
+    private static final Types FIRE = new Types();
+    private static final Types WATER = new Types();
+    private static final Types ELECTRIC = new Types();
+    private static final Types GRASS = new Types();
+    private static final Types ICE = new Types();
+    private static final Types FIGHTING = new Types();
+    private static final Types POISON = new Types();
+    private static final Types GROUND = new Types();
+    private static final Types FLYING = new Types();
+    private static final Types PSYCHIC = new Types();
+    private static final Types BUG = new Types();
+    private static final Types ROCK = new Types();
+    private static final Types GHOST = new Types();
+    private static final Types DRAGON = new Types();
+    private static final Types DARK = new Types();
+    private static final Types STEEL = new Types();
+    private static final Types FAIRY = new Types();
 
     // Cast types to hashmap for use. TODO Might not need this
-    private static final HashMap<Integer, Type> ALLTYPES
+    private static final HashMap<Integer, Types> ALLTYPES
             = new HashMap<>() {
         {
             put(0, null);
-            put(1, Type.NORMAL);
-            put(2, Type.FIRE);
-            put(3, Type.WATER);
-            put(4, Type.ELECTRIC);
-            put(5, Type.GRASS);
-            put(6, Type.ICE);
-            put(7, Type.FIGHTING);
-            put(8, Type.POISON);
-            put(9, Type.GROUND);
-            put(10, Type.FLYING);
-            put(11, Type.PSYCHIC);
-            put(12, Type.BUG);
-            put(13, Type.ROCK);
-            put(14, Type.GHOST);
-            put(15, Type.DRAGON);
-            put(16, Type.DARK);
-            put(17, Type.STEEL);
-            put(18, Type.FAIRY);
+            put(1, NORMAL);
+            put(2, FIRE);
+            put(3, WATER);
+            put(4, ELECTRIC);
+            put(5, GRASS);
+            put(6, ICE);
+            put(7, FIGHTING);
+            put(8, POISON);
+            put(9, GROUND);
+            put(10, FLYING);
+            put(11, PSYCHIC);
+            put(12, BUG);
+            put(13, ROCK);
+            put(14, GHOST);
+            put(15, DRAGON);
+            put(16, DARK);
+            put(17, STEEL);
+            put(18, FAIRY);
         }
     };
 
@@ -83,7 +60,7 @@ public final class Types {
     static final double NON_EFFECTIVE = 0;
 
     //returns relevant types depending on generation
-    public static HashMap<Integer, Type> getTypes(int gen)    {
+    public static HashMap<Integer, Types> getTypes(int gen)    {
 
         if (gen > 5)    {
             return ALLTYPES;
@@ -115,7 +92,7 @@ public final class Types {
         return ALLTYPES;
     }
 
-    public static HashMap<Integer, Type> getTypes(Format format)   {
+    public static HashMap<Integer, Types> getTypes(Format format)   {
         return getTypes(format.hashCode());
     }
 }
