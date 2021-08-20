@@ -49,7 +49,7 @@ public final class Type {
             return new ArrayList<Type>(ALLTYPES.subList(0, 14));
         }
         else if (gen <= 5)  {
-            return new ArrayList<Type>(ALLTYPES.subList(0, 14));
+            return new ArrayList<Type>(ALLTYPES.subList(0, 16));
         }
         return ALLTYPES;
     }
