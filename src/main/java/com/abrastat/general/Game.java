@@ -8,31 +8,23 @@ public class Game {
     // TODO: 20/08/2021 this class member and whole thing doesn't look right.
     // It shouldn't be fixed by initialising Formats as new object instances.
     // Dbl check that it's implemented safely.
-    static Format gameFormat = new Format();
+    static Format gameFormat;
 
-    public Game(Format format)   {
+    public Game(Format format) {
         this.PlayerA = PlayerA;
         this.PlayerB = PlayerB;
 
         //Deciding which gen format to run battle mechanics for
         if (RBY.equals(format)) {
-            RBYGame();
+            gameFormat = new Format(1);
+            gameFormat.setFormatAsRBY();
         } else if (GSC.equals(format)) {
-            GSCGame();
+            gameFormat = new Format(2);
+            gameFormat.setFormatAsGSC();
         } else if (ADV.equals(format)) {
-            ADVGame();
+            gameFormat = new Format(3);
+            gameFormat.setFormatAsADV();
         }
     }
-
-    public void RBYGame()   {
-        gameFormat.setFormatAsRBY();
-    }
-
-    public void GSCGame()   {
-        gameFormat.setFormatAsGSC();
-    }
-
-    public void ADVGame()   {
-        gameFormat.setFormatAsADV();
-    }
 }
+
