@@ -6,6 +6,7 @@ public class Game {
     Player PlayerA, PlayerB;
 
     // TODO: 20/08/2021 this class member and whole thing doesn't look right.
+    // It shouldn't be fixed by initialising Formats as new object instances.
     // Dbl check that it's implemented safely.
     static Format gameFormat = new Format();
 
