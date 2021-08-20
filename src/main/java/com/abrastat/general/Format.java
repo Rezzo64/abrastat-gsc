@@ -7,7 +7,6 @@ public enum Format {
     // Just look at the first 3 for now.
     // Numbering to simplify the control flow. If you don't play
     // Pocket Monsters video game: gen 1 = RBY, 2 = GSC, 3 = ADV, etc.
-    // TODO: 20/08/2021 implement this the same way that Type.java has been.
 
     RBY(1),
     GSC(2),
