@@ -1,11 +1,9 @@
 package com.abrastat.general;
 
-import javax.sound.sampled.Control;
-
 public abstract class Pokemon {
     private static Species species;
     private static Gender gender;
-    private static Type pokemonType1, pokemonType2;
+    private static Types pokemonType1, pokemonType2;
     private static int baseHP, baseAtk, baseDef, baseSpA, baseSpD, baseSpe;
     private static int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
     private static int level;

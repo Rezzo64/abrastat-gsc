@@ -2,14 +2,14 @@ package com.abrastat.general;
 
 import java.util.HashMap;
 
-public final class Type {
+public final class Types {
 
     /* Pokemon types and move types definitions are static and narrow,
     // so I've decided to just implement them in a class rather than
     // reading the JSON and importing them.
     */
 
-    enum Types  {
+    enum Type {
         NORMAL,
         FIRE,
         WATER,
@@ -49,28 +49,28 @@ public final class Type {
 //    private static final Type FAIRY = new Type();
 
     // Cast types to hashmap for use
-    private static final HashMap<Integer, Types> ALLTYPES
+    private static final HashMap<Integer, Type> ALLTYPES
             = new HashMap<>() {
         {
             put(0, null);
-            put(1, Types.NORMAL);
-            put(2, Types.FIRE);
-            put(3, Types.WATER);
-            put(4, Types.ELECTRIC);
-            put(5, Types.GRASS);
-            put(6, Types.ICE);
-            put(7, Types.FIGHTING);
-            put(8, Types.POISON);
-            put(9, Types.GROUND);
-            put(10, Types.FLYING);
-            put(11, Types.PSYCHIC);
-            put(12, Types.BUG);
-            put(13, Types.ROCK);
-            put(14, Types.GHOST);
-            put(15, Types.DRAGON);
-            put(16, Types.DARK);
-            put(17, Types.STEEL);
-            put(18, Types.FAIRY);
+            put(1, Type.NORMAL);
+            put(2, Type.FIRE);
+            put(3, Type.WATER);
+            put(4, Type.ELECTRIC);
+            put(5, Type.GRASS);
+            put(6, Type.ICE);
+            put(7, Type.FIGHTING);
+            put(8, Type.POISON);
+            put(9, Type.GROUND);
+            put(10, Type.FLYING);
+            put(11, Type.PSYCHIC);
+            put(12, Type.BUG);
+            put(13, Type.ROCK);
+            put(14, Type.GHOST);
+            put(15, Type.DRAGON);
+            put(16, Type.DARK);
+            put(17, Type.STEEL);
+            put(18, Type.FAIRY);
         }
     };
 
@@ -79,7 +79,7 @@ public final class Type {
     public static final double NON_EFFECTIVE = 0;
 
     //returns relevant types depending on generation
-    public static HashMap<Integer, Types> getTypes(int gen)    {
+    public static HashMap<Integer, Type> getTypes(int gen)    {
 
         if (gen > 5)    {
             return ALLTYPES;
@@ -111,7 +111,7 @@ public final class Type {
         return ALLTYPES;
     }
 
-    public static HashMap<Integer, Types> getTypes(Format format)   {
+    public static HashMap<Integer, ?> getTypes(Format format)   {
         return getTypes(format.hashCode());
     }
 }
