@@ -2,17 +2,48 @@ package com.abrastat.general;
 
 import java.util.HashMap;
 
-public final class Format {
+public enum Format {
 
-    // Just the first 3 for now.
+    // Just look at the first 3 for now.
     // Numbering to simplify the control flow. If you don't play
     // Pocket Monsters video game: gen 1 = RBY, 2 = GSC, 3 = ADV, etc.
+    // TODO: 20/08/2021 implement this the same way that Type.java has been.
 
-    // TODO: 20/08/2021 implement this the same way that Type.java has been. 
-    public static final Format RBY = new Format(1);
-    public static final Format GSC = new Format(2);
-    public static final Format ADV = new Format(3);
-    private Format format;
+    RBY(1),
+    GSC(2),
+    ADV(3),
+    DPP(4),
+    BW(5),
+    ORAS(6),
+    SM(7),
+    SWSH(8);
+
+    final int INDEX;
+
+    Format(int index) {
+        this.INDEX = index;
+    }
+
+    public void setFormat(Format format)    {
+        switch(format)    {
+            case RBY:
+                format = RBY;
+            case GSC:
+                format = GSC;
+            case ADV:
+                format = ADV;
+            case DPP:
+                format = DPP;
+            case BW:
+                format = BW;
+            case ORAS:
+                format = ORAS;
+            case SM:
+                format = SM;
+            case SWSH:
+                format = SWSH;
+        }
+    }
 
     private static final HashMap<Integer, Format> ALLFORMATS
             = new HashMap<>()   {
@@ -24,27 +55,4 @@ public final class Format {
         }
     };
 
-    public Format getFormat()    {  return format;  }
-
-    public Format(int gen)  {
-        switch(gen) {
-            case 1:
-                this.format = RBY;
-                // call method to implement RBY battle mechanics here
-                break;
-            case 2:
-                this.format = GSC;
-                // TODO call method to implement GSC battle mechanics here
-                break;
-            case 3:
-                this.format = ADV;
-                // call method to implement ADV battle mechanics here
-                break;
-        }
-    }
-
-    public Format() {
-        System.out.println("Format not selected. Assuming and defaulting to GSC.");
-        new Format(2);
-    }
 }
