@@ -9,7 +9,7 @@ import com.google.common.collect.*;
 public class TypeEffectiveness {
 
 
-    private static final HashMap<Integer, Type> ALLTYPES =
+    private static final HashMap<Integer, Type> GSCTYPES =
             Type.getTypes(2);
 
     // Row = attacking type
@@ -22,7 +22,7 @@ public class TypeEffectiveness {
 
     //quick definition class for type effectiveness in GSC
 
-    public TypeEffectiveness(HashBasedTable allTypes)    {
+    public TypeEffectiveness(HashBasedTable gscTypes)    {
 
     }
 }
