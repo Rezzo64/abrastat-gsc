@@ -1,5 +1,6 @@
 package com.abrastat.general;
 
+import com.fasterxml.jackson.databind.*;
 
 public class Pokemon {
     private static Species species;
@@ -18,6 +19,7 @@ public class Pokemon {
         Type pokemonType1, pokemonType2;
         int genderRatio;
 
+        ObjectMapper mapper = new ObjectMapper();
 
         // TODO: 19/08/2021 read & create getters + setters to read JSON
 
