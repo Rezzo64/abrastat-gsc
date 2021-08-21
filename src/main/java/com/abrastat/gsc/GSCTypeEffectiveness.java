@@ -7,40 +7,36 @@ import com.google.common.collect.*;
 // Copy this chunk into another package for implementation and modify,
 // Or just extend this class and override I suppose
 
-public class GSCTypeEffectiveness    {
+public final class GSCTypeEffectiveness    {
 
-    // Make singleton
-    private static GSCTypeEffectiveness TE;
-    private GSCTypeEffectiveness()  {}
-    static  {TE = new GSCTypeEffectiveness();}
-    public static GSCTypeEffectiveness getGSCTypeEffectiveness() {
-        return TE;
-    }
+    // Don't construct this, it's constant
+    private GSCTypeEffectiveness()    {}
 
     // Below table is a 2D representation of a type effectiveness chart.
     // Row = attacking type
     // Column = defending type
     // Value = damage multiplier
 
-    private final Table<Type, Type, Double> typeChart =
+    private static final Table<Type, Type, Double> TYPECHART =
         HashBasedTable.create();    {
             for(int i = 0; i <= 17; i++)    {
                 for(int j = 0; j <= 17; j++)    {
-                    typeChart.put(
+                    TYPECHART.put(
                         Type.values()[i],
                         Type.values()[j],
 
-                        // deduce attacking type vs defending type *er
+                        // deduce attacking type vs
+                        // defending type factor
                         CalculateTypeEffectiveness(
                                 Type.values()[i],
                                 Type.values()[j]
-                                )
-                        );
-                    }
+                        )
+                    );
                 }
+            }
     }
 
-    public final double CalculateTypeEffectiveness(Type attackingType, Type defendingType) {
+    public static double CalculateTypeEffectiveness(Type attackingType, Type defendingType) {
             
         // Manually define each type match-up combination now
 
@@ -90,7 +86,7 @@ public class GSCTypeEffectiveness    {
         return result;
     }
 
-    private double NormalEffectiveness(Type defendingType) {
+    private static double NormalEffectiveness(Type defendingType) {
             switch(defendingType)   {
                 case ROCK:
                 case STEEL:
@@ -102,7 +98,7 @@ public class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private double FireEffectiveness(Type defendingType) {
+    private static double FireEffectiveness(Type defendingType) {
             switch(defendingType)   {
                 case GRASS:
                 case ICE:
@@ -119,7 +115,7 @@ public class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private double WaterEffectiveness(Type defendingType) {
+    private static double WaterEffectiveness(Type defendingType) {
         switch(defendingType) {
             case FIRE:
             case GROUND:
@@ -134,7 +130,7 @@ public class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private double ElectricEffectiveness(Type defendingType) {
+    private static double ElectricEffectiveness(Type defendingType) {
         switch(defendingType)   {
             case WATER:
             case FLYING:
@@ -151,7 +147,7 @@ public class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private double GrassEffectiveness(Type defendingType) {
+    private static double GrassEffectiveness(Type defendingType) {
         switch(defendingType) {
             case WATER:
             case GROUND:
@@ -170,62 +166,62 @@ public class GSCTypeEffectiveness    {
     }
 
     //TODO
-    private double IceEffectiveness(Type defendingType) {
+    private static double IceEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double FightingEffectiveness(Type defendingType) {
+    private static double FightingEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double PoisonEffectiveness(Type defendingType) {
+    private static double PoisonEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double GroundEffectiveness(Type defendingType) {
+    private static double GroundEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double FlyingEffectiveness(Type defendingType) {
+    private static double FlyingEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double PsychicEffectiveness(Type defendingType) {
+    private static double PsychicEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double BugEffectiveness(Type defendingType) {
+    private static double BugEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double RockEffectiveness(Type defendingType) {
+    private static double RockEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double GhostEffectiveness(Type defendingType) {
+    private static double GhostEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double DragonEffectiveness(Type defendingType) {
+    private static double DragonEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double DarkEffectiveness(Type defendingType) {
+    private static double DarkEffectiveness(Type defendingType) {
         return 1.0;
     }
 
     //TODO
-    private double SteelEffectiveness(Type defendingType) {
+    private static double SteelEffectiveness(Type defendingType) {
         return 1.0;
     }
 

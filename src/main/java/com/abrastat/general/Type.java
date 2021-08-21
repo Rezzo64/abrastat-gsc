@@ -33,11 +33,11 @@ public enum Type {
 //      Set "None" as secondary typing if Mon has only one type
 
     public void setTypes(Type type1, Type type2)    {
-        this.setTypes(type1);
-        this.setTypes(type2);
+        this.setType(type1);
+        this.setType(type2);
     }
 
-    private void setTypes(Type type)   {
+    private void setType(Type type)   {
         switch(type)    {
             case NONE:
                 type = NONE;
