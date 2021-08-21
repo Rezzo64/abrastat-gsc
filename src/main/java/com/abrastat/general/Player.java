@@ -2,11 +2,10 @@ package com.abrastat.general;
 
 public class Player {
 
-    Team team;
+    private Pokemon[] pokemonTeam = new Pokemon[5];
 
-    enum Team {
-
-        POKEMON1, POKEMON2, POKEMON3, POKEMON4, POKEMON5, POKEMON6;
-
+    // [0] is always lead
+    public void AddPokemon(Pokemon pokemon) {
+        this.pokemonTeam[0] = pokemon;
     }
 }

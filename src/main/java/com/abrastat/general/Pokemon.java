@@ -1,5 +1,6 @@
 package com.abrastat.general;
 
+
 public class Pokemon {
     private static Species species;
     static Gender gender;
@@ -11,17 +12,16 @@ public class Pokemon {
 
     }
 
-    private static class Species extends Pokemon {
+    private static final class Species extends Pokemon {
 
-        static int baseHP, baseAtk, baseDef, baseSpA, baseSpD, baseSpe;
-        static Type pokemonType1, pokemonType2;
-        static int genderRatio;
+        int baseHP, baseAtk, baseDef, baseSpA, baseSpD, baseSpe;
+        Type pokemonType1, pokemonType2;
+        int genderRatio;
 
 
         // TODO: 19/08/2021 read & create getters + setters to read JSON
 
-        public Species() {
-        }
+        private Species() {}
 
     }
 
