@@ -9,5 +9,6 @@ public class GSCGame extends Game {
     public GSCGame() {
         super();
         Format format = GSC;
+        GSCTypeEffectiveness TE;
     }
 }
