@@ -21,8 +21,8 @@ public enum Type {
     STEEL("Steel", 17),
     FAIRY("Fairy", 18);
 
-    final String NAME;
-    final int INDEX;
+    public final String NAME;
+    public final int INDEX;
 
     Type(String name, int index) {
         this.NAME = name;
