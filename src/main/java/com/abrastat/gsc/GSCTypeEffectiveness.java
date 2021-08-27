@@ -17,30 +17,34 @@ public final class GSCTypeEffectiveness    {
     // Column = defending type
     // Value = damage multiplier
 
-    private static final Table<Type, Type, Double> TYPECHART =
-        HashBasedTable.create();    {
-            for(int i = 0; i <= 17; i++)    {
-                for(int j = 0; j <= 17; j++)    {
-                    TYPECHART.put(
+    public static final Table<Type, Type, Double> TYPECHART;
+
+    static {
+        TYPECHART = HashBasedTable.create();
+        for(int i = 0; i <= 17; i++)    {
+            for(int j = 0; j <= 17; j++)    {
+                TYPECHART.put(
                         Type.values()[i],
                         Type.values()[j],
 
                         // deduce attacking type vs
-                        // defending type factor
+                        // defending type dmg factor
                         CalculateTypeEffectiveness(
                                 Type.values()[i],
                                 Type.values()[j]
                         )
-                    );
-                }
+                );
             }
+        }
     }
+
+
 
     public static double CalculateTypeEffectiveness(Type attackingType, Type defendingType1, Type defendingType2) {
 
-        return (TYPECHART.get(attackingType.INDEX, defendingType1.INDEX))
+        return (TYPECHART.get(attackingType, defendingType1))
                *
-               (TYPECHART.get(attackingType.INDEX, defendingType2.INDEX));
+               (TYPECHART.get(attackingType, defendingType2));
     }
 
     private static double CalculateTypeEffectiveness(Type attackingType, Type defendingType) {

@@ -1,33 +1,25 @@
 package com.abrastat.general;
 
 public enum Type {
-    NONE("None", 0),
-    NORMAL("Normal", 1),
-    FIRE("Fire", 2),
-    WATER("Water", 3),
-    ELECTRIC("Electric", 4),
-    GRASS("Grass", 5),
-    ICE("Ice", 6),
-    FIGHTING("Fighting", 7),
-    POISON("Poison", 8),
-    GROUND("Ground", 9),
-    FLYING("Flying", 10),
-    PSYCHIC("Psychic", 11),
-    BUG("Bug", 12),
-    ROCK("Rock", 13),
-    GHOST("Ghost", 14),
-    DRAGON("Dragon", 15),
-    DARK("Dark", 16),
-    STEEL("Steel", 17),
-    FAIRY("Fairy", 18);
-
-    public final String NAME;
-    public final int INDEX;
-
-    Type(String name, int index) {
-        this.NAME = name;
-        this.INDEX = index;
-    }
+    NONE,
+    NORMAL,
+    FIRE,
+    WATER,
+    ELECTRIC,
+    GRASS,
+    ICE,
+    FIGHTING,
+    POISON,
+    GROUND,
+    FLYING,
+    PSYCHIC,
+    BUG,
+    ROCK,
+    GHOST,
+    DRAGON,
+    DARK,
+    STEEL,
+    FAIRY;
 
 //      Not convinced I'll ever need this...
 //      Set "None" as secondary typing if Mon has only one type
