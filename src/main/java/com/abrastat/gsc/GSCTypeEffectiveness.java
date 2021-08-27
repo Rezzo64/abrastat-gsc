@@ -17,7 +17,7 @@ public final class GSCTypeEffectiveness    {
     // Column = defending type
     // Value = damage multiplier
 
-    public static final Table<Type, Type, Double> TYPECHART;
+    private static final Table<Type, Type, Double> TYPECHART;
 
     static {
         TYPECHART = HashBasedTable.create();

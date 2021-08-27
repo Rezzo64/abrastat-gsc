@@ -15,8 +15,6 @@ public class StartGame {
         System.out.println("Game started...");
         Game currentGame = new GSCGame();
 
-        System.out.println(GSCTypeEffectiveness.TYPECHART.rowMap());
-
         System.out.println("Calculate type effectiveness fire attack on water type:");
         System.out.println(GSCTypeEffectiveness.CalculateTypeEffectiveness(Type.FIRE, Type.WATER, Type.NONE));
 
