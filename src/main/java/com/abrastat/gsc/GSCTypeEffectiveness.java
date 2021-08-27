@@ -42,9 +42,9 @@ public final class GSCTypeEffectiveness    {
 
     public static double CalculateTypeEffectiveness(Type attackingType, Type defendingType1, Type defendingType2) {
 
-        return (TYPECHART.get(attackingType, defendingType1))
+        return TYPECHART.get(attackingType, defendingType1)
                *
-               (TYPECHART.get(attackingType, defendingType2));
+               TYPECHART.get(attackingType, defendingType2);
     }
 
     private static double CalculateTypeEffectiveness(Type attackingType, Type defendingType) {
