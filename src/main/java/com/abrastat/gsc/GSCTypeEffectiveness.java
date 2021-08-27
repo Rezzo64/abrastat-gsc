@@ -50,40 +50,58 @@ public final class GSCTypeEffectiveness    {
         switch (attackingType) {
             case NONE:
                 result = 1.0;
+                break;
             case NORMAL:
                 result = NormalEffectiveness(defendingType);
+                break;
             case FIRE:
                 result = FireEffectiveness(defendingType);
+                break;
             case WATER:
                 result = WaterEffectiveness(defendingType);
+                break;
             case ELECTRIC:
                 result = ElectricEffectiveness(defendingType);
+                break;
             case GRASS:
                 result = GrassEffectiveness(defendingType);
+                break;
             case ICE:
                 result = IceEffectiveness(defendingType);
+                break;
             case FIGHTING:
                 result = FightingEffectiveness(defendingType);
+                break;
             case POISON:
                 result = PoisonEffectiveness(defendingType);
+                break;
             case GROUND:
                 result = GroundEffectiveness(defendingType);
+                break;
             case FLYING:
                 result = FlyingEffectiveness(defendingType);
+                break;
             case PSYCHIC:
                 result = PsychicEffectiveness(defendingType);
+                break;
             case BUG:
                 result = BugEffectiveness(defendingType);
+                break;
             case ROCK:
                 result = RockEffectiveness(defendingType);
+                break;
             case GHOST:
                 result = GhostEffectiveness(defendingType);
+                break;
             case DRAGON:
                 result = DragonEffectiveness(defendingType);
+                break;
             case DARK:
                 result = DarkEffectiveness(defendingType);
+                break;
             case STEEL:
                 result = SteelEffectiveness(defendingType);
+                break;
             case FAIRY:
                 System.out.println("using Fairy type attack in an old gen! " +
                         "is this an error?");

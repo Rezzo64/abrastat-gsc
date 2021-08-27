@@ -11,6 +11,8 @@ public class StartGame {
 
         System.out.println("Game started...");
         Game currentGame = new GSCGame();
+        System.out.println("Type multiplier below");
+        System.out.println(GSCTypeEffectiveness.CalculateTypeEffectiveness(Type.FIRE, Type.WATER, Type.NONE));
     }
 
 }
