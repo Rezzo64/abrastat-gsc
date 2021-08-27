@@ -42,6 +42,7 @@ public final class GSCTypeEffectiveness    {
 
     public static double CalculateTypeEffectiveness(Type attackingType, Type defendingType1, Type defendingType2) {
 
+        //TODO fix this warning, maybe even cast it as a 2D array for performance rather than unboxing constantly.
         return TYPECHART.get(attackingType, defendingType1)
                *
                TYPECHART.get(attackingType, defendingType2);
