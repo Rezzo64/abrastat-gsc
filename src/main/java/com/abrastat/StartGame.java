@@ -2,10 +2,6 @@ package com.abrastat;
 
 import com.abrastat.general.*;
 import com.abrastat.gsc.*;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
-import static com.abrastat.general.Format.*;
 
 public class StartGame {
 
@@ -16,7 +12,7 @@ public class StartGame {
         Game currentGame = new GSCGame();
 
         System.out.println("Calculate type effectiveness fire attack on water type:");
-        System.out.println(GSCTypeEffectiveness.CalculateTypeEffectiveness(Type.FIRE, Type.WATER, Type.NONE));
+        System.out.println(GSCTypeEffectiveness.CalcEffectiveness(Type.FIRE, Type.WATER, Type.NONE));
 
     }
 
