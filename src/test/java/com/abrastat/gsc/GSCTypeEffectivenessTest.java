@@ -39,8 +39,8 @@ class GSCTypeEffectivenessTest  {
     private static Stream<Arguments> provideTypesForNormalDamageTest()  {
         return Stream.of(
                 Arguments.of(NORMAL, NORMAL, NONE),
-                Arguments.of(NORMAL, NONE, NORMAL),
-                Arguments.of(NORMAL, NORMAL, FLYING),
+                Arguments.of(BUG, NONE, ICE),
+                Arguments.of(FIRE, NORMAL, FLYING),
                 Arguments.of(FIGHTING, FIGHTING, FIRE),
                 Arguments.of(WATER, BUG, NONE),
                 Arguments.of(ROCK, STEEL, FLYING)
