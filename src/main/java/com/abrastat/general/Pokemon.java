@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.*;
 
 import java.io.InputStream;
 
-public class Pokemon extends Species {
+public abstract class Pokemon extends Species {
     private static Species species;
     static Gender gender;
     static int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;

@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Species {
+abstract class Species {
 
     private Species species;
     int hp, attack, defense, special_attack, special_defense, speed;
