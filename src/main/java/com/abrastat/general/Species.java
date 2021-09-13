@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public final class Species extends Pokemon {
+public class Species {
 
     private Species species;
     int hp, attack, defense, special_attack, special_defense, speed;
@@ -98,6 +98,6 @@ public final class Species extends Pokemon {
     }
 
 
-    private Species() {}
+    protected Species() {}
 
 }
