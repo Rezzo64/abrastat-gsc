@@ -1,20 +1,35 @@
 package com.abrastat.general;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.List;
 
 abstract class Species {
 
     private Species species;
+    private String pokedexLoc = "./src/main/resources/pokedex.json";
+    int[] baseStats = new int[5];
     int hp, attack, defense, special_attack, special_defense, speed;
     Type[] types = new Type[1];
     int genderRatio;
+
+    public int[] getBaseStats() {
+        return baseStats;
+    }
+
+    public void setBaseStats(int[] baseStats) {
+        this.baseStats[0] = this.getHp();
+        this.baseStats[1] = this.getAttack();
+        this.baseStats[2] = this.getDefense();
+        this.baseStats[3] = this.getSpecial_attack();
+        this.baseStats[4] = this.getSpecial_defense();
+        this.baseStats[5] = this.getSpecial_defense();
+    }
 
     public int getHp() {
         return hp;
@@ -78,15 +93,15 @@ abstract class Species {
     }
 
     //TODO test and modify this
-    public void setSpecies(Species species) {
+    public void setSpecies(String speciesName) {
         final ObjectMapper mapper = new ObjectMapper();
-        File pokedex = new File("./src/main/resources/pokedex.json");
+        File pokedexJson = new File(pokedexLoc);
 
         try {
-            this.species = mapper.readValue(
-                    pokedex, Species.class
-            );
-
+            Species[] AllSpecies = mapper.readValue(
+                    pokedexJson, Species[].class
+                    );
+            
         } catch (DatabindException e)   {
             e.printStackTrace();
         } catch (StreamReadException e) {
