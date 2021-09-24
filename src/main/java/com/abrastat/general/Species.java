@@ -11,11 +11,14 @@ import java.util.List;
 
 abstract class Species {
 
-    private Species species;
+    private Species[] allSpecies;
     private String pokedexLoc = "./src/main/resources/pokedex.json";
     int[] baseStats = new int[5];
     int hp, attack, defense, special_attack, special_defense, speed;
-    Type[] types = new Type[1];
+    String[] types;
+    private String species;
+    private double height;
+    private double weight;
     int genderRatio;
 
     public int[] getBaseStats() {
@@ -88,17 +91,17 @@ abstract class Species {
         this.types[1] = type1;
     }
 
-    public Species getSpecies() {
-        return species;
+    public Species getSpecies(int speciesNumber) {
+        return allSpecies[speciesNumber];
     }
 
     //TODO test and modify this
-    public void setSpecies(String speciesName) {
+    public void setSpecies() {
         final ObjectMapper mapper = new ObjectMapper();
         File pokedexJson = new File(pokedexLoc);
 
         try {
-            Species[] AllSpecies = mapper.readValue(
+            allSpecies = mapper.readValue(
                     pokedexJson, Species[].class
                     );
             
@@ -109,10 +112,8 @@ abstract class Species {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
+    
     protected Species() {}
 
 }
