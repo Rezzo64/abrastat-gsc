@@ -15,7 +15,7 @@ abstract class Species {
     private String pokedexLoc = "./src/main/resources/pokedex.json";
     int[] baseStats = new int[5];
     int hp, attack, defense, special_attack, special_defense, speed;
-    String[] types;
+    Type[] types = new Type[1];
     private String species;
     private double height;
     private double weight;

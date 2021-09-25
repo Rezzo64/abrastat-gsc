@@ -4,12 +4,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.abrastat.general.Pokemon;
 import com.abrastat.general.Pokemon.*;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
 
 class GSCPokemonTest {
 
@@ -39,9 +45,6 @@ class GSCPokemonTest {
             "  \"most_likely_ability\": \"Chlorophyll\"\n" +
             "}";
 
-    @Before
-
-
     @Test
     @DisplayName("Bulbasaur Test")
     public void bulbasaurTest() {
@@ -52,11 +55,21 @@ class GSCPokemonTest {
         String species;
         String types;
         double weight;
+        Pokemon testBulbasaur = new GSCPokemon();
 
-        ObjectMapper mapper = new ObjectMapper();
-        GSCPokemon testBulbasaur = mapper.readValue(bulbasaurJson, GSCPokemonTest.class);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            testBulbasaur = mapper.readValue(bulbasaurJson, GSCPokemon.class);
+        } catch (DatabindException e)   {
+            e.printStackTrace();
+        } catch (StreamReadException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Pokemon bulbasaur = new GSCPokemon().getGSCPokemon();
-        assertEquals(testBulbasaur, bulbasaur.toString());
+        assertEquals(testBulbasaur, bulbasaur);
     }
 
 }
