@@ -4,20 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.abrastat.general.Pokemon;
 import static com.abrastat.general.Type.*;
-import com.abrastat.gsc.GSCPokemon;
-import com.abrastat.gsc.GSCPokemon.*;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.json.*;
 
 class GSCPokemonTest {
 
@@ -33,12 +22,12 @@ class GSCPokemonTest {
     @DisplayName("Bulbasaur Base Stats Test")
     void bulbasaurBaseStatsTest()   {
         assertAll("each individual stat should pass",
-            () -> assertEquals(45, bulbasaur.getHp()),
-            () -> assertEquals(49, bulbasaur.getAttack()),
-            () -> assertEquals(49, bulbasaur.getDefense()),
-            () -> assertEquals(65, bulbasaur.getSpecial_attack()),
-            () -> assertEquals(65, bulbasaur.getSpecial_defense()),
-            () -> assertEquals(45, bulbasaur.getSpeed()));
+            () -> assertEquals(45, bulbasaur.getBaseHp()),
+            () -> assertEquals(49, bulbasaur.getBaseAttack()),
+            () -> assertEquals(49, bulbasaur.getBaseDefense()),
+            () -> assertEquals(65, bulbasaur.getBaseSpecialAttack()),
+            () -> assertEquals(65, bulbasaur.getBaseSpecialDefense()),
+            () -> assertEquals(45, bulbasaur.getBaseSpeed()));
     }
 
     @Test

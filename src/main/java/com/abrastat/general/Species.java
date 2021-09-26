@@ -1,31 +1,27 @@
 package com.abrastat.general;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 import javax.json.*;
 
 abstract class Species {
-
-    private final String pokedexLoc = "./src/main/resources/pokedex.json";
 
     //Json mapper variables
     private String species;
     private String[] abilities;
     private final int[] baseStats = new int[5];
-    private int hp, attack, defense, special_attack, special_defense, speed;
+    private int baseHp, baseAttack, baseDefense, baseSpecialAttack, baseSpecialDefense, baseSpeed;
     private double height, weight;
     private final Type[] types = new Type[2];
     private double genderRatio;
-    private JsonReader reader;
-    private JsonObject jsonObject;
 
     protected Species(String speciesName)  {
 
         this.setSpecies(speciesName);
+        String pokedex = "./src/main/resources/pokedex.json";
+        JsonObject jsonObject = null;
 
         try {
-            reader = Json.createReader(new FileInputStream(pokedexLoc));
+            JsonReader reader = Json.createReader(new FileInputStream(pokedex));
             jsonObject = reader.readObject();
 
         } catch (FileNotFoundException e) {
@@ -65,65 +61,37 @@ abstract class Species {
         this.abilities[2] = abilities.getValue("H").toString();
     }
 
-    public int[] getBaseStats() {
-        return baseStats;
-    }
-
     public void setBaseStats(JsonObject baseStats) {
-        this.hp =               baseStats.getInt("hp");
-        this.attack =           baseStats.getInt("attack");
-        this.defense =          baseStats.getInt("defense");
-        this.special_attack =   baseStats.getInt("special_attack");
-        this.special_defense =  baseStats.getInt("special_defense");
-        this.speed =            baseStats.getInt("speed");
+        this.baseHp =               baseStats.getInt("hp");
+        this.baseAttack =           baseStats.getInt("attack");
+        this.baseDefense =          baseStats.getInt("defense");
+        this.baseSpecialAttack =   baseStats.getInt("special_attack");
+        this.baseSpecialDefense =  baseStats.getInt("special_defense");
+        this.baseSpeed =            baseStats.getInt("speed");
     }
 
-    public int getHp() {
-        return hp;
+    public int getBaseHp() {
+        return baseHp;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
+    public int getBaseAttack() {
+        return baseAttack;
     }
 
-    public int getAttack() {
-        return attack;
+    public int getBaseDefense() {
+        return baseDefense;
     }
 
-    public void setAttack(int attack) {
-        this.attack = attack;
+    public int getBaseSpecialAttack() {
+        return baseSpecialAttack;
     }
 
-    public int getDefense() {
-        return defense;
+    public int getBaseSpecialDefense() {
+        return baseSpecialDefense;
     }
 
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    public int getSpecial_attack() {
-        return special_attack;
-    }
-
-    public void setSpecial_attack(int special_attack) {
-        this.special_attack = special_attack;
-    }
-
-    public int getSpecial_defense() {
-        return special_defense;
-    }
-
-    public void setSpecial_defense(int special_defense) {
-        this.special_defense = special_defense;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public int getBaseSpeed() {
+        return baseSpeed;
     }
 
     public double getHeight() {

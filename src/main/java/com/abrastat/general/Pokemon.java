@@ -2,12 +2,11 @@ package com.abrastat.general;
 
 public abstract class Pokemon extends Species {
     private static Species species;
-    private String speciesName;
     private Pokemon pokemon;
-    static Gender gender;
-    static int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
-    static byte evHP, evAtk, evDef, evSpA, evSpD, evSpe;
-    static int level;
+    private static Gender gender;
+    private static int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
+    private static byte evHP, evAtk, evDef, evSpA, evSpD, evSpe;
+    private static int level;
 
     public Pokemon getPokemon() {
         return pokemon;
