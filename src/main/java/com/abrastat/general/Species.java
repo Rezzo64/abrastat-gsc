@@ -7,18 +7,18 @@ import javax.json.*;
 
 abstract class Species {
 
-    private String pokedexLoc = "./src/main/resources/pokedex.json";
+    private final String pokedexLoc = "./src/main/resources/pokedex.json";
 
     //Json mapper variables
     private String species;
     private String[] abilities;
-    private int[] baseStats = new int[5];
+    private final int[] baseStats = new int[5];
     private int hp, attack, defense, special_attack, special_defense, speed;
     private double height, weight;
-    String[] types = new String[2];
+    private final Type[] types = new Type[2];
     private double genderRatio;
-    JsonReader reader;
-    JsonObject jsonObject;
+    private JsonReader reader;
+    private JsonObject jsonObject;
 
     protected Species(String speciesName)  {
 
@@ -142,18 +142,27 @@ abstract class Species {
         this.weight = weight.getInt("weight");
     }
 
-    public String[] getTypes() {
+    public Type[] getTypes() {
         return types;
     }
 
     public void setTypes(JsonArray types) {
-        this.types[0] = types.getJsonString(0).toString();
+        final String type0 = types.getJsonString(0)
+                .toString()
+                .toUpperCase()
+                .replace("\"", "");
+        this.types[0] = Type.valueOf(type0);
 
         try {
-            this.types[1] = types.getJsonString(1).toString();
+            final String type1 = types.getJsonString(1)
+                    .toString()
+                    .toUpperCase()
+                    .replace("\"", "");
+            this.types[1] = Type.valueOf(type1);
+
         } catch (ArrayIndexOutOfBoundsException e)  {
             System.out.println("no secondary typing for " + getSpecies() + ".");
-            this.types[1] = "none";
+            this.types[1] = Type.NONE;
         }
     }
 
