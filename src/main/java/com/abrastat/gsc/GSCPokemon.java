@@ -6,13 +6,13 @@ public final class GSCPokemon extends Pokemon {
 
     private Pokemon[] allMons = new GSCPokemon[250];
 
-    public GSCPokemon() {
-        super();
+    public GSCPokemon(String speciesName) {
+        super(speciesName);
         this.setGSCPokemon();
     }
 
-    public Pokemon getGSCPokemon()  {
-        return new GSCPokemon();
+    public Pokemon getGSCPokemon(String species)  {
+        return new GSCPokemon(species);
     }
 
     private void setGSCPokemon() {

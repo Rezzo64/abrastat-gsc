@@ -1,37 +1,81 @@
 package com.abrastat.general;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+import javax.json.*;
 
 abstract class Species {
 
-    private Species[] allSpecies;
     private String pokedexLoc = "./src/main/resources/pokedex.json";
-    int[] baseStats = new int[5];
-    int hp, attack, defense, special_attack, special_defense, speed;
-    Type[] types = new Type[1];
+
+    //Json mapper variables
     private String species;
-    private double height;
-    private double weight;
-    int genderRatio;
+    private String[] abilities;
+    private int[] baseStats = new int[5];
+    private int hp, attack, defense, special_attack, special_defense, speed;
+    private double height, weight;
+    String[] types = new String[2];
+    private double genderRatio;
+    JsonReader reader;
+    JsonObject jsonObject;
+
+    protected Species(String speciesName)  {
+
+        this.setSpecies(speciesName);
+
+        try {
+            reader = Json.createReader(new FileInputStream(pokedexLoc));
+            jsonObject = reader.readObject();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        JsonObject jsonPokemon = jsonObject.getJsonObject(species);
+
+        JsonObject jsonAbilities = jsonPokemon.getJsonObject("abilities");
+        JsonObject jsonBaseStats = jsonPokemon.getJsonObject("baseStats");
+        JsonArray jsonTypesArray = jsonPokemon.getJsonArray("types");
+
+    //  this.setAbilities(jsonAbilities);
+        this.setBaseStats(jsonBaseStats);
+        this.setHeight(jsonPokemon);
+        this.setWeight(jsonPokemon);
+        this.setTypes(jsonTypesArray);
+
+
+    }
+
+    public String getSpecies()  {
+        return this.species;
+    }
+
+    public void setSpecies(String speciesName)    {
+        this.species = speciesName.toLowerCase();
+    }
+
+    public String[] getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(JsonObject abilities) {
+        this.abilities[0] = abilities.getValue("0").toString();
+        this.abilities[1] = abilities.getValue("1").toString();
+        this.abilities[2] = abilities.getValue("H").toString();
+    }
 
     public int[] getBaseStats() {
         return baseStats;
     }
 
-    public void setBaseStats(int[] baseStats) {
-        this.baseStats[0] = this.getHp();
-        this.baseStats[1] = this.getAttack();
-        this.baseStats[2] = this.getDefense();
-        this.baseStats[3] = this.getSpecial_attack();
-        this.baseStats[4] = this.getSpecial_defense();
-        this.baseStats[5] = this.getSpecial_defense();
+    public void setBaseStats(JsonObject baseStats) {
+        this.hp =               baseStats.getInt("hp");
+        this.attack =           baseStats.getInt("attack");
+        this.defense =          baseStats.getInt("defense");
+        this.special_attack =   baseStats.getInt("special_attack");
+        this.special_defense =  baseStats.getInt("special_defense");
+        this.speed =            baseStats.getInt("speed");
     }
 
     public int getHp() {
@@ -82,38 +126,35 @@ abstract class Species {
         this.speed = speed;
     }
 
-    public Type[] getTypes() {
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(JsonObject jsonHeight) {
+        height = jsonHeight.getInt("height");
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(JsonObject weight) {
+        this.weight = weight.getInt("weight");
+    }
+
+    public String[] getTypes() {
         return types;
     }
 
-    public void setTypes(Type type0, Type type1) {
-        this.types[0] = type0;
-        this.types[1] = type1;
-    }
-
-    public Species getSpecies(int speciesNumber) {
-        return allSpecies[speciesNumber];
-    }
-
-    //TODO test and modify this
-    public void setSpecies() {
-        final ObjectMapper mapper = new ObjectMapper();
-        File pokedexJson = new File(pokedexLoc);
+    public void setTypes(JsonArray types) {
+        this.types[0] = types.getJsonString(0).toString();
 
         try {
-            allSpecies = mapper.readValue(
-                    pokedexJson, Species[].class
-                    );
-            
-        } catch (DatabindException e)   {
-            e.printStackTrace();
-        } catch (StreamReadException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.types[1] = types.getJsonString(1).toString();
+        } catch (ArrayIndexOutOfBoundsException e)  {
+            System.out.println("no secondary typing for " + getSpecies() + ".");
+            this.types[1] = "none";
         }
     }
-    
-    protected Species() {}
 
 }
