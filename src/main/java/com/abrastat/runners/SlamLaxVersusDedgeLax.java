@@ -1,2 +1,4 @@
-package com.abrastat.runners;public class SlamLaxVersusDedgeLax {
+package com.abrastat.runners;
+
+public class SlamLaxVersusDedgeLax {
 }

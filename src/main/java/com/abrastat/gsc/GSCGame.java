@@ -5,7 +5,7 @@ import static com.abrastat.general.Format.*;
 import com.abrastat.general.Game;
 import com.abrastat.general.Player;
 
-public class GSCGame extends Game {
+public final class GSCGame extends Game {
 
     public GSCGame() {
         super();
