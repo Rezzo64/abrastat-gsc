@@ -1,0 +1,47 @@
+{
+	"bodyslam":	{
+		"move":			"attack",
+		"type":			"normal",
+		"basepower": 	"85",
+		"accuracy": 	"256",
+		"secondary":	"prz",
+		"chance": 		"76"
+	},
+	
+	"charm":	{
+		"move":			"status",
+		"target": 		"oppo",
+		"type":			"none",
+		"accuracy":		"0"
+	},
+	
+	"doubleedge":	{
+		"move":			"attack",
+		"type":			"normal",
+		"basepower":	"120",
+		"accuracy":		"0",
+		"secondary":	"recoil",
+		"chance":		"0"
+	},
+	
+	"rest":	{
+		"move":			"status",
+		"target": 		"self"
+	},
+	
+	"sleeptalk": {
+		"move":			"status",
+		"target": 		"self"
+	},
+
+	"thunder":	{
+		"move":			"attack",
+		"type":			"electric",
+		"basepower":	"120",
+		"accuracy":		"178",
+		"secondary":	"prz",
+		"chance":		"76"
+	}
+}
+	
+	
