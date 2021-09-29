@@ -8,7 +8,6 @@ abstract class Species {
     //Json mapper variables
     private String species;
     private String[] abilities;
-    private final int[] baseStats = new int[5];
     private int baseHp, baseAttack, baseDefense, baseSpecialAttack, baseSpecialDefense, baseSpeed;
     private double height, weight;
     private final Type[] types = new Type[2];
@@ -40,7 +39,6 @@ abstract class Species {
         this.setWeight(jsonPokemon);
         this.setTypes(jsonTypesArray);
 
-
     }
 
     public String getSpecies()  {
@@ -65,8 +63,8 @@ abstract class Species {
         this.baseHp =               baseStats.getInt("hp");
         this.baseAttack =           baseStats.getInt("attack");
         this.baseDefense =          baseStats.getInt("defense");
-        this.baseSpecialAttack =   baseStats.getInt("special_attack");
-        this.baseSpecialDefense =  baseStats.getInt("special_defense");
+        this.baseSpecialAttack =    baseStats.getInt("special_attack");
+        this.baseSpecialDefense =   baseStats.getInt("special_defense");
         this.baseSpeed =            baseStats.getInt("speed");
     }
 
@@ -117,15 +115,15 @@ abstract class Species {
     public void setTypes(JsonArray types) {
         final String type0 = types.getJsonString(0)
                 .toString()
-                .toUpperCase()
-                .replace("\"", "");
+                .replace("\"", "")
+                .toUpperCase();
         this.types[0] = Type.valueOf(type0);
 
         try {
             final String type1 = types.getJsonString(1)
                     .toString()
-                    .toUpperCase()
-                    .replace("\"", "");
+                    .replace("\"", "")
+                    .toUpperCase();
             this.types[1] = Type.valueOf(type1);
 
         } catch (ArrayIndexOutOfBoundsException e)  {

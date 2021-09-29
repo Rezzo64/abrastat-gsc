@@ -1,16 +1,24 @@
 package com.abrastat.general;
 
 public abstract class Pokemon extends Species {
-    private Species species;
-    private Pokemon pokemon;
+
+    private String nickname;
     private Gender gender;
     private Ability ability;
-    private int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe = 31;
-    private byte evHP, evAtk, evDef, evSpA, evSpD, evSpe;
+    private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;
+    private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;
     private int level = 100;
 
     public Pokemon(String species)    {
         super(species);
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public Gender getGender() {
@@ -69,51 +77,51 @@ public abstract class Pokemon extends Species {
         this.ivSpe = ivSpe;
     }
 
-    public byte getEvHP() {
+    public int getEvHP() {
         return evHP;
     }
 
-    public void setEvHP(byte evHP) {
+    public void setEvHP(int evHP) {
         this.evHP = evHP;
     }
 
-    public byte getEvAtk() {
+    public int getEvAtk() {
         return evAtk;
     }
 
-    public void setEvAtk(byte evAtk) {
+    public void setEvAtk(int evAtk) {
         this.evAtk = evAtk;
     }
 
-    public byte getEvDef() {
+    public int getEvDef() {
         return evDef;
     }
 
-    public void setEvDef(byte evDef) {
+    public void setEvDef(int evDef) {
         this.evDef = evDef;
     }
 
-    public byte getEvSpA() {
+    public int getEvSpA() {
         return evSpA;
     }
 
-    public void setEvSpA(byte evSpA) {
+    public void setEvSpA(int evSpA) {
         this.evSpA = evSpA;
     }
 
-    public byte getEvSpD() {
+    public int getEvSpD() {
         return evSpD;
     }
 
-    public void setEvSpD(byte evSpD) {
+    public void setEvSpD(int evSpD) {
         this.evSpD = evSpD;
     }
 
-    public byte getEvSpe() {
+    public int getEvSpe() {
         return evSpe;
     }
 
-    public void setEvSpe(byte evSpe) {
+    public void setEvSpe(int evSpe) {
         this.evSpe = evSpe;
     }
 
@@ -123,14 +131,6 @@ public abstract class Pokemon extends Species {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public Pokemon getPokemon() {
-        return pokemon;
-    }
-
-    public void setPokemon(Pokemon pokemon) {
-        this.pokemon = pokemon;
     }
 
     enum Gender {
