@@ -160,10 +160,10 @@ public abstract class Pokemon extends Species {
     }
 
     public void setMoves(Move move1, Move move2, Move move3, Move move4)    {
-        this.move1.setMove(move1);
-        this.move2.setMove(move2);
-        this.move3.setMove(move3);
-        this.move4.setMove(move4);
+        this.move1 = move1;
+        this.move2 = move2;
+        this.move3 = move3;
+        this.move4 = move4;
     }
 
     public void setMoves(Move move1, Move move2, Move move3)    {
