@@ -126,5 +126,92 @@ class GSCMoveTest {
         );
     }
 
+    @Test
+    @DisplayName("Rest move test")
+    void restMoveTest() {
+        assertEquals("Rest", rest.getMove());
+    }
+
+    @Test
+    @DisplayName("Rest 'is attack' test")
+    void restIsAttackTest() {
+        assertFalse(rest.isAttack);
+    }
+
+    @Test
+    @DisplayName("Rest target test")
+    void restTargetTest()   {
+        assertFalse(rest.opponentIsTarget);
+    }
+
+    @Test
+    @DisplayName("Rest PP test")
+    void restPPTest()   {
+        assertEquals(16, rest.getPP());
+    }
+
+    @ParameterizedTest
+    @MethodSource("restNullProperties")
+    @DisplayName("Rest unused properties test")
+    void restUnusedPropertiesTest(Object t) {
+        assertTrue(t == Integer.valueOf(0) || t == null);
+    }
+
+    private static Stream<Arguments> restNullProperties()   {
+        return Stream.of(
+                Arguments.of(rest.getBasePower()),
+                Arguments.of(rest.getAccuracy()),
+                Arguments.of(rest.getSecondaryEffect()),
+                Arguments.of(rest.getSecondaryChance())
+        );
+    }
+
+    @Test
+    @DisplayName("Drill Peck move test")
+    void drillPeckMoveTest()    {
+        assertEquals("Drill Peck", drillPeck.getMove());
+    }
+
+    @Test
+    @DisplayName("Drill Peck 'is attack' test")
+    void drillPeckIsAttackTest()    {
+        assertTrue(drillPeck.isAttack);
+    }
+
+    @Test
+    @DisplayName("Drill Peck base power test")
+    void drillPeckBasePowerTest()   {
+        assertEquals(80, drillPeck.getBasePower());
+    }
+
+    @Test
+    @DisplayName("Drill Peck PP test")
+    void drillPeckPPTest()  {
+        assertEquals(32, drillPeck.getPP());
+    }
+
+    @Test
+    @DisplayName("Drill Peck accuracy test")
+    void drillPeckAccuracyTest()    {
+        assertEquals(255, drillPeck.getAccuracy());
+    }
+
+    @Test
+    @DisplayName("Drill Peck type test")
+    void drillPeckTypeTest()    {
+        assertEquals(FLYING, drillPeck.getMoveType());
+    }
+
+    @Test
+    @DisplayName("Drill Peck secondary effect test")
+    void drillPeckSecondaryEffectTest()   {
+        assertEquals("none", drillPeck.getSecondaryEffect());
+    }
+
+    @Test
+    @DisplayName("Drill Peck secondary chance test")
+    void drillPeckSecondaryChanceTest()   {
+        assertEquals(0, drillPeck.getSecondaryChance());
+    }
 
 }
