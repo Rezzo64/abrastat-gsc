@@ -97,7 +97,7 @@ abstract class Species {
     }
 
     public void setHeight(JsonObject jsonHeight) {
-        height = jsonHeight.getInt("height");
+        height = jsonHeight.getJsonNumber("height").doubleValue();
     }
 
     public double getWeight() {
@@ -105,7 +105,7 @@ abstract class Species {
     }
 
     public void setWeight(JsonObject weight) {
-        this.weight = weight.getInt("weight");
+        this.weight = weight.getJsonNumber("weight").doubleValue();
     }
 
     public Type[] getTypes() {

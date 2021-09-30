@@ -1,5 +1,6 @@
 package com.abrastat.gsc;
 
+import com.abrastat.general.Move;
 import com.abrastat.general.Pokemon;
 import com.abrastat.general.Type;
 
@@ -17,9 +18,12 @@ public class GSCPokemon extends Pokemon {
         // TODO implement 'if' statement to override level due to user definition
         // if (true) {this.setLevel();}
 
-        // TODO implement 'if' statement to override DVs, for example Hidden Power type
-        // or user definition
-        // if (true) {this.overrideIVs(hiddenPowerType);}
+//         Move[] moves = this.getMoves();
+//         for (int i = 0; i < 4; i++) {
+//              if (moves[i].isHiddenPower())    {
+//                  this.overrideIVs(moves[i].getType());
+//              }
+//         }
 
         // TODO implement 'if' statement to override Stat Experience due to user definition
         // if (true) {this.overrideEVs();}
@@ -64,6 +68,7 @@ public class GSCPokemon extends Pokemon {
 
     }
 
+    //TODO
     private void overrideIVs(Type hiddenPowerType)  {
 
     }
