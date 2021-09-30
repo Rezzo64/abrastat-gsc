@@ -14,7 +14,7 @@ public final class GSCDamageCalc {
 
     public static void calcDamage(GSCPokemon defendingPokemon, GSCMove attack) {
     final double typeEffectiveness =
-            CalcEffectiveness(attack.getType(),
+            CalcEffectiveness(attack.getMoveType(),
                 defendingPokemon.getTypes()[0],
                 defendingPokemon.getTypes()[1]);
     }
