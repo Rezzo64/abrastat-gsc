@@ -15,7 +15,7 @@ class GSCPokemonTest {
     @Test
     @DisplayName("Bulbasaur Species Name Test")
     void bulbasaurSpeciesTest()    {
-        assertEquals("bulbasaur", bulbasaur.getSpecies());
+        assertEquals("Bulbasaur", bulbasaur.getSpecies());
     }
 
     @Test

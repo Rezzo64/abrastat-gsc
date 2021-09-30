@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 
 public class GSCPokemon extends Pokemon {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GSCPokemon.class);
-
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int currentHP;
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
@@ -111,37 +109,6 @@ public class GSCPokemon extends Pokemon {
     @Override
     protected void initGender() {
 
-    }
-
-    public Pokemon addMove(Move move)   {
-
-        Move[] currentMoves = this.getMoves();
-
-        if (currentMoves[0] == null) {
-            this.setMoves(move);
-            return (this);
-        }
-
-        else if (currentMoves[1] == null)    {
-            this.setMoves(currentMoves[0], move);
-            return (this);
-        }
-
-        else if (currentMoves[2] == null)   {
-            this.setMoves(currentMoves[0], currentMoves[1], move);
-            return (this);
-        }
-
-        else if (currentMoves[3] == null)   {
-            this.setMoves(currentMoves[0], currentMoves[1], currentMoves[2], move);
-            return (this);
-        }
-
-        else    {
-            LOGGER.error("tried to add a move to {} but it already has" +
-                    "4 moves. Please remove a move or resubmit all moves.", this.getSpecies());
-        }
-        return (this);
     }
 
     public int getStatHP() {

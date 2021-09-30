@@ -1,6 +1,12 @@
 package com.abrastat.general;
 
+import com.abrastat.gsc.GSCPokemon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class Pokemon extends Species {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GSCPokemon.class);
 
     private String nickname;
     private Gender gender;
@@ -34,7 +40,6 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
     protected abstract void initGender();
-    protected abstract Pokemon addMove(Move move);
 
     public String getNickname() {
         return nickname;
@@ -156,27 +161,60 @@ public abstract class Pokemon extends Species {
         this.level = level;
     }
 
-    public Move[] getMoves()    {
-        return new Move[] { move1, move2, move3, move4 };
+    private void addMove(Move move, int moveslot) {
+        switch (moveslot)   {
+            case 1:
+                this.move1 = move;
+            case 2:
+                this.move2 = move;
+            case 3:
+                this.move3 = move;
+            case 4:
+                this.move4 = move;
+        }
+
     }
 
-    public void setMoves(Move move1, Move move2, Move move3, Move move4)    {
+    public Pokemon addMove(Move move) {
+
+        Move[] currentMoves = this.getMoves();
+
+        // Java convention says the iterator starts at 0, whereas Pokemon convention
+        // indicates that the first moveslot starts at 1.
+        // This method just checks for the first null slot and fills it in.
+        for (int i = 0; i < 4; i++) {
+            if (currentMoves[i] == null) {
+                this.addMove(move, i + 1);
+            }
+            return (this);
+        }
+        LOGGER.error("tried to add a move to {} but it already has" +
+                "4 moves. Please remove a move or resubmit all moves.", this.getSpecies());
+        return (this);
+    }
+
+    public Pokemon addMoves(Move move1, Move move2, Move move3, Move move4)    {
         this.move1 = move1;
         this.move2 = move2;
         this.move3 = move3;
         this.move4 = move4;
+        return (this);
     }
 
-    public void setMoves(Move move1, Move move2, Move move3)    {
-        setMoves(move1, move2, move3, null);
+    private void addMoves(Move move1, Move move2, Move move3)    {
+        this.addMoves(move1, move2, move3, null);
     }
 
-    public void setMoves(Move move1, Move move2)    {
-        setMoves(move1, move2, null);
+    private void addMoves(Move move1, Move move2)    {
+        this.addMoves(move1, move2, null);
     }
 
-    public void setMoves(Move move) {
-        setMoves(move, null);
+    private void addMoves(Move move) {
+        this.addMoves(move, null);
+    }
+
+    public Move[] getMoves()    {
+        return new Move[] { move1, move2, move3, move4 };
     }
 
 }

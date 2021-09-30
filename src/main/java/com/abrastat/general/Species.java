@@ -15,12 +15,11 @@ abstract class Species {
     private String[] allowedAbilities;
     private int baseHp, baseAttack, baseDefense, baseSpecialAttack, baseSpecialDefense, baseSpeed;
     private double height, weight;
-    private final Type[] types = new Type[2];
+    private Type[] types = new Type[2];
     private double genderRatio;
 
     protected Species(String speciesName)  {
 
-        this.setSpecies(speciesName);
         String pokedex = "./src/main/resources/pokedex.json";
         JsonObject jsonObject = null;
 
@@ -32,7 +31,8 @@ abstract class Species {
             LOGGER.error("Error reading Pokedex file at: {}", pokedex);
         }
 
-        JsonObject jsonPokemon = jsonObject.getJsonObject(species);
+        JsonObject jsonPokemon = jsonObject.getJsonObject(speciesName);
+        this.setSpecies(speciesName);
 
         JsonObject jsonAbilities = jsonPokemon.getJsonObject("abilities");
         JsonObject jsonBaseStats = jsonPokemon.getJsonObject("baseStats");
@@ -51,7 +51,7 @@ abstract class Species {
     }
 
     public void setSpecies(String speciesName)    {
-        this.species = speciesName.toLowerCase();
+        this.species = speciesName.substring(0, 1).toUpperCase() + speciesName.substring(1).toLowerCase();
     }
 
     public String[] getAllowedAbilities() {
