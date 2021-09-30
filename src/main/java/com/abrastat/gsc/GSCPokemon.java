@@ -109,6 +109,36 @@ public class GSCPokemon extends Pokemon {
 
     }
 
+    public Pokemon addMove(Move move)   {
+
+        Move[] currentMoves = this.getMoves();
+
+        if (currentMoves[0] == null) {
+            this.setMoves(move);
+            return (this);
+        }
+
+        else if (currentMoves[1] == null)    {
+            this.setMoves(currentMoves[0], move);
+            return (this);
+        }
+
+        else if (currentMoves[2] == null)   {
+            this.setMoves(currentMoves[0], currentMoves[1], move);
+            return (this);
+        }
+
+        else if (currentMoves[3] == null)   {
+            this.setMoves(currentMoves[0], currentMoves[1], currentMoves[2], move);
+            return (this);
+        }
+
+        else    {
+            //TODO exception handler
+        }
+        return (this);
+    }
+
     public int getStatHP() {
         return statHP;
     }

@@ -15,7 +15,7 @@ public abstract class Move {
     //set this as default and override as necessary
     private boolean isBlockedByTypeImmunity = true;
 
-    public Move(String move)   {
+    protected Move(String move)   {
         this.move = move;
         String moveList = "./src/main/resources/movesgsc.json";
         JsonObject jsonObject = null;

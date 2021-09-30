@@ -34,6 +34,7 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
     protected abstract void initGender();
+    protected abstract Pokemon addMove(Move move);
 
     public String getNickname() {
         return nickname;

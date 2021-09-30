@@ -7,7 +7,7 @@ abstract class Species {
 
     //Json mapper variables
     private String species;
-    private String[] abilities;
+    private String[] allowedAbilities;
     private int baseHp, baseAttack, baseDefense, baseSpecialAttack, baseSpecialDefense, baseSpeed;
     private double height, weight;
     private final Type[] types = new Type[2];
@@ -49,14 +49,14 @@ abstract class Species {
         this.species = speciesName.toLowerCase();
     }
 
-    public String[] getAbilities() {
-        return abilities;
+    public String[] getAllowedAbilities() {
+        return allowedAbilities;
     }
 
-    public void setAbilities(JsonObject abilities) {
-        this.abilities[0] = abilities.getValue("0").toString();
-        this.abilities[1] = abilities.getValue("1").toString();
-        this.abilities[2] = abilities.getValue("H").toString();
+    public void setAllowedAbilities(JsonObject allowedAbilities) {
+        this.allowedAbilities[0] = allowedAbilities.getValue("0").toString();
+        this.allowedAbilities[1] = allowedAbilities.getValue("1").toString();
+        this.allowedAbilities[2] = allowedAbilities.getValue("H").toString();
     }
 
     public void setBaseStats(JsonObject baseStats) {
