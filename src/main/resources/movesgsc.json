@@ -3,7 +3,8 @@
 		"move":			"attack",
 		"type":			"normal",
 		"basepower": 	"85",
-		"accuracy": 	"256",
+		"pp": 			"24",
+		"accuracy": 	"255",
 		"secondary":	"prz",
 		"chance": 		"76"
 	},
@@ -12,32 +13,37 @@
 		"move":			"status",
 		"target": 		"oppo",
 		"type":			"none",
-		"accuracy":		"0"
+		"pp": 			"32",
+		"accuracy":		"255"
 	},
 	
 	"doubleedge":	{
 		"move":			"attack",
 		"type":			"normal",
 		"basepower":	"120",
-		"accuracy":		"0",
+		"pp": 			"24",
+		"accuracy":		"256",
 		"secondary":	"recoil",
-		"chance":		"0"
+		"chance":		"255"
 	},
 	
 	"rest":	{
 		"move":			"status",
-		"target": 		"self"
+		"target": 		"self",
+		"pp": 			"16"
 	},
 	
 	"sleeptalk": {
 		"move":			"status",
-		"target": 		"self"
+		"target": 		"self",
+		"pp":			"16"
 	},
 
 	"thunder":	{
 		"move":			"attack",
 		"type":			"electric",
 		"basepower":	"120",
+		"pp": 			"16",
 		"accuracy":		"178",
 		"secondary":	"prz",
 		"chance":		"76"

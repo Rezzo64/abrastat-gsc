@@ -13,7 +13,12 @@ public abstract class Game {
     public Game() {
         this.PlayerA = PlayerA;
         this.PlayerB = PlayerB;
+        this.initPokemon();
         //Deciding which gen format to run battle mechanics for
+    }
+
+    protected void initPokemon()    {
+
     }
 
 }

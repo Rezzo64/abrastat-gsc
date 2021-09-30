@@ -5,13 +5,35 @@ public abstract class Pokemon extends Species {
     private String nickname;
     private Gender gender;
     private Ability ability;
+    private Move move1, move2, move3, move4;
     private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;
     private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;
     private int level = 100;
 
+    enum Gender {
+
+        MALE, FEMALE, NONE;
+        // TODO: 19/08/2021 read & create getters + setters to read JSON
+
+    }
+
     public Pokemon(String species)    {
         super(species);
     }
+
+    public boolean hasMove(Move move)   {
+        if (move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected abstract void initMoves();
+    protected abstract void initIVs();
+    protected abstract void initEVs();
+    protected abstract void initHPStat();
+    protected abstract void initOtherStats();
+    protected abstract void initGender();
 
     public String getNickname() {
         return nickname;
@@ -133,10 +155,27 @@ public abstract class Pokemon extends Species {
         this.level = level;
     }
 
-    enum Gender {
-
-        MALE, FEMALE, NONE;
-        // TODO: 19/08/2021 read & create getters + setters to read JSON
-
+    public Move[] getMoves()    {
+        return new Move[] { move1, move2, move3, move4 };
     }
+
+    public void setMoves(Move move1, Move move2, Move move3, Move move4)    {
+        this.move1.setMove(move1);
+        this.move2.setMove(move2);
+        this.move3.setMove(move3);
+        this.move4.setMove(move4);
+    }
+
+    public void setMoves(Move move1, Move move2, Move move3)    {
+        setMoves(move1, move2, move3, null);
+    }
+
+    public void setMoves(Move move1, Move move2)    {
+        setMoves(move1, move2, null);
+    }
+
+    public void setMoves(Move move) {
+        setMoves(move, null);
+    }
+
 }
