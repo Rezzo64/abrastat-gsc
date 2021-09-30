@@ -1,52 +1,61 @@
 {
-	"bodyslam":	{
+	"bodySlam":	{
 		"move":			"attack",
 		"type":			"normal",
-		"basepower": 	"85",
-		"pp": 			"24",
-		"accuracy": 	"255",
+		"basepower": 	85,
+		"pp": 			24,
+		"accuracy": 	255,
 		"secondary":	"prz",
-		"chance": 		"76"
+		"chance": 		76
 	},
 	
 	"charm":	{
 		"move":			"status",
 		"target": 		"oppo",
 		"type":			"none",
-		"pp": 			"32",
-		"accuracy":		"255"
+		"pp": 			32,
+		"accuracy":		255
+	},
+
+	"drillPeck": 	{
+		"move": 		"attack",
+		"type": 		"flying",
+		"basepower": 	80,
+		"pp": 			32,
+		"accuracy": 	255,
+		"secondary": 	"none"
 	},
 	
-	"doubleedge":	{
+	"doubleEdge":	{
 		"move":			"attack",
 		"type":			"normal",
-		"basepower":	"120",
-		"pp": 			"24",
-		"accuracy":		"256",
+		"basepower":	120,
+		"pp": 			24,
+		"accuracy":		255,
 		"secondary":	"recoil",
-		"chance":		"255"
+		"chance":		256
 	},
 	
 	"rest":	{
 		"move":			"status",
 		"target": 		"self",
-		"pp": 			"16"
+		"pp": 			16
 	},
 	
-	"sleeptalk": {
+	"sleepTalk": {
 		"move":			"status",
 		"target": 		"self",
-		"pp":			"16"
+		"pp":			16
 	},
 
 	"thunder":	{
 		"move":			"attack",
 		"type":			"electric",
-		"basepower":	"120",
-		"pp": 			"16",
-		"accuracy":		"178",
+		"basepower":	120,
+		"pp": 			16,
+		"accuracy":		178,
 		"secondary":	"prz",
-		"chance":		"76"
+		"chance":		76
 	}
 }
 	
