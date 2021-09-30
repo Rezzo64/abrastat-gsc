@@ -3,8 +3,12 @@ package com.abrastat.gsc;
 import com.abrastat.general.Move;
 import com.abrastat.general.Pokemon;
 import com.abrastat.general.Type;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GSCPokemon extends Pokemon {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GSCPokemon.class);
 
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int currentHP;
@@ -134,7 +138,8 @@ public class GSCPokemon extends Pokemon {
         }
 
         else    {
-            //TODO exception handler
+            LOGGER.error("tried to add a move to {} but it already has" +
+                    "4 moves. Please remove a move or resubmit all moves.", this.getSpecies());
         }
         return (this);
     }

@@ -2,8 +2,13 @@ package com.abrastat.general;
 
 import java.io.*;
 import javax.json.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 abstract class Species {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Species.class);
 
     //Json mapper variables
     private String species;
@@ -24,7 +29,7 @@ abstract class Species {
             jsonObject = reader.readObject();
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("Error reading Pokedex file at: {}", pokedex);
         }
 
         JsonObject jsonPokemon = jsonObject.getJsonObject(species);
