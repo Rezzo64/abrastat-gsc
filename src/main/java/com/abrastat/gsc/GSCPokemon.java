@@ -10,7 +10,7 @@ public class GSCPokemon extends Pokemon {
 
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int currentHP;
-    private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
+    private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0, critMod = 0;
 
     public GSCPokemon(String speciesName) {
         super(speciesName);
@@ -167,8 +167,9 @@ public class GSCPokemon extends Pokemon {
         return evaMod;
     }
 
+    //prevents HP from going over maximum
     public void setCurrentHP(int HP) {
-        this.currentHP = HP;
+        this.currentHP = Math.min(HP, getStatHP());
     }
 
     public void setAtkMod(int atkMod) {
@@ -199,4 +200,11 @@ public class GSCPokemon extends Pokemon {
         this.evaMod = evaMod;
     }
 
+    public int getCritMod() {
+        return critMod;
+    }
+
+    public void setCritMod(int critMod) {
+        this.critMod = critMod;
+    }
 }

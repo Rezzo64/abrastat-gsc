@@ -56,6 +56,33 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
     protected abstract void initGender();
+    protected abstract int getStatHP();
+    protected abstract int getStatAtk();
+    protected abstract int getStatDef();
+    protected abstract int getStatSpA();
+    protected abstract int getStatSpD();
+    protected abstract int getStatSpe();
+    protected abstract int getCurrentHP();
+    protected abstract int getAtkMod();
+    protected abstract int getDefMod();
+    protected abstract int getSpAMod();
+    protected abstract int getSpDMod();
+    protected abstract int getSpeMod();
+    protected abstract int getAccMod();
+    protected abstract int getEvaMod();
+    protected abstract int getCritMod();
+
+    protected abstract void setCurrentHP(int HP);
+    protected abstract void setAtkMod(int atkMod);
+    protected abstract void setDefMod(int defMod);
+    protected abstract void setSpAMod(int spAMod);
+    protected abstract void setSpDMod(int spDMod);
+    protected abstract void setSpeMod(int speMod);
+    protected abstract void setAccMod(int accMod);
+    protected abstract void setEvaMod(int evaMod);
+    protected abstract void setCritMod(int critMod);
+
+    protected abstract int itemDamageBoost(Type type);
 
     public String getNickname() {
         return nickname;
