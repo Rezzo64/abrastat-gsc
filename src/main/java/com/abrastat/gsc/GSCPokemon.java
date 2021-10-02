@@ -11,7 +11,6 @@ public class GSCPokemon extends Pokemon {
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int currentHP;
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
-    private GSCItem heldItem = null;
 
     public GSCPokemon(String speciesName) {
         super(speciesName);
@@ -168,10 +167,6 @@ public class GSCPokemon extends Pokemon {
         return evaMod;
     }
 
-    public GSCItem getHeldItem() {
-        return heldItem;
-    }
-
     public void setCurrentHP(int HP) {
         this.currentHP = HP;
     }
@@ -202,10 +197,6 @@ public class GSCPokemon extends Pokemon {
 
     public void setEvaMod(int evaMod) {
         this.evaMod = evaMod;
-    }
-
-    public void giveItem(GSCItem heldItem) {
-        this.heldItem = heldItem;
     }
 
 }

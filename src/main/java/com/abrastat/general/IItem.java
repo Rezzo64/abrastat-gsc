@@ -1,6 +1,11 @@
 package com.abrastat.general;
 
+import com.abrastat.general.exceptions.ItemNotImplementedException;
 import com.abrastat.gsc.GSCItem;
+import com.abrastat.gsc.GSCPokemon;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public interface IItem {
 
@@ -8,22 +13,22 @@ public interface IItem {
 
         BERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         BERRY_JUICE(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         BERSERKGENE(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         BITTER_BERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         BLACK_BELT(false) {
@@ -38,12 +43,12 @@ public interface IItem {
         },
         BRIGHTPOWDER(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         BURNT_BERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         CHARCOAL(false) {
@@ -58,12 +63,12 @@ public interface IItem {
         },
         FOCUS_BAND(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         GOLD_BERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         HARD_STONE(false) {
@@ -73,27 +78,27 @@ public interface IItem {
         },
         ICE_BERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         KINGS_ROCK(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         LEFTOVERS(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                leftoversEffect();
+                generation.leftoversEffect();
             }
         },
         LIGHT_BALL(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         LUCKY_PUNCH(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         MAGNET(false) {
@@ -103,12 +108,12 @@ public interface IItem {
         },
         MAIL(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         METAL_POWDER(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         MINT_BERRY(true) {
@@ -118,7 +123,7 @@ public interface IItem {
         },
         MIRACLEBERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                cureStatus();
+                notImplemented(this, generation);
             }
         },
         MIRACLE_SEED(false) {
@@ -128,7 +133,7 @@ public interface IItem {
         },
         MYSTERYBERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         MYSTIC_WATER(false) {
@@ -158,22 +163,22 @@ public interface IItem {
         },
         PSNCUREBERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         PRZCUREBERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         QUICK_CLAW(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         SCOPE_LENS(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         SHARP_BEAK(false) {
@@ -198,12 +203,12 @@ public interface IItem {
         },
         STICK(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+                notImplemented(this, generation);
             }
         },
         THICK_CLUB(false) {
             public <T extends IItem> void itemEffect(T generation) {
-                notImplemented(this);
+
             }
         },
         TWISTEDSPOON(false) {
@@ -216,31 +221,29 @@ public interface IItem {
 
         public abstract <T extends IItem> void itemEffect(T generation);
 
+        Function<? extends IItem, Item> itemFunction = (itemGeneration) -> {
+            this.itemEffect(itemGeneration);
+            return (this);
+        };
+
         Item(boolean isConsumed) {
             this.isConsumed = isConsumed;
         }
     }
 
     // TODO some of these can be declared default in the future. Possibly even static.
-    static void leftoversEffect() {
 
-    }
-
-    static void cureStatus() {
-
-    }
-
+    void leftoversEffect();
+    void cureStatus();
     void damageBoost(Type type);
     void cureSleep();
 
-    static void notImplemented(Enum<Item> item) {
-        throw new ItemNotImplementedException(item.toString() + " not implemented");
-    }
+    BiFunction<? extends IItem, ? extends Pokemon, Pokemon> itemFunction = (itemGeneration, pokemon) -> {
+        pokemon.getHeldItem().itemEffect(itemGeneration);
+        return pokemon;
+    };
 
-}
-
-class ItemNotImplementedException extends RuntimeException    {
-    public ItemNotImplementedException(String message)  {
-        super(message);
+    static <T extends IItem> void notImplemented(Enum<Item> item, T t) {
+        throw new ItemNotImplementedException(item.toString() + " not implemented within " + t.toString());
     }
 }
