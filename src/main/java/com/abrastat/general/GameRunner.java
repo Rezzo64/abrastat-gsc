@@ -1,4 +1,10 @@
 package com.abrastat.general;
 
-public class GameLoader {
+import java.util.ArrayList;
+
+public class GameRunner {
+
+    ArrayList<? extends Game> gameList = new ArrayList<>();
+
+
 }
