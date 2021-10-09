@@ -8,6 +8,8 @@ public enum Format {
     // Numbering to simplify the control flow. If you don't play
     // Pocket Monsters video game: gen 1 = RBY, 2 = GSC, 3 = ADV, etc.
 
+    // DON'T IMPLEMENT THIS CLASS LOL
+
     RBY(1),
     GSC(2),
     ADV(3),

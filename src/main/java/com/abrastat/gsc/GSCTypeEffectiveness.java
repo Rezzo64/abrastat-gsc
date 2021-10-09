@@ -3,6 +3,8 @@ package com.abrastat.gsc;
 import com.abrastat.general.Type;
 
 import com.google.common.collect.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 // Copy this chunk into another package for implementation and modify,
 // Or just extend this class and override I suppose
@@ -51,11 +53,11 @@ public final class GSCTypeEffectiveness    {
                TYPECHART.get(attackingType, defendingType2);
     }
 
-    private static double CalcEffectivenessHelper(Type attackingType, Type defendingType) {
+    private static double CalcEffectivenessHelper(@NotNull Type attackingType, Type defendingType) {
             
         // Manually define each type match-up combination now
 
-        double result = 1.0;
+        double result;
         switch (attackingType) {
             case NONE:
                 result = 1.0;
@@ -121,7 +123,8 @@ public final class GSCTypeEffectiveness    {
         return result;
     }
 
-    private static double NormalEffectiveness(Type defendingType) {
+    @Contract(pure = true)
+    private static double NormalEffectiveness(@NotNull Type defendingType) {
             switch(defendingType)   {
                 case ROCK:
                 case STEEL:
@@ -133,7 +136,8 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double FireEffectiveness(Type defendingType) {
+    @Contract(pure = true)
+    private static double FireEffectiveness(@NotNull Type defendingType) {
             switch(defendingType)   {
                 case GRASS:
                 case ICE:
@@ -150,7 +154,8 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double WaterEffectiveness(Type defendingType) {
+    @Contract(pure = true)
+    private static double WaterEffectiveness(@NotNull Type defendingType) {
         switch(defendingType) {
             case FIRE:
             case GROUND:
@@ -165,7 +170,8 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double ElectricEffectiveness(Type defendingType) {
+    @Contract(pure = true)
+    private static double ElectricEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case WATER:
             case FLYING:
@@ -182,7 +188,8 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double GrassEffectiveness(Type defendingType) {
+    @Contract(pure = true)
+    private static double GrassEffectiveness(@NotNull Type defendingType) {
         switch(defendingType) {
             case WATER:
             case GROUND:
@@ -200,7 +207,8 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double IceEffectiveness(Type defendingType) {
+    @Contract(pure = true)
+    private static double IceEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case GRASS:
             case GROUND:
@@ -217,7 +225,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double FightingEffectiveness(Type defendingType) {
+    private static double FightingEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case NORMAL:
             case ICE:
@@ -238,7 +246,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double PoisonEffectiveness(Type defendingType) {
+    private static double PoisonEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case GRASS:
                 return 2.0;
@@ -255,7 +263,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double GroundEffectiveness(Type defendingType) {
+    private static double GroundEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case FIRE:
             case ELECTRIC:
@@ -274,7 +282,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double FlyingEffectiveness(Type defendingType) {
+    private static double FlyingEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case GRASS:
             case FIGHTING:
@@ -289,7 +297,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double PsychicEffectiveness(Type defendingType) {
+    private static double PsychicEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)  {
             case FIGHTING:
             case POISON:
@@ -305,7 +313,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double BugEffectiveness(Type defendingType) {
+    private static double BugEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case GRASS:
             case PSYCHIC:
@@ -323,7 +331,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double RockEffectiveness(Type defendingType) {
+    private static double RockEffectiveness(@NotNull Type defendingType) {
         switch (defendingType)  {
             case FIRE:
             case ICE:
@@ -339,7 +347,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double GhostEffectiveness(Type defendingType) {
+    private static double GhostEffectiveness(@NotNull Type defendingType) {
         switch (defendingType)  {
             case PSYCHIC:
             case GHOST:
@@ -354,7 +362,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double DragonEffectiveness(Type defendingType) {
+    private static double DragonEffectiveness(@NotNull Type defendingType) {
         switch (defendingType)  {
             case DRAGON:
                 return 2.0;
@@ -366,7 +374,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double DarkEffectiveness(Type defendingType) {
+    private static double DarkEffectiveness(@NotNull Type defendingType) {
         switch (defendingType)  {
             case PSYCHIC:
             case GHOST:
@@ -380,7 +388,7 @@ public final class GSCTypeEffectiveness    {
         return 1.0;
     }
 
-    private static double SteelEffectiveness(Type defendingType) {
+    private static double SteelEffectiveness(@NotNull Type defendingType) {
         switch(defendingType)   {
             case ICE:
             case ROCK:

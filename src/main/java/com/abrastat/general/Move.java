@@ -27,6 +27,9 @@ public abstract class Move {
     private boolean isBlockedByTypeImmunity = true;
 
     // Camel case for move names
+    // Honestly I've just coded in the GSC logic here for now as I'm lazy.
+    // But this does need refactoring.
+
     protected Move(String moveName)   {
 
         String moveList = "./src/main/resources/movesgsc.json";
@@ -38,6 +41,7 @@ public abstract class Move {
 
         } catch (FileNotFoundException e) {
             LOGGER.error("Error reading movesgsc file at: {}", moveList);
+            e.printStackTrace();
         }
 
         JsonObject jsonMove = jsonObject.getJsonObject(moveName);
@@ -71,11 +75,7 @@ public abstract class Move {
         this.setAccuracy(jsonMove);
     }
     public boolean isHiddenPower()  {
-        if (this.move.equals("hiddenpower")) {
-            return true;
-        } else {
-            return false;
-        }
+        return (this.move.equals("Hidden Power"));
     }
 
     public String getMove() {
