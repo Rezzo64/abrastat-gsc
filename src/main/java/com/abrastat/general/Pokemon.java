@@ -1,8 +1,13 @@
 package com.abrastat.general;
 
 import com.abrastat.gsc.GSCPokemon;
+import static com.abrastat.general.IItem.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 
 public abstract class Pokemon extends Species {
 
@@ -15,6 +20,17 @@ public abstract class Pokemon extends Species {
     private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;
     private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;
     private int level = 100;
+    private Item heldItem = null;
+
+
+
+    public Item getHeldItem() {
+        return heldItem;
+    }
+
+    public void setHeldItem(Item heldItem) {
+        this.heldItem = heldItem;
+    }
 
     enum Gender {
 

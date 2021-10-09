@@ -1,5 +1,5 @@
 {
-	"bodySlam":	{
+	"bodySlam":		{
 		"move":			"attack",
 		"type":			"normal",
 		"basepower": 	85,
@@ -9,7 +9,7 @@
 		"chance": 		76
 	},
 	
-	"charm":	{
+	"charm":		{
 		"move":			"status",
 		"target": 		"oppo",
 		"type":			"none",
@@ -17,7 +17,7 @@
 		"accuracy":		255
 	},
 
-	"drillPeck": 	{
+	"drillPeck":	{
 		"move": 		"attack",
 		"type": 		"flying",
 		"basepower": 	80,
@@ -36,21 +36,31 @@
 		"chance":		256
 	},
 	
-	"rest":	{
+	"rest":			{
 		"move":			"status",
 		"type": 		"none",
 		"target": 		"self",
 		"pp": 			16
 	},
 	
-	"sleepTalk": {
+	"sleepTalk":	{
 		"move":			"status",
 		"type":			"none",
 		"target": 		"self",
 		"pp":			16
 	},
 
-	"thunder":	{
+	"struggle": 	{
+		"move": 		"attack",
+		"type": 		"none",
+		"basepower": 	50,
+		"pp": 			500,
+		"accuracy": 	255,
+		"secondary": 	"recoil",
+		"chance": 		256
+	},
+
+	"thunder":		{
 		"move":			"attack",
 		"type":			"electric",
 		"basepower":	120,

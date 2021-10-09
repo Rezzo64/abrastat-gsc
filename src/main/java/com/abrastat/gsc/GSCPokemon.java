@@ -198,4 +198,5 @@ public class GSCPokemon extends Pokemon {
     public void setEvaMod(int evaMod) {
         this.evaMod = evaMod;
     }
+
 }

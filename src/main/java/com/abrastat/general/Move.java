@@ -90,7 +90,7 @@ public abstract class Move {
         return moveType;
     }
 
-    public void setMoveType(JsonObject moveType) {
+    private void setMoveType(JsonObject moveType) {
         String type = moveType.getJsonString("type")
                 .toString()
                 .replace("\"", "")
@@ -102,7 +102,7 @@ public abstract class Move {
         return basePower;
     }
 
-    public void setBasePower(JsonObject basePower) {
+    private void setBasePower(JsonObject basePower) {
         this.basePower = basePower.getInt("basepower");
     }
 
@@ -110,7 +110,7 @@ public abstract class Move {
         return accuracy;
     }
 
-    public void setAccuracy(JsonObject jsonMove) {
+    private void setAccuracy(JsonObject jsonMove) {
         this.accuracy = jsonMove.getInt("accuracy");
     }
 
@@ -118,7 +118,7 @@ public abstract class Move {
         return pp;
     }
 
-    public void setPP(JsonObject jsonMove) {
+    private void setPP(JsonObject jsonMove) {
         this.pp = jsonMove.getInt("pp");
     }
 
@@ -126,7 +126,7 @@ public abstract class Move {
         return secondaryEffect;
     }
 
-    public void setSecondaryEffect(JsonObject secondaryEffect) {
+    private void setSecondaryEffect(JsonObject secondaryEffect) {
         this.secondaryEffect = secondaryEffect.getString("secondary");
     }
 
@@ -134,7 +134,7 @@ public abstract class Move {
         return secondaryChance;
     }
 
-    public void setSecondaryChance(JsonObject secondaryChance) {
+    private void setSecondaryChance(JsonObject secondaryChance) {
         this.secondaryChance = secondaryChance.getInt("chance");
     }
 }
