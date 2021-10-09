@@ -9,7 +9,17 @@ import java.util.function.Function;
 
 public interface IItem {
 
+    /* Basically(!), this is an enum list which only allows concrete subclasses of
+    // the general package to implement their own item workings.
+    // It's pretty jarring to look at I know, but it's a workable way of abstracting
+    // item behaviour across generations.
+    // Don't worry too much about the implementation unless you desperately need
+    // something new out of this, it will work in 99% of cases.
+    */
+
     enum Item {
+
+        // ugly
 
         BERRY(true) {
             public <T extends IItem> void itemEffect(T generation) {
@@ -221,6 +231,7 @@ public interface IItem {
 
         public abstract <T extends IItem> void itemEffect(T generation);
 
+        @Deprecated
         Function<? extends IItem, Item> itemFunction = (itemGeneration) -> {
             this.itemEffect(itemGeneration);
             return (this);
@@ -238,6 +249,7 @@ public interface IItem {
     void damageBoost(Type type);
     void cureSleep();
 
+    @Deprecated
     BiFunction<? extends IItem, ? extends Pokemon, Pokemon> itemFunction = (itemGeneration, pokemon) -> {
         pokemon.getHeldItem().itemEffect(itemGeneration);
         return pokemon;

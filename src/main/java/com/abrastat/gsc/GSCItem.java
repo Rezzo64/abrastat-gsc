@@ -3,10 +3,10 @@ package com.abrastat.gsc;
 import com.abrastat.general.IItem;
 import com.abrastat.general.Type;
 
-public class GSCItem extends GSCPokemon implements IItem {
+public class GSCItem implements IItem {
 
-    public GSCItem(String speciesName) {
-        super(speciesName);
+    public GSCItem() {
+        super();
     }
 
 

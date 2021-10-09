@@ -7,9 +7,10 @@ import com.abrastat.general.Player;
 
 public final class GSCGame extends Game {
 
+    int turnNumber = 0;
+
     public GSCGame() {
         super();
-        Format format = GSC;
         GSCTypeEffectiveness TE;
     }
 }

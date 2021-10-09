@@ -1,16 +1,15 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.Move;
+import static com.abrastat.general.IItem.*;
 import com.abrastat.general.Pokemon;
 import com.abrastat.general.Type;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GSCPokemon extends Pokemon {
 
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int currentHP;
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
+    private Item heldItem;
 
     public GSCPokemon(String speciesName) {
         super(speciesName);
@@ -108,6 +107,16 @@ public class GSCPokemon extends Pokemon {
 
     @Override
     protected void initGender() {
+
+    }
+
+    @Override
+    public Item getHeldItem() {
+        return this.heldItem;
+    }
+
+    @Override
+    public void setHeldItem(Item heldItem) {
 
     }
 
