@@ -1,7 +1,6 @@
 package com.abrastat.general;
 
 import com.abrastat.gsc.GSCPokemon;
-import static com.abrastat.general.IItem.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

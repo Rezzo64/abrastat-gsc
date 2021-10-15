@@ -1,6 +1,6 @@
 package com.abrastat.gsc;
 
-import static com.abrastat.general.IItem.*;
+import com.abrastat.general.Item;
 import com.abrastat.general.Pokemon;
 import com.abrastat.general.Type;
 

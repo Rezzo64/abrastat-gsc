@@ -1,17 +1,22 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.IItem;
+import com.abrastat.general.Item;
 import com.abrastat.general.Pokemon;
-import com.abrastat.general.Type;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import static com.abrastat.gsc.GSCTypeEffectiveness.CalcEffectiveness;
-import static com.abrastat.general.IItem.*;
+import static com.abrastat.general.Item.*;
 
 public final class GSCDamageCalc {
 
     // singleton
-    private GSCDamageCalc()  {}
+    private GSCDamageCalc() {
+    }
+
+    private ArrayList<Item> items = new ArrayList<>();
+
 
     public void calcDamage(
             @NotNull GSCPokemon defendingPokemon, @NotNull GSCPokemon attackingPokemon, @NotNull GSCMove attack) {
@@ -20,38 +25,37 @@ public final class GSCDamageCalc {
         int basePower = attack.getBasePower();
         int attackStat = attackingPokemon.getStatAtk();
         int defenseStat = defendingPokemon.getStatDef();
-        Item attackerItem = attackingPokemon.getHeldItem();
+        Item heldItem = attackingPokemon.getHeldItem();
         // Modifiers for effects from Growl, Screech, Focus Energy, etc.
         int attackModifier, defenseModifier;
-        boolean hasBoostingItem = attackerItem.itemEffect();
+
         int itemBoost = 1;
 
         final double typeEffectiveness =
-                CalcEffectiveness(attack.getMoveType(),
+            CalcEffectiveness(attack.getMoveType(),
                     defendingPokemon.getTypes()[0],
                     defendingPokemon.getTypes()[1]);
 
         final int FORMULA = (int)
-                (Math.floor
-                        (Math.floor
-                                (
-                                        (
-                                                (
-                                                        Math.floor(
-                                                                (level * 2)
-                                                                        / 5)
-                                                                + 2)
-                                                        * basePower * attackStat)
-                                                / defenseStat)
-                                / 50)
-                        * critModifier() * itemBoost + 2)
-                * modifiers;
-
-
+            (Math.floor
+                    (Math.floor
+                            (
+                                    (
+                                            (
+                                                    Math.floor(
+                                                            (level * 2)
+                                                                    / 5)
+                                                            + 2)
+                                                    * basePower * attackStat)
+                                            / defenseStat)
+                            / 50)
+                    * critModifier() * itemBoost + 2)
+            * //modifiers
+            1;
     }
 
     private void calcItemBoost(Pokemon attackingPokemon)    {
-        (com.abrastat.gsc.GSCItem) attackingPokemon.getHeldItem().itemEffect(GSCItem);
+        attackingPokemon.getHeldItem().itemEffect();
     }
 
     private int critRoll = ThreadLocalRandom.current().nextInt(256);
@@ -69,4 +73,5 @@ public final class GSCDamageCalc {
         return damageRoll;
     }
 
+    private static ArrayList<Item> boostingItems = new ArrayList<>();
 }
