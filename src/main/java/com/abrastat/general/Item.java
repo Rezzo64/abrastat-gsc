@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.abrastat.general.Format.*;
+import static com.abrastat.general.Type.*;
 
 public enum Item  {
 
