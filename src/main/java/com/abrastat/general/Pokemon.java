@@ -21,8 +21,10 @@ public abstract class Pokemon extends Species {
     private int level = 100;
 
     public abstract Item getHeldItem();
-
     public abstract void setHeldItem(Item heldItem);
+    public abstract int getCurrentHP();
+    public abstract void applyHeal(int healAmount);
+    public abstract void applyDamage(int damage);
 
     enum Gender {
 
@@ -36,10 +38,7 @@ public abstract class Pokemon extends Species {
     }
 
     public boolean hasMove(Move move)   {
-        if (move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move)) {
-            return true;
-        }
-        return false;
+        return move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move);
     }
 
     protected abstract void initMoves();
@@ -48,9 +47,7 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
     protected abstract void initGender();
-    public abstract int getCurrentHP();
-    public abstract void applyHeal(int healAmount);
-    public abstract void applyDamage(int damage);
+
 
     public String getNickname() {
         return nickname;

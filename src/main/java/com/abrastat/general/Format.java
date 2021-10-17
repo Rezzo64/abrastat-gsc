@@ -25,27 +25,6 @@ public enum Format {
         this.INDEX = index;
     }
 
-    public void setFormat(Format format)    {
-        switch(format)    {
-            case RBY:
-                format = RBY;
-            case GSC:
-                format = GSC;
-            case ADV:
-                format = ADV;
-            case DPP:
-                format = DPP;
-            case BW:
-                format = BW;
-            case ORAS:
-                format = ORAS;
-            case SM:
-                format = SM;
-            case SWSH:
-                format = SWSH;
-        }
-    }
-
     private static final HashMap<Integer, Format> ALLFORMATS
             = new HashMap<>()   {
         {
