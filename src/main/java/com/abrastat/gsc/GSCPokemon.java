@@ -117,7 +117,7 @@ public class GSCPokemon extends Pokemon {
 
     @Override
     public void setHeldItem(Item heldItem) {
-
+        this.heldItem = heldItem;
     }
 
     public int getStatHP() {
@@ -176,8 +176,22 @@ public class GSCPokemon extends Pokemon {
         return evaMod;
     }
 
-    public void setCurrentHP(int HP) {
-        this.currentHP = HP;
+    public void applyHeal(int healAmount) {
+        if (this.statHP >= (this.currentHP + healAmount)) {
+            this.currentHP = this.statHP;
+        }
+        else    {
+            this.currentHP += healAmount;
+        }
+    }
+
+    public void applyDamage(int damage) {
+        if (damage >= this.currentHP)   {
+            this.currentHP = 0;
+        }
+        else    {
+            this.currentHP -= damage;
+        }
     }
 
     public void setAtkMod(int atkMod) {

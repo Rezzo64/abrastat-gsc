@@ -75,8 +75,6 @@ public enum GSCDamageCalc {
         // Modifiers for effects from Growl, Screech, Focus Energy, etc.
         int attackModifier, defenseModifier;
 
-        int itemBoost = 1;
-
         double typeEffectiveness =
             CalcEffectiveness(attack.getMoveType(),
                     defendingPokemon.getTypes()[0],
@@ -99,7 +97,7 @@ public enum GSCDamageCalc {
             * typeEffectiveness * damageRoll())
         ;
 
-        defendingPokemon.setCurrentHP(damage);
+        defendingPokemon.applyDamage(damage);
 
     }
 

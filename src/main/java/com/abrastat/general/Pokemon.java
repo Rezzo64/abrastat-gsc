@@ -16,8 +16,8 @@ public abstract class Pokemon extends Species {
     private Gender gender;
     private Ability ability;
     private Move move1, move2, move3, move4;
-    private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;
-    private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;
+    private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
+    private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;        // default min
     private int level = 100;
 
     public abstract Item getHeldItem();
@@ -48,6 +48,9 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
     protected abstract void initGender();
+    public abstract int getCurrentHP();
+    public abstract void applyHeal(int healAmount);
+    public abstract void applyDamage(int damage);
 
     public String getNickname() {
         return nickname;
