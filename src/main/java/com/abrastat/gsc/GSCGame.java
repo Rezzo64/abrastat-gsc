@@ -1,42 +1,45 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.*;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class GSCGame extends Game {
 
     private int turnNumber = 0;
-    private GSCPokemon pokemonPlayer1, pokemonPlayer2;
-    private MutablePair<GSCPokemon, GSCPokemon> turnOrderPair = new MutablePair<>();
+    private GSCPokemon pokemonPlayerOne, pokemonPlayerTwo;
 
     public GSCGame() {
         super();
+        this.pokemonPlayerOne = (GSCPokemon) getPlayerOne().getCurrentPokemon();
+        this.pokemonPlayerTwo = (GSCPokemon) getPlayerTwo().getCurrentPokemon();
     }
 
-    public void runTurn(Move movePlayer1, Move movePlayer2)   {
+    public void runTurn(Move movePlayerOne, Move movePlayerTwo)   {
         turnNumber++;
-        if (calculateWhosFaster()) { // true = player1, false = player2
-            takeTurns(pokemonPlayer1, pokemonPlayer2);
+        if (playerOneIsFaster()) { // true = player1, false = player2
+            takeTurn(pokemonPlayerOne, movePlayerOne);
+            takeTurn(pokemonPlayerTwo, movePlayerTwo);
         } else {
-            takeTurns(pokemonPlayer2, pokemonPlayer1);
+            takeTurn(pokemonPlayerTwo, movePlayerTwo);
+            takeTurn(pokemonPlayerOne, movePlayerOne);
         }
     }
 
-    private void takeTurns(GSCPokemon fasterPokemon, GSCPokemon slowerPokemon) {
+    private void takeTurn(GSCPokemon pokemon, Move move) {
 
     }
 
-    private boolean calculateWhosFaster() {
+    private boolean playerOneIsFaster() {
+
+        // TODO Quick Attack, Mach Punch, Roar etc. priority moves logic checking
         return (
-                pokemonPlayer1.getStatSpe() == pokemonPlayer2.getStatSpe()
+                pokemonPlayerOne.getStatSpe() == pokemonPlayerTwo.getStatSpe()
                         ?
                         ThreadLocalRandom.current().nextBoolean() // random player to go first this turn
                         :
-                        pokemonPlayer1.getStatSpe() ==
-                                Math.max(pokemonPlayer1.getStatSpe(), pokemonPlayer2.getStatSpe())
+                        pokemonPlayerOne.getStatSpe() ==
+                                Math.max(pokemonPlayerOne.getStatSpe(), pokemonPlayerTwo.getStatSpe())
         );
     }
 }

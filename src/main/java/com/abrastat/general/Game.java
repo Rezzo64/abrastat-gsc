@@ -1,15 +1,20 @@
 package com.abrastat.general;
 
-import static com.abrastat.general.Format.*;
-
 public abstract class Game {
 
-    public Player Player1;
-    public Player Player2;
+    private Player playerOne;
+    private Player playerTwo;
 
     public Game() {
-        //Deciding which gen format to run battle mechanics for
+
     }
 
+    public Player getPlayerOne()    {
+        return this.playerOne;
+    }
+
+    public Player getPlayerTwo()    {
+        return this.playerTwo;
+    }
 }
 
