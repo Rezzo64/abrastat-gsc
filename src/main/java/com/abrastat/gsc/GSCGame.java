@@ -1,8 +1,8 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.*;
-
 import java.util.concurrent.ThreadLocalRandom;
+import static com.abrastat.gsc.GSCDamageCalc.*;
 
 public final class GSCGame extends Game {
 
@@ -15,18 +15,32 @@ public final class GSCGame extends Game {
         this.pokemonPlayerTwo = (GSCPokemon) getPlayerTwo().getCurrentPokemon();
     }
 
-    public void runTurn(Move movePlayerOne, Move movePlayerTwo)   {
+    public void initTurn(GSCMove movePlayerOne, GSCMove movePlayerTwo)   {
         turnNumber++;
+
+        // IF speed priority move selected (Quick Attack, Roar)
+        // IF Pursuit selected
+
         if (playerOneIsFaster()) { // true = player1, false = player2
-            takeTurn(pokemonPlayerOne, movePlayerOne);
-            takeTurn(pokemonPlayerTwo, movePlayerTwo);
+            takeTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne);
+            takeTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo);
         } else {
-            takeTurn(pokemonPlayerTwo, movePlayerTwo);
-            takeTurn(pokemonPlayerOne, movePlayerOne);
+            takeTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo);
+            takeTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne);
         }
+
+        // IF battle effects like Perish Song, Light Screen
+
     }
 
-    private void takeTurn(GSCPokemon pokemon, Move move) {
+    private void takeTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
+        if (someoneFainted())
+        { return; } // end turn when either member faints
+
+        checkStatus(attackingPokemon);
+        calcDamage(attackingPokemon, defendingPokemon, move);
+
+
 
     }
 
@@ -42,4 +56,12 @@ public final class GSCGame extends Game {
                                 Math.max(pokemonPlayerOne.getStatSpe(), pokemonPlayerTwo.getStatSpe())
         );
     }
+
+    private boolean someoneFainted() {
+        return this.pokemonPlayerOne.getCurrentHP() == 0 || this.pokemonPlayerTwo.getCurrentHP() == 0;
+    }
+
+    private void checkStatus(GSCPokemon attackingPokemon) {
+    }
+
 }
