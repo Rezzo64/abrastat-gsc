@@ -4,8 +4,8 @@ import com.abrastat.gsc.GSCPokemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.EnumSet;
 
 
 public abstract class Pokemon extends Species {
@@ -19,6 +19,8 @@ public abstract class Pokemon extends Species {
     private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
     private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;        // default min
     private int level = 100;
+    private Status volatileStatus = null;
+    private EnumSet<Status> nonVolatileStatus;
 
     public abstract Item getHeldItem();
     public abstract void setHeldItem(Item heldItem);
@@ -167,6 +169,26 @@ public abstract class Pokemon extends Species {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public Status getVolatileStatus() {
+        return volatileStatus;
+    }
+
+    public void setVolatileStatus(Status volatileStatus) {
+        this.volatileStatus = volatileStatus;
+    }
+
+    public EnumSet<Status> getNonVolatileStatus() {
+        return nonVolatileStatus;
+    }
+
+    public void applyNonVolatileStatus(Status status) {
+        this.nonVolatileStatus.add(status);
+    }
+
+    public void removeNonVolatileStatus(Status status)  {
+        this.nonVolatileStatus.remove(status);
     }
 
     private void addMove(Move move, int moveslot) {

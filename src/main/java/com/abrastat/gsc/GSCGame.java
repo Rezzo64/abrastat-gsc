@@ -37,9 +37,9 @@ public final class GSCGame extends Game {
         if (someoneFainted())
         { return; } // end turn when either member faints
 
-        checkStatus(attackingPokemon);
-        calcDamage(attackingPokemon, defendingPokemon, move);
-
+        if (canAttack(attackingPokemon)) {
+            calcDamage(attackingPokemon, defendingPokemon, move);
+        }
 
 
     }
@@ -61,7 +61,26 @@ public final class GSCGame extends Game {
         return this.pokemonPlayerOne.getCurrentHP() == 0 || this.pokemonPlayerTwo.getCurrentHP() == 0;
     }
 
+    private boolean canAttack(GSCPokemon attackingPokemon) {
+
+        int roll;
+
+        switch (attackingPokemon.getVolatileStatus())   {
+            case PARALYSIS:
+                roll = ThreadLocalRandom.current().nextInt(256);
+                if (roll < 64) {
+
+                }
+                break;
+            case SLEEP:
+        }
+
+        return true;
+    }
+
     private void checkStatus(GSCPokemon attackingPokemon) {
+
+
     }
 
 }
