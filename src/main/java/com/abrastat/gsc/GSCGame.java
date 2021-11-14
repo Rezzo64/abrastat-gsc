@@ -50,13 +50,10 @@ public final class GSCGame extends Game {
         if (someoneFainted())
         { return; } // end turn when either member faints
 
+        checkStatusMoveEffects(attackingPokemon);
         if (canAttack(attackingPokemon)) {
             calcDamage(attackingPokemon, defendingPokemon, move);
         }
-
-
-        checkStatusMoveEffects(attackingPokemon);
-        calcDamage(attackingPokemon, defendingPokemon, move);
         checkStatusAfterEffects(attackingPokemon);
 
     }
@@ -78,7 +75,7 @@ public final class GSCGame extends Game {
         return this.pokemonPlayerOne.getCurrentHP() == 0 || this.pokemonPlayerTwo.getCurrentHP() == 0;
     }
 
-    private boolean canAttack(GSCPokemon attackingPokemon) {
+    private boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
 
         int roll;
 
@@ -99,7 +96,7 @@ public final class GSCGame extends Game {
 
     }
 
-    private void checkStatusMoveEffects(GSCPokemon attackingPokemon) {
+    private void checkStatusMoveEffects(@NotNull GSCPokemon attackingPokemon) {
 
         // some of these effects override others and need to be checked first as such
         // TODO
@@ -140,7 +137,7 @@ public final class GSCGame extends Game {
         }
     }
 
-    private void checkStatusAfterEffects(GSCPokemon attackingPokemon) {
+    private void checkStatusAfterEffects(@NotNull GSCPokemon attackingPokemon) {
 
         // TODO
         switch (attackingPokemon.getNonVolatileStatus())    {
