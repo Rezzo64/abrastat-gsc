@@ -4,8 +4,14 @@ import com.abrastat.gsc.GSCPokemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.util.ArrayList;
 import java.util.EnumSet;
+
+import java.util.HashSet;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 
 
 public abstract class Pokemon extends Species {
@@ -19,8 +25,9 @@ public abstract class Pokemon extends Species {
     private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
     private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;        // default min
     private int level = 100;
-    private Status volatileStatus = null;
-    private EnumSet<Status> nonVolatileStatus;
+
+    private Status nonVolatileStatus = null;
+    private HashSet<Status> volatileStatus = new HashSet<>();
 
     public abstract Item getHeldItem();
     public abstract void setHeldItem(Item heldItem);
@@ -171,26 +178,6 @@ public abstract class Pokemon extends Species {
         this.level = level;
     }
 
-    public Status getVolatileStatus() {
-        return volatileStatus;
-    }
-
-    public void setVolatileStatus(Status volatileStatus) {
-        this.volatileStatus = volatileStatus;
-    }
-
-    public EnumSet<Status> getNonVolatileStatus() {
-        return nonVolatileStatus;
-    }
-
-    public void applyNonVolatileStatus(Status status) {
-        this.nonVolatileStatus.add(status);
-    }
-
-    public void removeNonVolatileStatus(Status status)  {
-        this.nonVolatileStatus.remove(status);
-    }
-
     private void addMove(Move move, int moveslot) {
         switch (moveslot)   {
             case 1:
@@ -247,4 +234,42 @@ public abstract class Pokemon extends Species {
         return new Move[] { move1, move2, move3, move4 };
     }
 
+    public Status getNonVolatileStatus()  {
+        return this.nonVolatileStatus;
+    }
+
+    // only one nv status can be applied at a time.
+    public void applyNonVolatileStatus(Status status)   {
+        if (this.nonVolatileStatus == null) {
+            this.nonVolatileStatus = status;
+        } else {
+            Messages.statusFailed(this, this.nonVolatileStatus);
+        }
+    }
+
+    public void removeNonVolatileStatus()  {
+        this.nonVolatileStatus = null;
+    }
+
+    public Status[] getVolatileStatus()   {
+        return (Status[]) volatileStatus.toArray();
+    }
+
+    public void applyVolatileStatus(Status status)  {
+        if (!(volatileStatus.contains(status)))    {
+            volatileStatus.add(status);
+        } else {
+            Messages.statusFailed(this, status);
+        }
+    }
+
+    public void removeVolatileStatus(Status status) {
+        if (this.volatileStatus.contains(status)) {
+            this.volatileStatus.remove(status);
+        }
+    }
+
+    public void clearVolatileStatus()   {
+        this.volatileStatus.clear();
+    }
 }
