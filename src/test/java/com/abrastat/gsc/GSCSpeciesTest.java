@@ -8,7 +8,7 @@ import static com.abrastat.general.Type.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class GSCPokemonTest {
+class GSCSpeciesTest {
 
     Pokemon bulbasaur = new GSCPokemon("bulbasaur");
 
