@@ -1,7 +1,6 @@
 package com.abrastat.runners;
 
-public class SlamLaxVersusDedgeLax {
-
+public class SlamLaxVersusThunderZapdos {
     public static void main(String[] args) {
 
     }
