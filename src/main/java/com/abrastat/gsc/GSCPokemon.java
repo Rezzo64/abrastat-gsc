@@ -183,6 +183,26 @@ public class GSCPokemon extends Pokemon {
         return evaMod;
     }
 
+    public int getSleepCounter() {
+        return sleepCounter;
+    }
+
+    public int getToxicCounter() {
+        return toxicCounter;
+    }
+
+    public int getConfuseCounter() {
+        return confuseCounter;
+    }
+
+    public int getDisableCounter() {
+        return disableCounter;
+    }
+
+    public int getPerishCounter() {
+        return perishCounter;
+    }
+
     public void applyHeal(int healAmount) {
         if (this.statHP >= (this.currentHP + healAmount)) {
             this.currentHP = this.statHP;
@@ -239,25 +259,45 @@ public class GSCPokemon extends Pokemon {
         this.evaMod = 0;
     }
 
-    public void incrementSleepCounter() { this.sleepCounter++; }
+    public void incrementSleepCounter() {
+        this.sleepCounter++;
+    }
 
-    public void incrementToxicCounter() { this.toxicCounter++; }
+    public void incrementToxicCounter() {
+        this.toxicCounter++;
+    }
 
-    public void incrementConfuseCounter() { this.confuseCounter++; }
+    public void incrementConfuseCounter() {
+        this.confuseCounter++;
+    }
 
-    public void incrementDisableCounter() { this.disableCounter++; }
+    public void incrementDisableCounter() {
+        this.disableCounter++;
+    }
 
-    public void incrementPerishCounter() { this.perishCounter++; }
+    public void incrementPerishCounter() {
+        this.perishCounter++;
+    }
 
-    public void resetSleepCounter() { this.sleepCounter = 0; }
+    public void resetSleepCounter() {
+        this.sleepCounter = 0;
+    }
 
-    public void resetToxicCounter() { this.toxicCounter = 0; }
+    public void resetToxicCounter() {
+        this.toxicCounter = 0;
+    }
 
-    public void resetConfuseCounter() { this.confuseCounter = 0; }
+    public void resetConfuseCounter() {
+        this.confuseCounter = 0;
+    }
 
-    public void resetDisableCounter() { this.disableCounter = 0; }
+    public void resetDisableCounter() {
+        this.disableCounter = 0;
+    }
 
-    public void resetPerishCounter() { this.perishCounter = 0; }
+    public void resetPerishCounter() {
+        this.perishCounter = 0;
+    }
 
     public void resetAllCounters() {
         this.sleepCounter = 0;
@@ -266,4 +306,5 @@ public class GSCPokemon extends Pokemon {
         this.disableCounter = 0;
         this.perishCounter = 0;
     }
+
 }

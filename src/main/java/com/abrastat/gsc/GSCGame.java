@@ -28,7 +28,7 @@ public final class GSCGame extends Game {
         // IF switch selected
             // IF pursuit also selected
 
-        // IF speed priority move selected (Quick Attack, Protect, Roar)
+        // IF speed priority !=0 move selected (Quick Attack, Protect, Roar)
 
         if (playerOneIsFaster()) { // true = player1, false = player2
             takeTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne);
@@ -73,20 +73,32 @@ public final class GSCGame extends Game {
 
     private boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
 
-        int roll;    // handles RNG factor
+        int roll = ThreadLocalRandom.current().nextInt(256);  // handles RNG factor
 
         switch (attackingPokemon.getNonVolatileStatus())   {
+            case SLEEP:
+                // roll sleep awakening chance, increment sleep counter, check for sleep talk call, skip turn otherwise
+                break;
+            case REST:
+                if (attackingPokemon.getSleepCounter() < 2) {
+                    Messages.cantAttack(attackingPokemon, REST);
+                    attackingPokemon.incrementSleepCounter();
+                    return false;
+                }
+                break;
+            case FREEZE:
+                // roll thaw chance, skip turn (always)
+                break;
             case PARALYSIS:
-                roll = ThreadLocalRandom.current().nextInt(256);
                 if (roll < 64) {
                     Messages.cantAttack(attackingPokemon, PARALYSIS);
                     return false;
                 } else {
                     return true;
                 }
-            case SLEEP:
+            default:
+                return true;
         }
-
         return true;
     }
 
@@ -96,21 +108,12 @@ public final class GSCGame extends Game {
 
     private void checkStatusMoveEffects(@NotNull GSCPokemon attackingPokemon) {
 
+        int roll;    // handles RNG factor
+
         // some of these effects override others and need to be checked first as such
         // TODO
         switch (attackingPokemon.getNonVolatileStatus())    {
-            case SLEEP:
-                // roll sleep awakening chance, increment sleep counter, check for sleep talk call, skip turn otherwise
-                break;
-            case REST:
-                // check if waking turn, increment sleep counter, check for sleep talk call, skip turn otherwise
-                break;
-            case FREEZE:
-                // roll thaw chance, skip turn (always)
-                break;
-            case PARALYSIS:
-                // roll full paralysis chance
-                break;
+
         }
 
         // TODO
