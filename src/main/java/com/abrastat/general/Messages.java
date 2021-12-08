@@ -8,6 +8,10 @@ public final class Messages {
 
     private static String messageBuffer;
 
+    private static void handleMessage() { // handle logging from here and whether it's enabled or not
+
+    }
+
     public static void statusFailed(Pokemon pokemon, @NotNull Status status) {
         switch (status) {
             case BURN:
@@ -37,6 +41,8 @@ public final class Messages {
             default:
                 messageBuffer = "But it failed!";
         }
+
+        handleMessage();
     }
 
     public static void cantAttack(Pokemon pokemon, @NotNull Status status)   {
@@ -61,6 +67,8 @@ public final class Messages {
             default:
                 messageBuffer = (pokemon + " can't attack because of its " + status + "!");
         }
+
+        handleMessage();
     }
 
     public static void statusChanged(Pokemon pokemon, @NotNull Status status)    {
@@ -79,9 +87,11 @@ public final class Messages {
             default:
                 messageBuffer = (pokemon + "is no longer affected by " + status + "!");
         }
+
+        handleMessage();
     }
 
-    public static void logEffect(Pokemon pokemon, Status status)    {
+    public static void logEffect(Pokemon pokemon, @NotNull Status status)    {
         switch (status) {
             case BURN:
                 messageBuffer = (pokemon + " is hurt by its burn!");
@@ -100,5 +110,7 @@ public final class Messages {
             default:
                 messageBuffer = (pokemon + " is affected by " + status + "!");
         }
+
+        handleMessage();
     }
 }
