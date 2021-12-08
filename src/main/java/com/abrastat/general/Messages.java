@@ -35,7 +35,7 @@ public final class Messages {
                 messageBuffer = (pokemon + " is already in love!");
                 break;
             default:
-                messageBuffer = "but it failed!";
+                messageBuffer = "But it failed!";
         }
     }
 
