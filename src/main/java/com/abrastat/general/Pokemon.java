@@ -32,7 +32,7 @@ public abstract class Pokemon extends Species {
 
     enum Gender {
 
-        MALE, FEMALE, NONE;
+        MALE, FEMALE, NONE
         // TODO: 19/08/2021 read & create getters + setters to read JSON
 
     }
@@ -233,7 +233,7 @@ public abstract class Pokemon extends Species {
         return this.nonVolatileStatus;
     }
 
-    // only one nv status can be applied at a time.
+    // only one non-volatile status can be applied at a time.
     public void applyNonVolatileStatus(Status status)   {
         if (this.nonVolatileStatus == null) {
             this.nonVolatileStatus = status;

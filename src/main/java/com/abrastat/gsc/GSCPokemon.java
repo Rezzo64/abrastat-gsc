@@ -11,6 +11,13 @@ public class GSCPokemon extends Pokemon {
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
     private Item heldItem;
 
+    // all counters below to be handled incrementally (for consistency)
+    private int sleepCounter = 0;
+    private int toxicCounter = 0;
+    private int confuseCounter = 0;
+    private int disableCounter = 0;
+    private int perishCounter = 0;
+
     public GSCPokemon(String speciesName) {
         super(speciesName);
         this.initIVs();
@@ -222,4 +229,41 @@ public class GSCPokemon extends Pokemon {
         this.evaMod = evaMod;
     }
 
+    public void resetMods() {
+        this.atkMod = 0;
+        this.defMod = 0;
+        this.spAMod = 0;
+        this.spDMod = 0;
+        this.speMod = 0;
+        this.accMod = 0;
+        this.evaMod = 0;
+    }
+
+    public void incrementSleepCounter() { this.sleepCounter++; }
+
+    public void incrementToxicCounter() { this.toxicCounter++; }
+
+    public void incrementConfuseCounter() { this.confuseCounter++; }
+
+    public void incrementDisableCounter() { this.disableCounter++; }
+
+    public void incrementPerishCounter() { this.perishCounter++; }
+
+    public void resetSleepCounter() { this.sleepCounter = 0; }
+
+    public void resetToxicCounter() { this.toxicCounter = 0; }
+
+    public void resetConfuseCounter() { this.confuseCounter = 0; }
+
+    public void resetDisableCounter() { this.disableCounter = 0; }
+
+    public void resetPerishCounter() { this.perishCounter = 0; }
+
+    public void resetAllCounters() {
+        this.sleepCounter = 0;
+        this.toxicCounter = 0;
+        this.confuseCounter = 0;
+        this.disableCounter = 0;
+        this.perishCounter = 0;
+    }
 }

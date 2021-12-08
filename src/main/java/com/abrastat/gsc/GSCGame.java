@@ -11,14 +11,10 @@ public final class GSCGame extends Game {
 
     private int turnNumber = 0;
     private GSCPokemon pokemonPlayerOne, pokemonPlayerTwo;
-    private int p1SleepCounter = 0, p2SleepCounter = 0;
-    private int p1ToxicCounter = 0, p2ToxicCounter = 0;
-    private int p1ConfuseCounter = 0, p2ConfuseCounter = 0;
+
     private int p1ReflectCounter = 0, p2ReflectCounter = 0;
     private int p1LightScreenCounter = 0, p2LightScreenCounter = 0;
     private int p1SafeguardCounter = 0, p2SafeguardCounter = 0;
-    private int p1DisableCounter = 0, p2DisableCounter = 0;
-    private int p1PerishCounter = 0, p2PerishCounter = 0;
 
     public GSCGame() {
         super();
@@ -77,15 +73,17 @@ public final class GSCGame extends Game {
 
     private boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
 
-        int roll;
+        int roll;    // handles RNG factor
 
         switch (attackingPokemon.getNonVolatileStatus())   {
             case PARALYSIS:
                 roll = ThreadLocalRandom.current().nextInt(256);
                 if (roll < 64) {
-
+                    Messages.cantAttack(attackingPokemon, PARALYSIS);
+                    return false;
+                } else {
+                    return true;
                 }
-                break;
             case SLEEP:
         }
 
