@@ -76,19 +76,17 @@ public final class GSCGame extends Game {
         int roll = ThreadLocalRandom.current().nextInt(256);  // handles RNG factor
 
         switch (attackingPokemon.getNonVolatileStatus())   {
-            case SLEEP:
-                // roll sleep awakening chance, increment sleep counter, check for sleep talk call, skip turn otherwise
-                break;
+            // case SLEEP: // roll sleep awakening chance, increment sleep counter, check for sleep talk call, skip turn otherwise
             case REST:
                 if (attackingPokemon.getSleepCounter() < 2) {
                     Messages.cantAttack(attackingPokemon, REST);
                     attackingPokemon.incrementSleepCounter();
                     return false;
+                } else {
+                    Messages.statusChanged(attackingPokemon, SLEEP);
+                    return true;
                 }
-                break;
-            case FREEZE:
-                // roll thaw chance, skip turn (always)
-                break;
+            // case FREEZE: // roll thaw chance, skip turn (always)
             case PARALYSIS:
                 if (roll < 64) {
                     Messages.cantAttack(attackingPokemon, PARALYSIS);
@@ -99,7 +97,6 @@ public final class GSCGame extends Game {
             default:
                 return true;
         }
-        return true;
     }
 
     private void checkStatus(GSCPokemon attackingPokemon) {
