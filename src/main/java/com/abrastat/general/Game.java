@@ -7,14 +7,24 @@ public abstract class Game {
 
     public Game() {
 
+        this.getPlayerOne();
+        this.getPlayerTwo();
+
     }
 
-    public Player getPlayerOne()    {
+    protected Player getPlayerOne()    {
         return this.playerOne;
     }
 
-    public Player getPlayerTwo()    {
+    protected Player getPlayerTwo()    {
         return this.playerTwo;
     }
+
+    protected boolean checkPokemonAreNotFainted() {
+        return playerOne.getCurrentPokemon().getCurrentHP() > 0
+               &&
+               playerTwo.getCurrentPokemon().getCurrentHP() > 0;
+    }
+
 }
 

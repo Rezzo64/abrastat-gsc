@@ -9,7 +9,7 @@ public final class Messages {
     private static String messageBuffer;
 
     private static void handleMessage() { // handle logging from here and whether it's enabled or not
-
+        System.out.println(messageBuffer);
     }
 
     public static void statusFailed(Pokemon pokemon, @NotNull Status status) {
@@ -109,6 +109,32 @@ public final class Messages {
                 break;
             default:
                 messageBuffer = (pokemon + " is affected by " + status + "!");
+        }
+
+        handleMessage();
+    }
+
+    public static void leftoversHeal(Pokemon pokemon)   {
+        messageBuffer = (pokemon + " restored health using its Leftovers!");
+        handleMessage();
+    }
+
+    public static void logAttack(Pokemon pokemon, Move move)    {
+        messageBuffer = (pokemon + " used " + move + "!");
+    }
+
+    public static void logTypeEffectiveness(int typeEffectiveness)  {
+        if (typeEffectiveness == 0) {
+            messageBuffer = "It didn't affect the opponent!";
+        }
+        else if (typeEffectiveness < 10)    {
+            messageBuffer = "It's not very effective...";
+        }
+        else if (typeEffectiveness > 10)    {
+            messageBuffer = "It's super effective!";
+        }
+        else    {
+            return;
         }
 
         handleMessage();

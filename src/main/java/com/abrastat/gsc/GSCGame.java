@@ -20,6 +20,8 @@ public final class GSCGame extends Game {
         super();
         this.pokemonPlayerOne = (GSCPokemon) getPlayerOne().getCurrentPokemon();
         this.pokemonPlayerTwo = (GSCPokemon) getPlayerTwo().getCurrentPokemon();
+
+
     }
 
     public void initTurn(GSCMove movePlayerOne, GSCMove movePlayerTwo)   {
@@ -40,6 +42,11 @@ public final class GSCGame extends Game {
 
         // IF battle effects like Perish Song, Light Screen, Safeguard
 
+        applyLeftovers(playerOneIsFaster());
+
+        // thaw chance
+
+
     }
 
     private void takeTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
@@ -48,6 +55,7 @@ public final class GSCGame extends Game {
 
         checkStatusMoveEffects(attackingPokemon);
         if (canAttack(attackingPokemon)) {
+            Messages.logAttack(attackingPokemon, move);
             calcDamage(attackingPokemon, defendingPokemon, move);
         }
         checkStatusAfterEffects(attackingPokemon);
@@ -117,20 +125,26 @@ public final class GSCGame extends Game {
         for (Status status : attackingPokemon.getVolatileStatus()) {
             switch (status) {
                 case ATTRACT:
+                    roll = ThreadLocalRandom.current().nextInt(256);
                     // roll move fail chance
                     break;
                 case CONFUSION:
                 case FATIGUE:
+                    roll = ThreadLocalRandom.current().nextInt(256);
                     // increment counter, roll hurt self chance, check for end chance
                     break;
                 case ENCORE:
+                    roll = ThreadLocalRandom.current().nextInt(256);
                     // increment counter, override attack to instead be previously used attack, check for end chance
                     break;
                 case LOCKON:
+                    roll = ThreadLocalRandom.current().nextInt(256);
                     // remove accuracy checks (for this turn only), remove LOCKON status
                     break;
                 case DISABLE:
+                    roll = ThreadLocalRandom.current().nextInt(256);
                     // increment counter, block some attack from being selected, check for end chance
+                    break;
             }
         }
     }
@@ -167,6 +181,41 @@ public final class GSCGame extends Game {
                     // decrement safeguard counter
                     break;
             }
+        }
+    }
+
+    private void applyLeftovers(boolean playerOneIsFaster) {
+
+        // this is the cleanest way I can think of implementing this while respecting
+        // the game mechanics.
+
+        // flat integer division replicates in-game behaviour.
+
+        if (pokemonPlayerOne.getHeldItem() == Item.LEFTOVERS && pokemonPlayerTwo.getHeldItem() == Item.LEFTOVERS)   {
+            if (playerOneIsFaster == true)  {
+                pokemonPlayerOne.applyHeal(pokemonPlayerOne.getStatHP() / 16);
+                Messages.leftoversHeal(pokemonPlayerOne);
+                pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.getStatHP() / 16);
+                Messages.leftoversHeal(pokemonPlayerTwo);
+            } else {
+                pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.getStatHP() / 16);
+                Messages.leftoversHeal(pokemonPlayerTwo);
+                pokemonPlayerOne.applyHeal(pokemonPlayerOne.getStatHP() / 16);
+                Messages.leftoversHeal(pokemonPlayerOne);
+            }
+            return;
+        }
+
+        if (pokemonPlayerOne.getHeldItem() == Item.LEFTOVERS)   {
+            pokemonPlayerOne.applyHeal(pokemonPlayerOne.getStatHP() / 16);
+            Messages.leftoversHeal(pokemonPlayerOne);
+            return;
+        }
+
+        if (pokemonPlayerTwo.getHeldItem() == Item.LEFTOVERS)   {
+            pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.getStatHP() / 16);
+            Messages.leftoversHeal(pokemonPlayerTwo);
+            return;
         }
     }
 }

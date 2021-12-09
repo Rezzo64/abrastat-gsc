@@ -1,6 +1,7 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.Item;
+import com.abrastat.general.Messages;
 import com.abrastat.general.Type;
 import org.jetbrains.annotations.NotNull;
 
@@ -96,6 +97,15 @@ public enum GSCDamageCalc {
                     * critModifier() * calcItemBoost(doesItemBoostDamage) + 2)
             * typeEffectiveness * damageRoll())
         ;
+
+        if (typeEffectiveness != 1) {
+
+            // nve will be 0 < typeEffectiveness < 1, so multiply to get around this
+            // dirty fix and not optimised, come back and change if performance needs it
+
+            typeEffectiveness *= 10;
+            Messages.logTypeEffectiveness((int) typeEffectiveness);
+        }
 
         defendingPokemon.applyDamage(damage);
 

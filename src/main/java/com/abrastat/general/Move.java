@@ -5,6 +5,7 @@ import javax.json.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,9 @@ public abstract class Move {
     private String secondaryEffect;
     private int secondaryChance;
 
+    // inherits the movelist json file from the correct gen
+    public abstract String getMoveList();
+
     public boolean isAttack, hasSecondary = false, opponentIsTarget = true;
 
     //set this as default and override as necessary
@@ -32,7 +36,7 @@ public abstract class Move {
 
     protected Move(String moveName)   {
 
-        String moveList = "./src/main/resources/movesgsc.json";
+        String moveList = getMoveList();
         JsonObject jsonObject = null;
 
         try {
@@ -40,7 +44,7 @@ public abstract class Move {
             jsonObject = reader.readObject();
 
         } catch (FileNotFoundException e) {
-            LOGGER.error("Error reading movesgsc file at: {}", moveList);
+            LOGGER.error("Error reading file at: {}", moveList);
             e.printStackTrace();
         }
 
@@ -90,7 +94,7 @@ public abstract class Move {
         return moveType;
     }
 
-    private void setMoveType(JsonObject moveType) {
+    private void setMoveType(@NotNull JsonObject moveType) {
         String type = moveType.getJsonString("type")
                 .toString()
                 .replace("\"", "")
@@ -102,7 +106,7 @@ public abstract class Move {
         return basePower;
     }
 
-    private void setBasePower(JsonObject basePower) {
+    private void setBasePower(@NotNull JsonObject basePower) {
         this.basePower = basePower.getInt("basepower");
     }
 
@@ -110,7 +114,7 @@ public abstract class Move {
         return accuracy;
     }
 
-    private void setAccuracy(JsonObject jsonMove) {
+    private void setAccuracy(@NotNull JsonObject jsonMove) {
         this.accuracy = jsonMove.getInt("accuracy");
     }
 
@@ -118,7 +122,7 @@ public abstract class Move {
         return pp;
     }
 
-    private void setPP(JsonObject jsonMove) {
+    private void setPP(@NotNull JsonObject jsonMove) {
         this.pp = jsonMove.getInt("pp");
     }
 
@@ -126,7 +130,7 @@ public abstract class Move {
         return secondaryEffect;
     }
 
-    private void setSecondaryEffect(JsonObject secondaryEffect) {
+    private void setSecondaryEffect(@NotNull JsonObject secondaryEffect) {
         this.secondaryEffect = secondaryEffect.getString("secondary");
     }
 
@@ -134,7 +138,7 @@ public abstract class Move {
         return secondaryChance;
     }
 
-    private void setSecondaryChance(JsonObject secondaryChance) {
+    private void setSecondaryChance(@NotNull JsonObject secondaryChance) {
         this.secondaryChance = secondaryChance.getInt("chance");
     }
 }
