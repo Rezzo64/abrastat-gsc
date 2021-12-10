@@ -1,6 +1,7 @@
 package com.abrastat.general;
 
 import com.abrastat.gsc.GSCPokemon;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,7 @@ import java.util.HashSet;
 public abstract class Pokemon extends Species {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GSCPokemon.class);
+    private int lastDamageTaken;
 
     private String nickname;
     private Gender gender;
@@ -234,6 +236,15 @@ public abstract class Pokemon extends Species {
         return this.nonVolatileStatus;
     }
 
+    public void applySecondaryEffect(@NotNull MoveSecondaryEffect effect)    {
+        // TODO write cases for every effect
+        switch (effect) {
+            case PARALYSIS:
+                applyNonVolatileStatus(Status.PARALYSIS);
+            case RECOILQUARTER:
+
+        }
+    }
     // only one non-volatile status can be applied at a time.
     public void applyNonVolatileStatus(Status status)   {
         if (this.nonVolatileStatus == null) {
@@ -271,5 +282,13 @@ public abstract class Pokemon extends Species {
 
     public void clearVolatileStatus()   {
         this.volatileStatus.clear();
+    }
+
+    public int getLastDamageTaken()    {
+        return this.lastDamageTaken;
+    }
+
+    public void setLastDamageTaken(int damage)   {
+        this.lastDamageTaken = damage;
     }
 }

@@ -3,7 +3,16 @@ package com.abrastat.general;
 
 public class Player {
 
+    private String playerName;
     private Pokemon[] pokemonTeam = new Pokemon[6];
+
+    public void setName(String name)    {
+        this.playerName = name;
+    }
+
+    public String getName()   {
+        return playerName;
+    }
 
     // [0] is always lead
     // [0] will always store the currently battling Pokemon
@@ -18,6 +27,10 @@ public class Player {
     //TODO eventually...
     public void swapCurrentPokemon()    {
 
+    }
+
+    public Pokemon[] getCurrentTeam() {
+        return this.pokemonTeam;
     }
 
 //    public void addPokemon(Pokemon pokemon, int partyPosition)  {

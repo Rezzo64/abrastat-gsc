@@ -1,6 +1,7 @@
 package com.abrastat.general;
 
 import java.io.*;
+import java.util.HashMap;
 import javax.json.*;
 
 import com.abrastat.gsc.GSCMove;
@@ -20,7 +21,7 @@ public abstract class Move {
     private int basePower;
     private int accuracy;
     private int pp;
-    private String secondaryEffect;
+    private MoveSecondaryEffect secondaryEffect;
     private int secondaryChance;
 
     // inherits the movelist json file from the correct gen
@@ -127,12 +128,20 @@ public abstract class Move {
         this.pp = jsonMove.getInt("pp");
     }
 
-    public String getSecondaryEffect() {
+    public MoveSecondaryEffect getSecondaryEffect() {
         return secondaryEffect;
     }
 
     private void setSecondaryEffect(@NotNull JsonObject secondaryEffect) {
-        this.secondaryEffect = secondaryEffect.getString("secondary");
+        String secondaryEffectCaps = secondaryEffect.getString("secondary").toUpperCase();
+
+        try {
+            this.secondaryEffect = MoveSecondaryEffect.valueOf(secondaryEffectCaps);
+        } catch (IllegalArgumentException e)   {
+            System.out.println("Secondary effect '" + secondaryEffectCaps + "' wasn't found. " +
+                    "no secondary effect will be applied. ");
+            this.secondaryEffect = MoveSecondaryEffect.NONE;
+        }
     }
 
     public int getSecondaryChance() {

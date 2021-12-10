@@ -5,7 +5,7 @@
 		"basepower": 	85,
 		"pp": 			24,
 		"accuracy": 	255,
-		"secondary":	"prz",
+		"secondary":	"paralysis",
 		"chance": 		76
 	},
 	
@@ -32,7 +32,7 @@
 		"basepower":	120,
 		"pp": 			24,
 		"accuracy":		255,
-		"secondary":	"recoil",
+		"secondary":	"recoilquarter",
 		"chance":		256
 	},
 	
@@ -56,7 +56,7 @@
 		"basepower": 	50,
 		"pp": 			500,
 		"accuracy": 	255,
-		"secondary": 	"recoil",
+		"secondary": 	"struggle",
 		"chance": 		256
 	},
 
@@ -66,7 +66,7 @@
 		"basepower":	120,
 		"pp": 			16,
 		"accuracy":		178,
-		"secondary":	"prz",
+		"secondary":	"paralysis",
 		"chance":		76
 	}
 }

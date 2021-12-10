@@ -214,9 +214,12 @@ public class GSCPokemon extends Pokemon {
 
     public void applyDamage(int damage) {
         if (damage >= this.currentHP)   {
+            this.setLastDamageTaken(this.currentHP);
             this.currentHP = 0;
+
         }
         else    {
+            this.setLastDamageTaken(damage);
             this.currentHP -= damage;
         }
     }

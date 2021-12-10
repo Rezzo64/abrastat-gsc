@@ -1,5 +1,7 @@
 package com.abrastat.general;
 
+import com.abrastat.gsc.GSCMove;
+import com.abrastat.gsc.GSCPokemon;
 import org.jetbrains.annotations.NotNull;
 
 import static com.abrastat.general.Status.*;
@@ -14,31 +16,51 @@ public enum Messages {
         System.out.println(messageBuffer);
     }
 
+    // For debugging purposes only, records any effects which aren't yet handled.
+    public static void notImplementedYet(Object o)  {
+        messageBuffer = ("DEBUG: " + o + " not implemented yet. No effect logged.");
+        handleMessage();
+    }
+
+    public static void announceTeam(@NotNull Player player) {
+        StringBuilder s = new StringBuilder((player.getName() + ": " + System.lineSeparator()));
+        for (Pokemon pokemon : player.getCurrentTeam()) {
+            try {
+                s.append(pokemon.getSpecies() + " ");
+            } catch (NullPointerException e)    {
+                s.append("(-) ");
+            }
+        }
+        s.append(System.lineSeparator());
+        messageBuffer = s.toString();
+        handleMessage();
+    }
+
     public static void statusFailed(Pokemon pokemon, @NotNull Status status) {
         switch (status) {
             case BURN:
-                messageBuffer = (pokemon + " is already burned!");
+                messageBuffer = (pokemon.getSpecies() + " is already burned!");
                 break;
             case FREEZE:
-                messageBuffer = (pokemon + " is already frozen!");
+                messageBuffer = (pokemon.getSpecies() + " is already frozen!");
                 break;
             case PARALYSIS:
-                messageBuffer = (pokemon + " is already paralysed!");
+                messageBuffer = (pokemon.getSpecies() + " is already paralysed!");
                 break;
             case POISON:
             case TOXIC:
-                messageBuffer = (pokemon + " is already poisoned!");
+                messageBuffer = (pokemon.getSpecies() + " is already poisoned!");
                 break;
             case SLEEP:
             case REST:
-                messageBuffer = (pokemon + " is already asleep!");
+                messageBuffer = (pokemon.getSpecies() + " is already asleep!");
                 break;
             case CONFUSION:
             case FATIGUE:
-                messageBuffer = (pokemon + " is already confused!");
+                messageBuffer = (pokemon.getSpecies() + " is already confused!");
                 break;
             case ATTRACT:
-                messageBuffer = (pokemon + " is already in love!");
+                messageBuffer = (pokemon.getSpecies() + " is already in love!");
                 break;
             default:
                 messageBuffer = "But it failed!";
@@ -50,24 +72,24 @@ public enum Messages {
     public static void cantAttack(Pokemon pokemon, @NotNull Status status)   {
         switch (status) {
             case PARALYSIS:
-                messageBuffer = (pokemon + " is fully paralysed!");
+                messageBuffer = (pokemon.getSpecies() + " is fully paralysed!");
                 break;
             case REST:
             case SLEEP:
-                messageBuffer = (pokemon + " is fast asleep!");
+                messageBuffer = (pokemon.getSpecies() + " is fast asleep!");
                 break;
             case FREEZE:
-                messageBuffer = (pokemon + " is frozen solid!");
+                messageBuffer = (pokemon.getSpecies() + " is frozen solid!");
                 break;
             case CONFUSION:
             case FATIGUE:
-                messageBuffer = (pokemon + " hurt itself in confusion!");
+                messageBuffer = (pokemon.getSpecies() + " hurt itself in confusion!");
                 break;
             case ATTRACT:
-                messageBuffer = (pokemon + " is immobilised by love!");
+                messageBuffer = (pokemon.getSpecies() + " is immobilised by love!");
                 break;
             default:
-                messageBuffer = (pokemon + " can't attack because of its " + status + "!");
+                messageBuffer = (pokemon.getSpecies() + " can't attack because of its " + status + "!");
         }
 
         handleMessage();
@@ -77,17 +99,17 @@ public enum Messages {
         switch (status) {
             case REST:
             case SLEEP:
-                messageBuffer = (pokemon + " woke up!");
+                messageBuffer = (pokemon.getSpecies() + " woke up!");
                 break;
             case FREEZE:
-                messageBuffer = (pokemon + " thawed!");
+                messageBuffer = (pokemon.getSpecies() + " thawed!");
                 break;
             case CONFUSION:
             case FATIGUE:
-                messageBuffer = (pokemon + " snapped out of its confusion!");
+                messageBuffer = (pokemon.getSpecies() + " snapped out of its confusion!");
                 break;
             default:
-                messageBuffer = (pokemon + "is no longer affected by " + status + "!");
+                messageBuffer = (pokemon.getSpecies() + "is no longer affected by " + status + "!");
         }
 
         handleMessage();
@@ -96,28 +118,28 @@ public enum Messages {
     public static void logEffect(Pokemon pokemon, @NotNull Status status)    {
         switch (status) {
             case BURN:
-                messageBuffer = (pokemon + " is hurt by its burn!");
+                messageBuffer = (pokemon.getSpecies() + " is hurt by its burn!");
                 break;
             case POISON:
             case TOXIC:
-                messageBuffer = (pokemon + " is hurt by poison!");
+                messageBuffer = (pokemon.getSpecies() + " is hurt by poison!");
                 break;
             case CONFUSION:
             case FATIGUE:
-                messageBuffer = (pokemon + " is confused!");
+                messageBuffer = (pokemon.getSpecies() + " is confused!");
                 break;
             case ATTRACT:
-                messageBuffer = (pokemon + " is in love with its opponent!");
+                messageBuffer = (pokemon.getSpecies() + " is in love with its opponent!");
                 break;
             default:
-                messageBuffer = (pokemon + " is affected by " + status + "!");
+                messageBuffer = (pokemon.getSpecies() + " is affected by " + status + "!");
         }
 
         handleMessage();
     }
 
-    public static void leftoversHeal(Pokemon pokemon)   {
-        messageBuffer = (pokemon + " restored health using its Leftovers!");
+    public static void leftoversHeal(@NotNull Pokemon pokemon)   {
+        messageBuffer = (pokemon.getSpecies() + " restored health using its Leftovers!");
         handleMessage();
     }
 
@@ -126,8 +148,9 @@ public enum Messages {
         handleMessage();
     }
 
-    public static void logAttack(Pokemon pokemon, Move move)    {
-        messageBuffer = (pokemon + " used " + move + "!");
+    public static void logAttack(@NotNull Pokemon pokemon, @NotNull Move move)    {
+        messageBuffer = (pokemon.getSpecies() + " used " + move.getMove() + "!");
+        handleMessage();
     }
 
     public static void logTypeEffectiveness(int typeEffectiveness)  {
@@ -146,4 +169,57 @@ public enum Messages {
 
         handleMessage();
     }
+
+    public static void logFainted(@NotNull Pokemon pokemon) {
+        messageBuffer = (pokemon.getSpecies() + " fainted!");
+        handleMessage();
+    }
+
+    public static void logDamageTaken(@NotNull Pokemon pokemon, int damage)  {
+        messageBuffer = (pokemon.getSpecies() + " took " + damage + " hit points of damage.");
+        handleMessage();
+    }
+
+    public static void logMissedAttack(@NotNull Pokemon pokemon) {
+        messageBuffer = (pokemon.getSpecies()) + "'s attack missed!";
+        handleMessage();
+    }
+
+    public static void logNewStatus(Pokemon pokemon, @NotNull Status status) {
+        switch (status) {
+            case PARALYSIS:
+                messageBuffer = (pokemon.getSpecies() + " is paralysed! It may be unable to move!");
+                break;
+            case SLEEP:
+            case REST:
+                messageBuffer = (pokemon.getSpecies() + " has fallen asleep!");
+                break;
+            case FREEZE:
+                messageBuffer = (pokemon.getSpecies() + " was frozen!");
+            case BURN:
+                messageBuffer = (pokemon.getSpecies() + " was burned by the attack!");
+            case FATIGUE:
+            case CONFUSION:
+                messageBuffer = (pokemon.getSpecies() + " became confused!");
+            case POISON:
+                messageBuffer = (pokemon.getSpecies() + " is poisoned!");
+            case TOXIC:
+                messageBuffer = (pokemon.getSpecies() + " is badly poisoned!");
+            default:
+                messageBuffer = (pokemon.getSpecies() + " is afflicted by " + status + "!");
+        }
+        handleMessage();
+    }
+
+    public static void announceTurn(int turnNumber) {
+        messageBuffer = System.lineSeparator() + ("Turn " + turnNumber) + System.lineSeparator();
+        handleMessage();
+    }
+
+    public static void gameOver() {
+        messageBuffer = "Game over!";
+        handleMessage();
+    }
+
+
 }

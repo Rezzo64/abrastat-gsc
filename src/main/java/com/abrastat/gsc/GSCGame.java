@@ -4,6 +4,7 @@ import com.abrastat.general.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
+import com.abrastat.general.MoveSecondaryEffect;
 import static com.abrastat.gsc.GSCDamageCalc.*;
 import static com.abrastat.general.Status.*;
 
@@ -16,17 +17,26 @@ public final class GSCGame implements Game {
     private int p1ReflectCounter = 0, p2ReflectCounter = 0;
     private int p1LightScreenCounter = 0, p2LightScreenCounter = 0;
     private int p1SafeguardCounter = 0, p2SafeguardCounter = 0;
+    private int lastDamageValue;
+    private GSCMove lastMoveUsed;
 
     public GSCGame() {
 
+        this.player1.setName("Youngster Joey");
+        this.player2.setName("Bug Catcher Don");
+
         this.pokemonPlayerOne = (GSCPokemon) player1.getCurrentPokemon();
         this.pokemonPlayerTwo = (GSCPokemon) player2.getCurrentPokemon();
+
+        Messages.announceTeam(player1);
+        Messages.announceTeam(player2);
     }
 
 
 
     public void initTurn(GSCMove movePlayerOne, GSCMove movePlayerTwo)   {
         turnNumber++;
+        Messages.announceTurn(turnNumber);
 
         // IF switch selected
             // IF pursuit also selected
@@ -47,19 +57,38 @@ public final class GSCGame implements Game {
 
         // thaw chance
 
-
+        this.lastDamageValue = 0;
     }
 
     private void takeTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
-        if (someoneFainted())
-        { return; } // end turn when either member faints
+
+        // both Pokemon can faint at the same time in the instance of moves like Explosion
+        if (someoneFainted()) {
+            return; // end turn when either member faints
+        }
 
         checkStatusMoveEffects(attackingPokemon);
+        
         if (canAttack(attackingPokemon)) {
+
             Messages.logAttack(attackingPokemon, move);
-            calcDamage(attackingPokemon, defendingPokemon, move);
+
+            if (didAttackMiss(move.getAccuracy())) {
+
+                Messages.logMissedAttack(attackingPokemon);
+
+            } else {
+                calcDamage(attackingPokemon, defendingPokemon, move);
+
+                // for stuff like Counter as well as debugging
+                rollSecondaryEffects(attackingPokemon, defendingPokemon, move);
+                this.lastDamageValue = defendingPokemon.getLastDamageTaken();
+                this.lastMoveUsed = move;
+            }
         }
+
         checkStatusAfterEffects(attackingPokemon);
+        this.setLastMoveUsed(move);
 
     }
 
@@ -76,7 +105,13 @@ public final class GSCGame implements Game {
         );
     }
 
-    private boolean someoneFainted() {
+    public boolean someoneFainted() {
+        if (pokemonPlayerOne.getCurrentHP() == 0)  {
+            Messages.logFainted(pokemonPlayerOne);
+        }
+        if (pokemonPlayerTwo.getCurrentHP() == 0)  {
+            Messages.logFainted(pokemonPlayerTwo);
+        }
         return this.pokemonPlayerOne.getCurrentHP() == 0 || this.pokemonPlayerTwo.getCurrentHP() == 0;
     }
 
@@ -193,6 +228,38 @@ public final class GSCGame implements Game {
 //        }
     }
 
+    private boolean didAttackMiss(int accuracy) {
+        int roll = ThreadLocalRandom.current().nextInt(256);
+        return (accuracy < roll);
+    }
+
+    private void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Move move) {
+        MoveSecondaryEffect effect = move.getSecondaryEffect();
+
+        if (effect.getTarget() == MoveSecondaryEffect.Target.NONE)   {
+            return;
+        }
+
+        int roll = ThreadLocalRandom.current().nextInt(256);
+
+        if (roll < move.getSecondaryChance()) {
+
+            switch (effect) {
+                case PARALYSIS:
+                    if (opponent.getNonVolatileStatus() == PARALYSIS)
+                    { break; }
+
+                    opponent.applyNonVolatileStatus(PARALYSIS);
+                    Messages.logNewStatus(opponent, PARALYSIS);
+                    break;
+
+                // TODO other effects
+                default:
+                    Messages.notImplementedYet(effect);
+            }
+        }
+    }
+
     private void applyLeftovers(boolean playerOneIsFaster) {
 
         // this is the cleanest way I can think of implementing this while respecting
@@ -228,12 +295,19 @@ public final class GSCGame implements Game {
         }
     }
 
-    @Override
-    public boolean checkPokemonAreNotFainted() {
-        {
-            return player1.getCurrentPokemon().getCurrentHP() > 0
-                   &&
-                   player2.getCurrentPokemon().getCurrentHP() > 0;
-        }
+    public void setLastMoveUsed(GSCMove move)  {
+        this.lastMoveUsed = move;
+    }
+
+    public GSCMove getLastMoveUsed(GSCMove move)   {
+        return this.lastMoveUsed;
+    }
+
+    public void setLastDamageValue(int damageValue) {
+        this.lastDamageValue = damageValue;
+    }
+
+    public int getLastDamageValue() {
+        return this.lastDamageValue;
     }
 }

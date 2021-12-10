@@ -105,10 +105,13 @@ public enum GSCDamageCalc {
                     defendingPokemon.getTypes()[1]);
 
         int damage = (int)
-            ((Math.floor(Math.floor(((Math.floor((level * 2) / 5) + 2) * basePower * attackStat) / defenseStat) / 50) * critModifier() * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness * damageRoll());
+            ((Math.floor(Math.floor(((Math.floor((level * 2) / 5) + 2) * basePower * attackStat) / defenseStat) / 50) * critModifier() * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness);
+
+        damage *= damageRoll();
+        damage = (int) Math.floor(damage / 255);
 
         if (sameTypeAttackBonus(attackingPokemon, attack))  {
-            damage *= Math.floor(damage * 1.5);
+            damage = (int) Math.floor(damage * 1.5);
         }
 
         if (typeEffectiveness != 1) {
@@ -121,7 +124,7 @@ public enum GSCDamageCalc {
         }
 
         defendingPokemon.applyDamage(damage);
-
+        Messages.logDamageTaken(defendingPokemon, damage);
     }
 
 }
