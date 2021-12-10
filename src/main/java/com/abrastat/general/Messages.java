@@ -121,6 +121,11 @@ public enum Messages {
         handleMessage();
     }
 
+    public static void logCriticalHit() {
+        messageBuffer = "A critical hit!";
+        handleMessage();
+    }
+
     public static void logAttack(Pokemon pokemon, Move move)    {
         messageBuffer = (pokemon + " used " + move + "!");
     }

@@ -1,12 +1,11 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.Item;
-import com.abrastat.general.Messages;
-import com.abrastat.general.Type;
+import com.abrastat.general.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
 import static com.abrastat.gsc.GSCTypeEffectiveness.CalcEffectiveness;
 import static com.abrastat.general.Item.*;
 import static com.abrastat.general.Type.*;
@@ -37,6 +36,16 @@ public enum GSCDamageCalc {
             entry(METAL_COAT, STEEL)
     );
 
+    private static boolean sameTypeAttackBonus(@NotNull Pokemon pokemon, @NotNull Move move) {
+
+        Type moveType = move.getMoveType();
+        if (pokemon.getTypes()[0] == moveType || pokemon.getTypes()[1] == moveType) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private static double calcItemBoost(boolean itemBoostsDamage)    {
         if (itemBoostsDamage) {
             return 1.1;
@@ -48,6 +57,7 @@ public enum GSCDamageCalc {
 
     private static int critModifier() {
         if (critRoll() < 16) {
+            Messages.logCriticalHit();
             return 2;
         } else {
             return 1;
@@ -58,16 +68,24 @@ public enum GSCDamageCalc {
         return ThreadLocalRandom.current().nextInt(256);
     }
     private static int damageRoll()    {
-        return ThreadLocalRandom.current().nextInt(217, 256);
+        return (ThreadLocalRandom.current().nextInt(217, 256));
     }
 
     public static void calcDamage(
-            @NotNull GSCPokemon defendingPokemon, @NotNull GSCPokemon attackingPokemon, @NotNull GSCMove attack) {
+            @NotNull GSCPokemon attackingPokemon, @NotNull GSCPokemon defendingPokemon, @NotNull GSCMove attack) {
 
         int level = attackingPokemon.getLevel();
         int basePower = attack.getBasePower();
-        int attackStat = attackingPokemon.getStatAtk();
-        int defenseStat = defendingPokemon.getStatDef();
+        int attackStat, defenseStat;
+
+        if (Move.isPhysicalAttack(attack))   {
+            attackStat = attackingPokemon.getStatAtk();
+            defenseStat = defendingPokemon.getStatDef();
+        } else {
+            attackStat = attackingPokemon.getStatSpA();
+            defenseStat = defendingPokemon.getStatSpD();
+        }
+
         Item heldItem = attackingPokemon.getHeldItem();
 
         boolean doesItemBoostDamage;
@@ -87,21 +105,11 @@ public enum GSCDamageCalc {
                     defendingPokemon.getTypes()[1]);
 
         int damage = (int)
-            ((Math.floor
-                    (Math.floor
-                            (
-                                    (
-                                            (
-                                                    Math.floor(
-                                                            (level * 2)
-                                                                    / 5)
-                                                            + 2)
-                                                    * basePower * attackStat)
-                                            / defenseStat)
-                            / 50)
-                    * critModifier() * calcItemBoost(doesItemBoostDamage) + 2)
-            * typeEffectiveness * damageRoll())
-        ;
+            ((Math.floor(Math.floor(((Math.floor((level * 2) / 5) + 2) * basePower * attackStat) / defenseStat) / 50) * critModifier() * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness * damageRoll());
+
+        if (sameTypeAttackBonus(attackingPokemon, attack))  {
+            damage *= Math.floor(damage * 1.5);
+        }
 
         if (typeEffectiveness != 1) {
 

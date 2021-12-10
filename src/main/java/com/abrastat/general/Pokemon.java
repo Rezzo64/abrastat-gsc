@@ -221,7 +221,7 @@ public abstract class Pokemon extends Species {
         this.addMoves(move1, move2, null);
     }
 
-    private void addMoves(Move move) {
+    public void addMoves(Move move) {
         this.addMoves(move, null);
     }
 

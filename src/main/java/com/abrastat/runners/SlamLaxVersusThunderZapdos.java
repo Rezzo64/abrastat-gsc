@@ -15,12 +15,16 @@ public class SlamLaxVersusThunderZapdos {
     public static void main(String[] args) {
 
         player1.addPokemon(new GSCPokemon("snorlax"));
+        player1.getCurrentPokemon().addMoves(new GSCMove("bodySlam"));
         player2.addPokemon(new GSCPokemon("zapdos"));
-
+        player2.getCurrentPokemon().addMoves(new GSCMove("thunder"));
         Game game = new GSCGame();
 
         while (game.checkPokemonAreNotFainted())    {
-            ((GSCGame) game).initTurn(new GSCMove("thunder"), new GSCMove("bodySlam"));
+            ((GSCGame) game).initTurn(
+            (GSCMove) player1.getCurrentPokemon().getMoves()[0],
+            (GSCMove) player2.getCurrentPokemon().getMoves()[0]
+            );
         }
     }
 }
