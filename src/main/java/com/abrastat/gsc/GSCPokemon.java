@@ -2,7 +2,9 @@ package com.abrastat.gsc;
 
 import com.abrastat.general.Item;
 import com.abrastat.general.Pokemon;
+import com.abrastat.general.Status;
 import com.abrastat.general.Type;
+import org.jetbrains.annotations.NotNull;
 
 public class GSCPokemon extends Pokemon {
 
@@ -310,4 +312,26 @@ public class GSCPokemon extends Pokemon {
         this.perishCounter = 0;
     }
 
+    @Override
+    public void applyVolatileStatusDebuff(@NotNull Status status) {
+        switch (status) {
+            case PARALYSIS:
+                this.statSpe = (statSpe / 4);
+                break;
+            case BURN:
+                this.statAtk = (statAtk / 2);
+                break;
+        }
+    }
+
+    public void removeVolatileStatusDebuff()    {
+        switch (this.getNonVolatileStatus()) {
+            case PARALYSIS:
+                this.statSpe = initOtherStatsFormula(this.getBaseSpeed(), this.getIvSpe(), this.getEvSpe(), this.getLevel());
+                break;
+            case BURN:
+                this.statAtk = initOtherStatsFormula(this.getBaseAttack(), this.getIvAtk(), this.getEvAtk(), this.getLevel());
+                break;
+        }
+    }
 }

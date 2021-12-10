@@ -36,6 +36,11 @@ public enum Messages {
         handleMessage();
     }
 
+    public static void announceSwitch(@NotNull Player player, @NotNull Pokemon pokemon) {
+        messageBuffer = (player.getName() + " sent out " + pokemon.getSpecies() + "!");
+        handleMessage();
+    }
+
     public static void statusFailed(Pokemon pokemon, @NotNull Status status) {
         switch (status) {
             case BURN:
@@ -220,6 +225,5 @@ public enum Messages {
         messageBuffer = "Game over!";
         handleMessage();
     }
-
 
 }

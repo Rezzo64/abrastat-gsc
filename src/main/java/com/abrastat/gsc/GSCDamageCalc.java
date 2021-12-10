@@ -124,6 +124,7 @@ public enum GSCDamageCalc {
         }
 
         defendingPokemon.applyDamage(damage);
+        defendingPokemon.setLastDamageTaken(damage);
         Messages.logDamageTaken(defendingPokemon, damage);
     }
 

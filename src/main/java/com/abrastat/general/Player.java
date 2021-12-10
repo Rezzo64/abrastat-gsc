@@ -1,6 +1,8 @@
 package com.abrastat.general;
 
 
+import com.abrastat.gsc.GSCMove;
+
 public class Player {
 
     private String playerName;
@@ -33,6 +35,10 @@ public class Player {
         return this.pokemonTeam;
     }
 
+    // eventually going to handle the logic sequence of selecting a preferred move.
+    public Move chooseAttack() {
+        return this.pokemonTeam[0].getMoves()[0];
+    }
 //    public void addPokemon(Pokemon pokemon, int partyPosition)  {
 //        this.pokemonTeam[partyPosition] = pokemon;
 //    }

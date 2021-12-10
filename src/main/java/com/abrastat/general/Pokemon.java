@@ -1,5 +1,6 @@
 package com.abrastat.general;
 
+import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -241,21 +242,27 @@ public abstract class Pokemon extends Species {
         switch (effect) {
             case PARALYSIS:
                 applyNonVolatileStatus(Status.PARALYSIS);
+                break;
             case RECOILQUARTER:
-
+                this.applyDamage(lastDamageTaken / 4);
+                break;
         }
     }
     // only one non-volatile status can be applied at a time.
     public void applyNonVolatileStatus(Status status)   {
         if (this.nonVolatileStatus == null) {
             this.nonVolatileStatus = status;
+            applyVolatileStatusDebuff(status);
         } else {
             Messages.statusFailed(this, this.nonVolatileStatus);
         }
     }
 
     public void removeNonVolatileStatus()  {
-        this.nonVolatileStatus = null;
+
+        this.removeVolatileStatusDebuff();
+        this.nonVolatileStatus = Status.HEALTHY;
+
     }
 
     public Status[] getVolatileStatus()   {
@@ -291,4 +298,7 @@ public abstract class Pokemon extends Species {
     public void setLastDamageTaken(int damage)   {
         this.lastDamageTaken = damage;
     }
+
+    public abstract void applyVolatileStatusDebuff(Status status);
+    public abstract void removeVolatileStatusDebuff();
 }

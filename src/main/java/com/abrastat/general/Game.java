@@ -1,10 +1,20 @@
 package com.abrastat.general;
 
+import com.abrastat.gsc.GSCMove;
+import com.abrastat.gsc.GSCPokemon;
+import org.jetbrains.annotations.NotNull;
+
 public interface Game {
 
     Player player1 = new Player();
     Player player2 = new Player();
 
-    boolean checkPokemonAreNotFainted();
+    static boolean checkPokemonAreNotFainted(@NotNull GSCPokemon attackingPokemon, GSCPokemon defendingPokemon) {
+        return attackingPokemon.getCurrentHP() == 0 || defendingPokemon.getCurrentHP() == 0;
+    }
+
+    Move getLastMoveUsed();
+    void setLastMoveUsed(GSCMove move);
+
 }
 
