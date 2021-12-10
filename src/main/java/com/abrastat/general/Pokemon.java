@@ -24,7 +24,7 @@ public abstract class Pokemon extends Species {
     private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;        // default min
     private int level = 100;
 
-    private Status nonVolatileStatus = null;
+    private Status nonVolatileStatus = Status.HEALTHY;
     private HashSet<Status> volatileStatus = new HashSet<>();
 
     public abstract Item getHeldItem();
