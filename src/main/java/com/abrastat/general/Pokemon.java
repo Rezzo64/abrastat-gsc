@@ -230,6 +230,7 @@ public abstract class Pokemon extends Species {
     }
 
     public Status getNonVolatileStatus()  {
+
         return this.nonVolatileStatus;
     }
 
@@ -247,12 +248,16 @@ public abstract class Pokemon extends Species {
     }
 
     public Status[] getVolatileStatus()   {
-        return (Status[]) volatileStatus.toArray();
+        if (!(this.volatileStatus.isEmpty()))   {
+            return (Status[]) this.volatileStatus.toArray();
+        } else  {
+            return new Status[]{};
+        }
     }
 
     public void applyVolatileStatus(Status status)  {
-        if (!(volatileStatus.contains(status)))    {
-            volatileStatus.add(status);
+        if (!(this.volatileStatus.contains(status)))    {
+            this.volatileStatus.add(status);
         } else {
             Messages.statusFailed(this, status);
         }

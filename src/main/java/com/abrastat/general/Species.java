@@ -131,7 +131,7 @@ abstract class Species {
                     .toUpperCase();
             this.types[1] = Type.valueOf(type1);
 
-        } catch (ArrayIndexOutOfBoundsException e)  {
+        } catch (Exception e)  {
             System.out.println("no secondary typing for " + getSpecies() + ".");
             this.types[1] = Type.NONE;
         }

@@ -7,9 +7,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import static com.abrastat.gsc.GSCDamageCalc.*;
 import static com.abrastat.general.Status.*;
 
-public final class GSCGame extends Game {
+public final class GSCGame implements Game {
 
     private int turnNumber = 0;
+
     private GSCPokemon pokemonPlayerOne, pokemonPlayerTwo;
 
     private int p1ReflectCounter = 0, p2ReflectCounter = 0;
@@ -17,12 +18,12 @@ public final class GSCGame extends Game {
     private int p1SafeguardCounter = 0, p2SafeguardCounter = 0;
 
     public GSCGame() {
-        super();
-        this.pokemonPlayerOne = (GSCPokemon) getPlayerOne().getCurrentPokemon();
-        this.pokemonPlayerTwo = (GSCPokemon) getPlayerTwo().getCurrentPokemon();
 
-
+        this.pokemonPlayerOne = (GSCPokemon) player1.getCurrentPokemon();
+        this.pokemonPlayerTwo = (GSCPokemon) player2.getCurrentPokemon();
     }
+
+
 
     public void initTurn(GSCMove movePlayerOne, GSCMove movePlayerTwo)   {
         turnNumber++;
@@ -81,6 +82,10 @@ public final class GSCGame extends Game {
 
     private boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
 
+        if (attackingPokemon.getNonVolatileStatus() == null)    {
+            return true;
+        }
+
         int roll = ThreadLocalRandom.current().nextInt(256);  // handles RNG factor
 
         switch (attackingPokemon.getNonVolatileStatus())   {
@@ -117,9 +122,9 @@ public final class GSCGame extends Game {
 
         // some of these effects override others and need to be checked first as such
         // TODO
-        switch (attackingPokemon.getNonVolatileStatus())    {
-
-        }
+//        switch (attackingPokemon.getNonVolatileStatus())    {
+//
+//        }
 
         // TODO
         for (Status status : attackingPokemon.getVolatileStatus()) {
@@ -151,6 +156,10 @@ public final class GSCGame extends Game {
 
     private void checkStatusAfterEffects(@NotNull GSCPokemon attackingPokemon) {
 
+        if (attackingPokemon.getNonVolatileStatus() == null)    {
+            return;
+        }
+
         // TODO
         switch (attackingPokemon.getNonVolatileStatus())    {
             case BURN:
@@ -165,23 +174,23 @@ public final class GSCGame extends Game {
         }
 
         //TODO
-        for (Status status : attackingPokemon.getVolatileStatus()) {
-            switch (status) {
-                case LEECHSEED:
-                    // apply leech seed damage
-                    // apply leech seed healing of the opponent
-                    break;
-                case CURSE:
-                    // apply curse damage
-                    break;
-                case NIGHTMARE:
-                    // apply nightmare damage if asleep
-                    break;
-                case SAFEGUARD:
-                    // decrement safeguard counter
-                    break;
-            }
-        }
+//        for (Status status : attackingPokemon.getVolatileStatus()) {
+//            switch (status) {
+//                case LEECHSEED:
+//                    // apply leech seed damage
+//                    // apply leech seed healing of the opponent
+//                    break;
+//                case CURSE:
+//                    // apply curse damage
+//                    break;
+//                case NIGHTMARE:
+//                    // apply nightmare damage if asleep
+//                    break;
+//                case SAFEGUARD:
+//                    // decrement safeguard counter
+//                    break;
+//            }
+//        }
     }
 
     private void applyLeftovers(boolean playerOneIsFaster) {
@@ -216,6 +225,15 @@ public final class GSCGame extends Game {
             pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.getStatHP() / 16);
             Messages.leftoversHeal(pokemonPlayerTwo);
             return;
+        }
+    }
+
+    @Override
+    public boolean checkPokemonAreNotFainted() {
+        {
+            return player1.getCurrentPokemon().getCurrentHP() > 0
+                   &&
+                   player2.getCurrentPokemon().getCurrentHP() > 0;
         }
     }
 }

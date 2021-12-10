@@ -70,8 +70,13 @@ public enum GSCDamageCalc {
         int defenseStat = defendingPokemon.getStatDef();
         Item heldItem = attackingPokemon.getHeldItem();
 
+        boolean doesItemBoostDamage;
         // comparing item's boosting type against selected attack's type
-        boolean doesItemBoostDamage = (damageBoostingItems.get(heldItem) == attack.getMoveType());
+        if (heldItem != null && damageBoostingItems.get(heldItem) != null) {
+            doesItemBoostDamage = (damageBoostingItems.get(heldItem) == attack.getMoveType());
+        } else {
+            doesItemBoostDamage = false;
+        }
 
         // Modifiers for effects from Growl, Screech, Focus Energy, etc.
         int attackModifier, defenseModifier;

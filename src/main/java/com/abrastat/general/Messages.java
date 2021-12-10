@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.abrastat.general.Status.*;
 
-public final class Messages {
+public enum Messages {
+
+    INSTANCE;
 
     private static String messageBuffer;
 

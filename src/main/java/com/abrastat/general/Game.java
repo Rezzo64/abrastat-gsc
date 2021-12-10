@@ -1,30 +1,11 @@
 package com.abrastat.general;
 
-public abstract class Game {
+public interface Game {
 
-    private Player playerOne;
-    private Player playerTwo;
+    Player player1 = new Player();
+    Player player2 = new Player();
 
-    public Game() {
-
-        this.getPlayerOne();
-        this.getPlayerTwo();
-
-    }
-
-    protected Player getPlayerOne()    {
-        return this.playerOne;
-    }
-
-    protected Player getPlayerTwo()    {
-        return this.playerTwo;
-    }
-
-    protected boolean checkPokemonAreNotFainted() {
-        return playerOne.getCurrentPokemon().getCurrentHP() > 0
-               &&
-               playerTwo.getCurrentPokemon().getCurrentHP() > 0;
-    }
+    boolean checkPokemonAreNotFainted() ;
 
 }
 
