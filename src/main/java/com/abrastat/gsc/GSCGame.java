@@ -63,7 +63,7 @@ public final class GSCGame implements Game {
     private void takeTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
 
         // both Pokemon can faint at the same time in the instance of moves like Explosion
-        if (someoneFainted()) {
+        if (checkPokemonAreNotFainted()) {
             return; // end turn when either member faints
         }
 
@@ -112,7 +112,7 @@ public final class GSCGame implements Game {
         if (pokemonPlayerTwo.getCurrentHP() == 0)  {
             Messages.logFainted(pokemonPlayerTwo);
         }
-        return this.pokemonPlayerOne.getCurrentHP() == 0 || this.pokemonPlayerTwo.getCurrentHP() == 0;
+        return checkPokemonAreNotFainted();
     }
 
     private boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
@@ -309,5 +309,10 @@ public final class GSCGame implements Game {
 
     public int getLastDamageValue() {
         return this.lastDamageValue;
+    }
+
+    @Override
+    public boolean checkPokemonAreNotFainted() {
+        return this.pokemonPlayerOne.getCurrentHP() == 0 || this.pokemonPlayerTwo.getCurrentHP() == 0;
     }
 }

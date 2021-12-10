@@ -25,9 +25,9 @@ public enum Messages {
     public static void announceTeam(@NotNull Player player) {
         StringBuilder s = new StringBuilder((player.getName() + ": " + System.lineSeparator()));
         for (Pokemon pokemon : player.getCurrentTeam()) {
-            try {
+            if (pokemon != null) {
                 s.append(pokemon.getSpecies() + " ");
-            } catch (NullPointerException e)    {
+            } else {
                 s.append("(-) ");
             }
         }
