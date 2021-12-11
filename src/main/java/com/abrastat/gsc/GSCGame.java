@@ -1,6 +1,7 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.*;
+import com.abrastat.runners.GSCGameRunner;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,6 +15,7 @@ public class GSCGame implements Game {
     private int turnNumber = 0;
 
     private GSCPokemon pokemonPlayerOne, pokemonPlayerTwo;
+    private int winner; // 0 = draw, 1 = p1, 2 = p2
 
     private int p1ReflectCounter = 0, p2ReflectCounter = 0;
     private int p1LightScreenCounter = 0, p2LightScreenCounter = 0;
@@ -95,7 +97,22 @@ public class GSCGame implements Game {
             pokemonPlayerTwo.isFainted();
             Messages.logFainted(pokemonPlayerTwo);
         }
+        setWinner();
         return checkPokemonAreNotFainted(pokemonPlayerOne, pokemonPlayerTwo);
+    }
+
+    public int getWinner()   {
+        return this.winner;
+    }
+
+    private void setWinner() {
+        if (pokemonPlayerOne.getNonVolatileStatus() == FAINT && pokemonPlayerTwo.getNonVolatileStatus() == FAINT)   {
+            winner = 0;
+        } else if (pokemonPlayerOne.getNonVolatileStatus() == FAINT)    {
+            winner = 2;
+        } else {
+            winner = 1;
+        }
     }
 
 
