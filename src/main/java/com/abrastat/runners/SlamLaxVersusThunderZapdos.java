@@ -1,6 +1,7 @@
 package com.abrastat.runners;
 
 import com.abrastat.general.Game;
+import com.abrastat.general.Item;
 import com.abrastat.general.Messages;
 import com.abrastat.gsc.GSCGame;
 import com.abrastat.gsc.GSCMove;
@@ -18,8 +19,10 @@ public class SlamLaxVersusThunderZapdos {
 
         player1.addPokemon(new GSCPokemon("snorlax"));
         player1.getCurrentPokemon().addMoves(new GSCMove("bodySlam"));
+        player1.getCurrentPokemon().setHeldItem(Item.LEFTOVERS);
         player2.addPokemon(new GSCPokemon("zapdos"));
         player2.getCurrentPokemon().addMoves(new GSCMove("thunder"));
+        player2.getCurrentPokemon().setHeldItem(Item.LEFTOVERS);
 
         Game game = new GSCGame();
 

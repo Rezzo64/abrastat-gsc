@@ -46,6 +46,8 @@ public class GSCGame implements Game {
     public void initTurn(GSCMove movePlayerOne, GSCMove movePlayerTwo)   {
         turnNumber++;
         Messages.announceTurn(turnNumber);
+        Messages.displayCurrentHP(pokemonPlayerOne);
+        Messages.displayCurrentHP(pokemonPlayerTwo);
 
         // prevents Counter or Mirror Coat from carrying over
         pokemonPlayerOne.setLastDamageTaken(0);
@@ -86,9 +88,11 @@ public class GSCGame implements Game {
 
     public boolean someoneFainted() {
         if (pokemonPlayerOne.getCurrentHP() == 0)  {
+            pokemonPlayerOne.isFainted();
             Messages.logFainted(pokemonPlayerOne);
         }
         if (pokemonPlayerTwo.getCurrentHP() == 0)  {
+            pokemonPlayerTwo.isFainted();
             Messages.logFainted(pokemonPlayerTwo);
         }
         return checkPokemonAreNotFainted(pokemonPlayerOne, pokemonPlayerTwo);
@@ -101,6 +105,10 @@ public class GSCGame implements Game {
         // the game mechanics.
 
         // flat integer division replicates in-game behaviour.
+
+        if (checkPokemonAreNotFainted(pokemonPlayerOne, pokemonPlayerTwo))  {
+            return;
+        }
 
         if (pokemonPlayerOne.getHeldItem() == Item.LEFTOVERS && pokemonPlayerTwo.getHeldItem() == Item.LEFTOVERS)   {
             if (playerOneIsFaster == true)  {
@@ -117,13 +125,13 @@ public class GSCGame implements Game {
             return;
         }
 
-        if (pokemonPlayerOne.getHeldItem() == Item.LEFTOVERS)   {
+        else if (pokemonPlayerOne.getHeldItem() == Item.LEFTOVERS)   {
             pokemonPlayerOne.applyHeal(pokemonPlayerOne.getStatHP() / 16);
             Messages.leftoversHeal(pokemonPlayerOne);
             return;
         }
 
-        if (pokemonPlayerTwo.getHeldItem() == Item.LEFTOVERS)   {
+        else if (pokemonPlayerTwo.getHeldItem() == Item.LEFTOVERS)   {
             pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.getStatHP() / 16);
             Messages.leftoversHeal(pokemonPlayerTwo);
             return;

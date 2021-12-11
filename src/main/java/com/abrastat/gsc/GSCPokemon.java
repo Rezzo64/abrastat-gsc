@@ -206,10 +206,9 @@ public class GSCPokemon extends Pokemon {
     }
 
     public void applyHeal(int healAmount) {
-        if (this.statHP >= (this.currentHP + healAmount)) {
+        if (this.currentHP + healAmount >= this.statHP) {
             this.currentHP = this.statHP;
-        }
-        else    {
+        } else {
             this.currentHP += healAmount;
         }
     }

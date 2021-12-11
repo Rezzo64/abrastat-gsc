@@ -226,4 +226,11 @@ public enum Messages {
         handleMessage();
     }
 
+    public static void displayCurrentHP(@NotNull GSCPokemon pokemon) {
+        messageBuffer = (pokemon.getSpecies() +
+                " current HP: " + pokemon.getCurrentHP() +
+                " / " +
+                pokemon.getStatHP());
+        handleMessage();
+    }
 }

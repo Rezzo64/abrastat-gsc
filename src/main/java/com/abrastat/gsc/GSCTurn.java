@@ -37,7 +37,7 @@ public class GSCTurn {
         }
     }
 
-    private void checkStatusMoveEffects(@NotNull GSCPokemon attackingPokemon) {
+    private static void checkStatusMoveEffects(@NotNull GSCPokemon attackingPokemon) {
 
         int roll;    // handles RNG factor
 
@@ -75,9 +75,9 @@ public class GSCTurn {
         }
     }
 
-    private boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
+    private static boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
 
-        if (attackingPokemon.getNonVolatileStatus() == null)    {
+        if (attackingPokemon.getNonVolatileStatus() == HEALTHY)    {
             return true;
         }
 
@@ -107,12 +107,12 @@ public class GSCTurn {
         }
     }
 
-    private boolean didAttackMiss(int accuracy) {
+    private static boolean didAttackMiss(int accuracy) {
         int roll = ThreadLocalRandom.current().nextInt(256);
         return (accuracy < roll);
     }
 
-    private void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Move move) {
+    private static void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Move move) {
         MoveSecondaryEffect effect = move.getSecondaryEffect();
 
         if (effect.getTarget() == MoveSecondaryEffect.Target.NONE)   {
@@ -125,7 +125,7 @@ public class GSCTurn {
 
             switch (effect) {
                 case PARALYSIS:
-                    if (opponent.getNonVolatileStatus() == PARALYSIS)
+                    if (opponent.getNonVolatileStatus() != HEALTHY)
                     { break; }
 
                     opponent.applyNonVolatileStatus(PARALYSIS);

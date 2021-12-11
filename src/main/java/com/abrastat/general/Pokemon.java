@@ -250,12 +250,16 @@ public abstract class Pokemon extends Species {
     }
     // only one non-volatile status can be applied at a time.
     public void applyNonVolatileStatus(Status status)   {
-        if (this.nonVolatileStatus == null) {
+        if (this.nonVolatileStatus == Status.HEALTHY) {
             this.nonVolatileStatus = status;
             applyVolatileStatusDebuff(status);
         } else {
             Messages.statusFailed(this, this.nonVolatileStatus);
         }
+    }
+
+    public void isFainted() {
+        this.nonVolatileStatus = Status.FAINT;
     }
 
     public void removeNonVolatileStatus()  {
@@ -301,4 +305,5 @@ public abstract class Pokemon extends Species {
 
     public abstract void applyVolatileStatusDebuff(Status status);
     public abstract void removeVolatileStatusDebuff();
+
 }
