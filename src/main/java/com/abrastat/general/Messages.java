@@ -18,6 +18,7 @@ public enum Messages {
 
     // For debugging purposes only, records any effects which aren't yet handled.
     public static void notImplementedYet(Object o)  {
+
         messageBuffer = ("DEBUG: " + o + " not implemented yet. No effect logged.");
         handleMessage();
     }

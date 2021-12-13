@@ -51,7 +51,7 @@ public enum GSCDamageCalc {
             return 1.1;
         }
         else    {
-            return 1.0;
+            return 1;
         }
     }
 
@@ -78,12 +78,12 @@ public enum GSCDamageCalc {
         int basePower = attack.getBasePower();
         int attackStat, defenseStat;
 
-        if (Move.isPhysicalAttack(attack))   {
-            attackStat = attackingPokemon.getStatAtk();
-            defenseStat = defendingPokemon.getStatDef();
-        } else {
-            attackStat = attackingPokemon.getStatSpA();
-            defenseStat = defendingPokemon.getStatSpD();
+        attackStat = Move.isPhysicalAttack(attack) ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
+        defenseStat = Move.isPhysicalAttack(attack) ? defendingPokemon.getStatDef() : defendingPokemon.getStatSpD();
+
+        if (attackStat > 255 || defenseStat > 255)  {
+            attackStat /= 4;
+            defenseStat /= 4;
         }
 
         Item heldItem = attackingPokemon.getHeldItem();
@@ -104,11 +104,8 @@ public enum GSCDamageCalc {
                     defendingPokemon.getTypes()[0],
                     defendingPokemon.getTypes()[1]);
 
-        int damage = (int)
-            ((Math.floor(Math.floor(((Math.floor((level * 2) / 5) + 2) * basePower * attackStat) / defenseStat) / 50) * critModifier() * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness);
-
-        damage *= damageRoll();
-        damage = (int) Math.floor(damage / 255);
+        var damage = (int)
+            ((Math.floor(Math.floor(((Math.floor((level * 2) / 5) + 2) * Math.max(1, attackStat) * basePower) / Math.max(1, defenseStat)) / 50) * critModifier() * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness);
 
         if (sameTypeAttackBonus(attackingPokemon, attack))  {
             damage = (int) Math.floor(damage * 1.5);
@@ -122,6 +119,9 @@ public enum GSCDamageCalc {
             typeEffectiveness *= 10;
             Messages.logTypeEffectiveness((int) typeEffectiveness);
         }
+
+        damage *= damageRoll();
+        damage = (int) Math.floor(damage / 255);
 
         defendingPokemon.applyDamage(damage);
         defendingPokemon.setLastDamageTaken(damage);

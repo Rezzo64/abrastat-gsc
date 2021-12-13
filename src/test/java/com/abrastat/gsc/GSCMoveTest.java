@@ -1,6 +1,7 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.Move;
+import com.abrastat.general.MoveSecondaryEffect;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,7 +48,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Body Slam PP test")
     void bodySlamPPTest()   {
-        assertEquals(24, bodySlam.getPP());
+        assertEquals(24, bodySlam.getMaxPP());
     }
 
     @Test
@@ -59,8 +60,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Body Slam secondary effect test")
     void bodySlamSecondaryEffectTest()  {
-        assertNotEquals("none", bodySlam.getSecondaryEffect());
-        assertEquals("prz", bodySlam.getSecondaryEffect());
+        assertEquals(MoveSecondaryEffect.PARALYSIS, bodySlam.getSecondaryEffect());
     }
 
     @Test
@@ -102,7 +102,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Charm PP test")
     void charmPPTest()  {
-        assertEquals(32, charm.getPP());
+        assertEquals(32, charm.getMaxPP());
     }
 
     @Test
@@ -147,7 +147,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Rest PP test")
     void restPPTest()   {
-        assertEquals(16, rest.getPP());
+        assertEquals(16, rest.getMaxPP());
     }
 
     @ParameterizedTest
@@ -187,7 +187,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Drill Peck PP test")
     void drillPeckPPTest()  {
-        assertEquals(32, drillPeck.getPP());
+        assertEquals(32, drillPeck.getMaxPP());
     }
 
     @Test
@@ -205,7 +205,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Drill Peck secondary effect test")
     void drillPeckSecondaryEffectTest()   {
-        assertEquals("none", drillPeck.getSecondaryEffect());
+        assertEquals(MoveSecondaryEffect.NONE, drillPeck.getSecondaryEffect());
     }
 
     @Test

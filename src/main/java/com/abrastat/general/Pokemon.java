@@ -1,6 +1,5 @@
 package com.abrastat.general;
 
-import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -252,7 +251,7 @@ public abstract class Pokemon extends Species {
     public void applyNonVolatileStatus(Status status)   {
         if (this.nonVolatileStatus == Status.HEALTHY) {
             this.nonVolatileStatus = status;
-            applyVolatileStatusDebuff(status);
+            applyNonVolatileStatusDebuff(status);
         } else {
             Messages.statusFailed(this, this.nonVolatileStatus);
         }
@@ -264,7 +263,7 @@ public abstract class Pokemon extends Species {
 
     public void removeNonVolatileStatus()  {
 
-        this.removeVolatileStatusDebuff();
+        this.removeNonVolatileStatusDebuff();
         this.nonVolatileStatus = Status.HEALTHY;
 
     }
@@ -303,7 +302,19 @@ public abstract class Pokemon extends Species {
         this.lastDamageTaken = damage;
     }
 
-    public abstract void applyVolatileStatusDebuff(Status status);
-    public abstract void removeVolatileStatusDebuff();
+    public abstract void applyNonVolatileStatusDebuff(Status status);
+    public abstract void removeNonVolatileStatusDebuff();
+    public abstract void resetStatHp();
+
+    public void resetAllPP()    {
+        this.move1.resetCurrentPP();
+        this.move2.resetCurrentPP();
+        this.move3.resetCurrentPP();
+        this.move4.resetCurrentPP();
+    }
+
+    public void resetMoveOnePP()  {
+        this.move1.resetCurrentPP();
+    }
 
 }

@@ -1,7 +1,6 @@
 package com.abrastat.general;
 
 import java.io.*;
-import java.util.HashMap;
 import javax.json.*;
 
 import com.abrastat.gsc.GSCMove;
@@ -20,7 +19,7 @@ public abstract class Move {
     private Type moveType;
     private int basePower;
     private int accuracy;
-    private int pp;
+    private int MaxPP;
     private MoveSecondaryEffect secondaryEffect;
     private int secondaryChance;
 
@@ -52,7 +51,7 @@ public abstract class Move {
 
         JsonObject jsonMove = jsonObject.getJsonObject(moveName);
         this.setMove(moveName);
-        this.setPP(jsonMove);
+        this.setMaxPP(jsonMove);
 
         if (jsonMove.getJsonString("move").toString().equals("\"status\""))    {
             this.isAttack = false;
@@ -120,13 +119,18 @@ public abstract class Move {
         this.accuracy = jsonMove.getInt("accuracy");
     }
 
-    public int getPP() {
-        return pp;
+    public int getMaxPP() {
+        return MaxPP;
     }
 
-    private void setPP(@NotNull JsonObject jsonMove) {
-        this.pp = jsonMove.getInt("pp");
+    private void setMaxPP(@NotNull JsonObject jsonMove) {
+        this.MaxPP = jsonMove.getInt("pp");
     }
+
+    public abstract void reduceCurrentPP();
+    public abstract void resetCurrentPP();
+    public abstract int getCurrentPP();
+    public abstract void setCurrentPP(int ppValue);
 
     public MoveSecondaryEffect getSecondaryEffect() {
         return secondaryEffect;

@@ -312,7 +312,7 @@ public class GSCPokemon extends Pokemon {
     }
 
     @Override
-    public void applyVolatileStatusDebuff(@NotNull Status status) {
+    public void applyNonVolatileStatusDebuff(@NotNull Status status) {
         switch (status) {
             case PARALYSIS:
                 this.statSpe = (statSpe / 4);
@@ -323,7 +323,7 @@ public class GSCPokemon extends Pokemon {
         }
     }
 
-    public void removeVolatileStatusDebuff()    {
+    public void removeNonVolatileStatusDebuff()    {
         switch (this.getNonVolatileStatus()) {
             case PARALYSIS:
                 this.statSpe = initOtherStatsFormula(this.getBaseSpeed(), this.getIvSpe(), this.getEvSpe(), this.getLevel());
@@ -332,5 +332,10 @@ public class GSCPokemon extends Pokemon {
                 this.statAtk = initOtherStatsFormula(this.getBaseAttack(), this.getIvAtk(), this.getEvAtk(), this.getLevel());
                 break;
         }
+    }
+
+    @Override
+    public void resetStatHp() {
+        this.currentHP = this.statHP;
     }
 }
