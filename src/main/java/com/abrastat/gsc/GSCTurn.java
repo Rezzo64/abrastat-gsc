@@ -34,6 +34,9 @@ public class GSCTurn {
                 // for stuff like Counter as well as debugging
                 rollSecondaryEffects(attackingPokemon, defendingPokemon, move);
             }
+
+            move.reduceCurrentPP();
+
         }
     }
 

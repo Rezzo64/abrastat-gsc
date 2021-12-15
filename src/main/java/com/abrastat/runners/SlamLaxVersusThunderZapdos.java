@@ -12,7 +12,7 @@ public class SlamLaxVersusThunderZapdos {
 
     public static void main(String[] args) {
 
-        GSCGameRunner runner = new GSCGameRunner(player1, player2);
+        GSCGameRunner runner = new GSCGameRunner(1000000);
 
         Messages.gameOver();
         System.exit(0);

@@ -317,4 +317,8 @@ public abstract class Pokemon extends Species {
         this.move1.resetCurrentPP();
     }
 
+    public abstract static class Builder {
+
+    }
+
 }

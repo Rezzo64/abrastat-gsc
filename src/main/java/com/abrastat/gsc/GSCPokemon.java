@@ -43,6 +43,10 @@ public class GSCPokemon extends Pokemon {
         this.currentHP = statHP;
     }
 
+    public static class Builder extends Pokemon.Builder {
+
+    }
+
     @Override
     protected void initMoves() {
 
