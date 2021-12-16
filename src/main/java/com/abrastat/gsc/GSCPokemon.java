@@ -5,15 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class GSCPokemon extends Pokemon {
 
-    private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
-    private int currentHP;
-    private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
-
-    // all counters below to be handled incrementally (for consistency)
-    private int sleepCounter = 0;
-    private int toxicCounter = 0;
-    private int confuseCounter = 0;
-    private int disableCounter = 0;
     private int perishCounter = 0;
 
     private GSCPokemon(String speciesName, Builder builder) {
@@ -40,7 +31,7 @@ public class GSCPokemon extends Pokemon {
         // TODO implement 'if' statement to override Stat Experience due to user definition
         // if (true) {this.overrideEVs();}
 
-        this.currentHP = statHP;
+        this.setCurrentHP(this.getStatHP());
     }
 
     public static class Builder extends Pokemon.Builder<GSCPokemon> {
@@ -115,22 +106,23 @@ public class GSCPokemon extends Pokemon {
 
     @Override
     protected void initHPStat()    {
-        this.statHP = (int)
+        this.initStatHP(
+                (int)
                 (Math.floor(((this.getBaseHp() + this.getIvHP()) * 2)
                         + (Math.floor(Math.sqrt(this.getEvHP()) / 4))
                         * this.getLevel() / 100)
-                        + this.getLevel() + 10);
+                        + this.getLevel() + 10)
+        );
     }
 
     @Override
     protected void initOtherStats() {
 
-        int level = this.getLevel();
-        this.statAtk = initOtherStatsFormula(this.getBaseAttack(), this.getIvAtk(), this.getEvAtk(), level);
-        this.statDef = initOtherStatsFormula(this.getBaseDefense(), this.getIvDef(), this.getEvDef(), level);
-        this.statSpA = initOtherStatsFormula(this.getBaseSpecialAttack(), this.getIvSpA(), this.getEvSpA(), level);
-        this.statSpD = initOtherStatsFormula(this.getBaseSpecialDefense(), this.getIvSpD(), this.getEvSpD(), level);
-        this.statSpe = initOtherStatsFormula(this.getBaseSpeed(), this.getIvSpe(), this.getEvSpe(), level);
+        this.initStatAtk(initOtherStatsFormula(this.getBaseAttack(), this.getIvAtk(), this.getEvAtk(), getLevel()));
+        this.initStatDef(initOtherStatsFormula(this.getBaseDefense(), this.getIvDef(), this.getEvDef(), getLevel()));
+        this.initStatSpA(initOtherStatsFormula(this.getBaseSpecialAttack(), this.getIvSpA(), this.getEvSpA(), getLevel()));
+        this.initStatSpD(initOtherStatsFormula(this.getBaseSpecialDefense(), this.getIvSpD(), this.getEvSpD(), getLevel()));
+        this.initStatSpe(initOtherStatsFormula(this.getBaseSpeed(), this.getIvSpe(), this.getEvSpe(), getLevel()));
 
     }
 
@@ -142,213 +134,38 @@ public class GSCPokemon extends Pokemon {
                     + 5;
     }
 
-    public int getStatHP() {
-        return statHP;
-    }
-
-    public int getStatAtk() {
-        return statAtk;
-    }
-
-    public int getStatDef() {
-        return statDef;
-    }
-
-    public int getStatSpA() {
-        return statSpA;
-    }
-
-    public int getStatSpD() {
-        return statSpD;
-    }
-
-    public int getStatSpe() {
-        return statSpe;
-    }
-
-    public int getCurrentHP() {
-        return currentHP;
-    }
-
-    public int getAtkMod() {
-        return atkMod;
-    }
-
-    public int getDefMod() {
-        return defMod;
-    }
-
-    public int getSpAMod() {
-        return spAMod;
-    }
-
-    public int getSpDMod() {
-        return spDMod;
-    }
-
-    public int getSpeMod() {
-        return speMod;
-    }
-
-    public int getAccMod() {
-        return accMod;
-    }
-
-    public int getEvaMod() {
-        return evaMod;
-    }
-
-    public int getSleepCounter() {
-        return sleepCounter;
-    }
-
-    public int getToxicCounter() {
-        return toxicCounter;
-    }
-
-    public int getConfuseCounter() {
-        return confuseCounter;
-    }
-
-    public int getDisableCounter() {
-        return disableCounter;
-    }
-
     public int getPerishCounter() {
         return perishCounter;
-    }
-
-    public void applyHeal(int healAmount) {
-        if (this.currentHP + healAmount >= this.statHP) {
-            this.currentHP = this.statHP;
-        } else {
-            this.currentHP += healAmount;
-        }
-    }
-
-    public void applyDamage(int damage) {
-        if (damage >= this.currentHP)   {
-            this.setLastDamageTaken(this.currentHP);
-            this.currentHP = 0;
-
-        }
-        else    {
-            this.setLastDamageTaken(damage);
-            this.currentHP -= damage;
-        }
-    }
-
-    public void setAtkMod(int atkMod) {
-        this.atkMod = atkMod;
-    }
-
-    public void setDefMod(int defMod) {
-        this.defMod = defMod;
-    }
-
-    public void setSpAMod(int spAMod) {
-        this.spAMod = spAMod;
-    }
-
-    public void setSpDMod(int spDMod) {
-        this.spDMod = spDMod;
-    }
-
-    public void setSpeMod(int speMod) {
-        this.speMod = speMod;
-    }
-
-    public void setAccMod(int accMod) {
-        this.accMod = accMod;
-    }
-
-    public void setEvaMod(int evaMod) {
-        this.evaMod = evaMod;
-    }
-
-    public void resetMods() {
-        this.atkMod = 0;
-        this.defMod = 0;
-        this.spAMod = 0;
-        this.spDMod = 0;
-        this.speMod = 0;
-        this.accMod = 0;
-        this.evaMod = 0;
-    }
-
-    public void incrementSleepCounter() {
-        this.sleepCounter++;
-    }
-
-    public void incrementToxicCounter() {
-        this.toxicCounter++;
-    }
-
-    public void incrementConfuseCounter() {
-        this.confuseCounter++;
-    }
-
-    public void incrementDisableCounter() {
-        this.disableCounter++;
-    }
-
-    public void incrementPerishCounter() {
-        this.perishCounter++;
-    }
-
-    public void resetSleepCounter() {
-        this.sleepCounter = 0;
-    }
-
-    public void resetToxicCounter() {
-        this.toxicCounter = 0;
-    }
-
-    public void resetConfuseCounter() {
-        this.confuseCounter = 0;
-    }
-
-    public void resetDisableCounter() {
-        this.disableCounter = 0;
     }
 
     public void resetPerishCounter() {
         this.perishCounter = 0;
     }
 
-    public void resetAllCounters() {
-        this.sleepCounter = 0;
-        this.toxicCounter = 0;
-        this.confuseCounter = 0;
-        this.disableCounter = 0;
-        this.perishCounter = 0;
+    public void incrementPerishCounter() {
+        this.perishCounter++;
     }
 
     @Override
-    public void applyNonVolatileStatusDebuff(@NotNull Status status) {
-        switch (status) {
-            case PARALYSIS:
-                this.statSpe = (statSpe / 4);
-                break;
-            case BURN:
-                this.statAtk = (statAtk / 2);
-                break;
-        }
-    }
-
-    public void removeNonVolatileStatusDebuff()    {
-        switch (this.getNonVolatileStatus()) {
-            case PARALYSIS:
-                this.statSpe = initOtherStatsFormula(this.getBaseSpeed(), this.getIvSpe(), this.getEvSpe(), this.getLevel());
-                break;
-            case BURN:
-                this.statAtk = initOtherStatsFormula(this.getBaseAttack(), this.getIvAtk(), this.getEvAtk(), this.getLevel());
-                break;
-        }
+    public void resetAllCounters()  {
+        this.resetSleepCounter();
+        this.resetToxicCounter();
+        this.resetConfuseCounter();
+        this.resetDisableCounter();
+        this.resetPerishCounter();
     }
 
     @Override
-    public void resetStatHp() {
-        this.currentHP = this.statHP;
+    public void removeNonVolatileStatusDebuff() {
+        {
+            switch (this.getNonVolatileStatus()) {
+                case PARALYSIS:
+                    this.initStatSpe(GSCPokemon.initOtherStatsFormula(this.getBaseSpeed(), this.getIvSpe(), this.getEvSpe(), this.getLevel()));
+                    break;
+                case BURN:
+                    this.initStatAtk(GSCPokemon.initOtherStatsFormula(this.getBaseAttack(), this.getIvAtk(), this.getEvAtk(), this.getLevel()));
+                    break;
+            }
+        }
     }
 }

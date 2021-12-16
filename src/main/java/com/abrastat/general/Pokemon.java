@@ -23,13 +23,37 @@ public abstract class Pokemon extends Species {
     private int evHP, evAtk, evDef, evSpA, evSpD, evSpe;
     private int level;
     private Item heldItem;
-
     private Status nonVolatileStatus = Status.HEALTHY;
     private HashSet<Status> volatileStatus = new HashSet<>();
+    private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
+    private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
+    private int currentHP;
 
-    public abstract int getCurrentHP();
-    public abstract void applyHeal(int healAmount);
-    public abstract void applyDamage(int damage);
+    // all counters below to be handled incrementally (for consistency)
+    private int sleepCounter = 0;
+    private int toxicCounter = 0;
+    private int confuseCounter = 0;
+    private int disableCounter = 0;
+
+    public void applyHeal(int healAmount) {
+        if (this.currentHP + healAmount >= this.statHP) {
+            this.currentHP = this.statHP;
+        } else {
+            this.currentHP += healAmount;
+        }
+    }
+
+    public void applyDamage(int damage) {
+        if (damage >= this.currentHP)   {
+            this.setLastDamageTaken(this.currentHP);
+            this.currentHP = 0;
+
+        }
+        else    {
+            this.setLastDamageTaken(damage);
+            this.currentHP -= damage;
+        }
+    }
 
     enum Gender {
 
@@ -230,6 +254,168 @@ public abstract class Pokemon extends Species {
         this.evSpe = evSpe;
     }
 
+    public int getCurrentHP() {
+        return this.currentHP;
+    }
+
+    protected void setCurrentHP(int hp) {
+        this.currentHP = hp;
+    }
+
+    public int getStatHP() {
+        return statHP;
+    }
+
+    protected void initStatHP(int hp) {
+        this.statHP = hp;
+    }
+
+    public int getStatAtk() {
+        return statAtk;
+    }
+
+    protected void initStatAtk(int atk)    {
+        this.statAtk = atk;
+    }
+
+    public int getStatDef() {
+        return statDef;
+    }
+
+    protected void initStatDef(int def) {
+        this.statDef = def;
+    }
+
+    public int getStatSpA() {
+        return statSpA;
+    }
+
+    protected void initStatSpA(int spa) {
+        this.statSpA = spa;
+    }
+
+    public int getStatSpD() {
+        return statSpD;
+    }
+
+    protected void initStatSpD(int spd) {
+        this.statSpD = spd;
+    }
+
+    public int getStatSpe() {
+        return statSpe;
+    }
+
+    protected void initStatSpe(int spe) {
+        this.statSpe = spe;
+    }
+
+    public int getAtkMod() {
+        return atkMod;
+    }
+
+    public int getDefMod() {
+        return defMod;
+    }
+
+    public int getSpAMod() {
+        return spAMod;
+    }
+
+    public int getSpDMod() {
+        return spDMod;
+    }
+
+    public int getSpeMod() {
+        return speMod;
+    }
+
+    public int getAccMod() {
+        return accMod;
+    }
+
+    public int getEvaMod() {
+        return evaMod;
+    }
+
+    public void raiseStat(@NotNull Stat stat, int amount)    {
+        switch (stat)   {
+            case ATTACK:
+                this.atkMod = checkModUpperLimit(atkMod, amount);
+                break;
+            case DEFENSE:
+                this.defMod = checkModUpperLimit(defMod, amount);
+                break;
+            case SPECIALATTACK:
+                this.spAMod = checkModUpperLimit(spAMod, amount);
+                break;
+            case SPECIALDEFENSE:
+                this.spDMod = checkModUpperLimit(spDMod, amount);
+                break;
+            case SPEED:
+                this.speMod = checkModUpperLimit(spDMod, amount);
+                break;
+            case ACCURACY:
+                this.accMod = checkModUpperLimit(accMod, amount);
+                break;
+            case EVASION:
+                this.evaMod = checkModUpperLimit(evaMod, amount);
+        }
+    }
+
+    public void lowerStat(@NotNull Stat stat, int amount)    {
+        switch (stat)   {
+            case ATTACK:
+                this.atkMod = checkModLowerLimit(atkMod, amount);
+                break;
+            case DEFENSE:
+                this.defMod = checkModLowerLimit(defMod, amount);
+                break;
+            case SPECIALATTACK:
+                this.spAMod = checkModLowerLimit(spAMod, amount);
+                break;
+            case SPECIALDEFENSE:
+                this.spDMod = checkModLowerLimit(spDMod, amount);
+                break;
+            case SPEED:
+                this.speMod = checkModLowerLimit(spDMod, amount);
+                break;
+            case ACCURACY:
+                this.accMod = checkModLowerLimit(accMod, amount);
+                break;
+            case EVASION:
+                this.evaMod = checkModLowerLimit(evaMod, amount);
+        }
+    }
+
+    public static int checkModUpperLimit(int mod, int increase)   {
+        if (mod + Math.abs(increase) >= 5)   {
+            return 6;
+        } else {
+            return (mod + Math.abs(increase));
+        }
+    }
+
+    public static int checkModLowerLimit(int mod, int decrease)   {
+        if (mod - Math.abs(decrease) <= -5)   {
+            return -6;
+        } else {
+            return (mod - Math.abs(decrease));
+        }
+    }
+
+    public int getToxicCounter() {
+        return toxicCounter;
+    }
+
+    public int getConfuseCounter() {
+        return confuseCounter;
+    }
+
+    public int getDisableCounter() {
+        return disableCounter;
+    }
+
     public int getLevel() {
         return level;
     }
@@ -249,7 +435,6 @@ public abstract class Pokemon extends Species {
             case 4:
                 this.move4 = move;
         }
-
     }
 
     public Pokemon addMoves(Move move1, Move move2, Move move3, Move move4)    {
@@ -265,7 +450,6 @@ public abstract class Pokemon extends Species {
     }
 
     public Status getNonVolatileStatus()  {
-
         return this.nonVolatileStatus;
     }
 
@@ -343,9 +527,98 @@ public abstract class Pokemon extends Species {
         this.lastDamageTaken = damage;
     }
 
-    public abstract void applyNonVolatileStatusDebuff(Status status);
+    public void setAtkMod(int atkMod) {
+        this.atkMod = atkMod;
+    }
+
+    public void setDefMod(int defMod) {
+        this.defMod = defMod;
+    }
+
+    public void setSpAMod(int spAMod) {
+        this.spAMod = spAMod;
+    }
+
+    public void setSpDMod(int spDMod) {
+        this.spDMod = spDMod;
+    }
+
+    public void setSpeMod(int speMod) {
+        this.speMod = speMod;
+    }
+
+    public void setAccMod(int accMod) {
+        this.accMod = accMod;
+    }
+
+    public void setEvaMod(int evaMod) {
+        this.evaMod = evaMod;
+    }
+
+    public void resetMods() {
+        this.atkMod = 0;
+        this.defMod = 0;
+        this.spAMod = 0;
+        this.spDMod = 0;
+        this.speMod = 0;
+        this.accMod = 0;
+        this.evaMod = 0;
+    }
+
+    public int getSleepCounter() {
+        return sleepCounter;
+    }
+
+    public void incrementSleepCounter() {
+        this.sleepCounter++;
+    }
+
+    public void incrementToxicCounter() {
+        this.toxicCounter++;
+    }
+
+    public void incrementConfuseCounter() {
+        this.confuseCounter++;
+    }
+
+    public void incrementDisableCounter() {
+        this.disableCounter++;
+    }
+
+    public void resetSleepCounter() {
+        this.sleepCounter = 0;
+    }
+
+    public void resetToxicCounter() {
+        this.toxicCounter = 0;
+    }
+
+    public void resetConfuseCounter() {
+        this.confuseCounter = 0;
+    }
+
+    public void resetDisableCounter() {
+        this.disableCounter = 0;
+    }
+
+    public abstract void resetAllCounters();
+
+    public void applyNonVolatileStatusDebuff(@NotNull Status status) {
+        switch (status) {
+            case PARALYSIS:
+                this.statSpe = (statSpe / 4);
+                break;
+            case BURN:
+                this.statAtk = (statAtk / 2);
+                break;
+        }
+    }
+
     public abstract void removeNonVolatileStatusDebuff();
-    public abstract void resetStatHp();
+
+    public void resetStatHp() {
+        this.currentHP = this.statHP;
+    }
 
     public void resetAllPP()    {
         this.move1.resetCurrentPP();
