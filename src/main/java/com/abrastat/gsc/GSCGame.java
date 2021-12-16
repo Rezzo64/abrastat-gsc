@@ -33,8 +33,8 @@ public class GSCGame implements Game {
         Messages.announceTeam(player1);
         Messages.announceTeam(player2);
 
-        Messages.announceSwitch(player1, pokemonPlayerOne);
-        Messages.announceSwitch(player2, pokemonPlayerTwo);
+        // Messages.announceSwitch(player1, pokemonPlayerOne);
+        // Messages.announceSwitch(player2, pokemonPlayerTwo);
 
         while (!someoneFainted())   {
             Move movePlayerOne = player1.chooseAttack();

@@ -20,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GSCTypeEffectivenessTest  {
 
-    Game game = new GSCGame();
-
     @Test
     @DisplayName("damage successful test (carrying empty secondary typing)")
     void damageTest() {

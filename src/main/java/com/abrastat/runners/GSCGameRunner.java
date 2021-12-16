@@ -2,9 +2,7 @@ package com.abrastat.runners;
 
 import com.abrastat.general.Game;
 import com.abrastat.general.Item;
-import com.abrastat.general.Player;
 import com.abrastat.gsc.GSCGame;
-import com.abrastat.gsc.GSCItem;
 import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +11,7 @@ import java.util.ArrayList;
 
 import static com.abrastat.general.Game.player1;
 import static com.abrastat.general.Game.player2;
+import static com.abrastat.general.Item.*;
 
 public class GSCGameRunner {
 
@@ -20,18 +19,21 @@ public class GSCGameRunner {
     private ArrayList<? extends Game> gameList = new ArrayList<>();
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
 
-    public GSCGameRunner(GSCPokemon pokemonPlayerOne, GSCMove[] pokemonPlayerOneMoves, GSCItem pokemonPlayerOneItem)    {
+    public GSCGameRunner(GSCPokemon pokemonPlayerOne, GSCMove[] pokemonPlayerOneMoves, Item pokemonPlayerOneItem)    {
 
     }
 
     public GSCGameRunner(int simulationCount) {
 
-        player2.addPokemon(new GSCPokemon("snorlax"));
-        player2.getCurrentPokemon().addMoves(new GSCMove("bodySlam"));
-        player2.getCurrentPokemon().setHeldItem(Item.LEFTOVERS);
-        player1.addPokemon(new GSCPokemon("zapdos"));
-        player1.getCurrentPokemon().addMoves(new GSCMove("thunder"));
-        player1.getCurrentPokemon().setHeldItem(Item.LEFTOVERS);
+        player1.addPokemon(new GSCPokemon.Builder("snorlax")
+                .moves("bodySlam")
+                .item(LEFTOVERS)
+                .build());
+        player2.addPokemon(new GSCPokemon.Builder("zapdos")
+                .moves("thunder")
+                .item(LEFTOVERS)
+                .build());
+
         playerOnePermanentItem = player1.getCurrentPokemon().getHeldItem();
         playerTwoPermanentItem = player2.getCurrentPokemon().getHeldItem();
 
@@ -50,7 +52,6 @@ public class GSCGameRunner {
             }
 
             refreshTeams();
-            System.out.println(currentResults() + System.lineSeparator());
 
         }
     }
@@ -74,12 +75,12 @@ public class GSCGameRunner {
 
     public void playerOneWins()  {
         this.playerOneWinnerCount++;
-        System.out.println(currentResults());
+        System.out.println(currentResults() + System.lineSeparator());
     }
 
     public void playerTwoWins() {
         this.playerTwoWinnerCount++;
-        System.out.println(currentResults());
+        System.out.println(currentResults() + System.lineSeparator());
     }
 
     public void nobodyWins()    {
