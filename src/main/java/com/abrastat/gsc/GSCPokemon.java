@@ -120,12 +120,6 @@ public class GSCPokemon extends Pokemon {
                         + (Math.floor(Math.sqrt(this.getEvHP()) / 4))
                         * this.getLevel() / 100)
                         + this.getLevel() + 10);
-        this.statHP = (int)
-                (Math.floor(((this.getBaseHp() + this.getIvHP()) * 2)
-                        + (Math.floor(Math.sqrt(this.getEvHP()) / 4))
-                        * this.getLevel() / 100)
-                        + this.getLevel() + 10);
-
     }
 
     @Override
@@ -140,7 +134,7 @@ public class GSCPokemon extends Pokemon {
 
     }
 
-    private int initOtherStatsFormula(int baseStat, int ivStat, int evStat, int level)   {
+    private static int initOtherStatsFormula(int baseStat, int ivStat, int evStat, int level)   {
         return (int)
                 Math.floor(((baseStat + ivStat) * 2)
                     + (Math.floor((Math.sqrt(evStat) / 4)) * level)
