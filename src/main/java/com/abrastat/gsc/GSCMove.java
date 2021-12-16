@@ -8,7 +8,10 @@ public class GSCMove extends Move {
     private int currentPP;
 
     public GSCMove(String move)    {
+
         super(move);
+        this.currentPP = this.getMaxPP();
+
     }
 
     @Override

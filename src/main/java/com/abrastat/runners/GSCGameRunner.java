@@ -2,7 +2,6 @@ package com.abrastat.runners;
 
 import com.abrastat.general.Game;
 import com.abrastat.general.Item;
-import com.abrastat.general.Player;
 import com.abrastat.gsc.GSCGame;
 import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
@@ -12,27 +11,33 @@ import java.util.ArrayList;
 
 import static com.abrastat.general.Game.player1;
 import static com.abrastat.general.Game.player2;
+import static com.abrastat.general.Item.*;
 
 public class GSCGameRunner {
 
-    private int simulationCount = 50000;
     private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
     private ArrayList<? extends Game> gameList = new ArrayList<>();
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
-    public GSCGameRunner(@NotNull Player player1, @NotNull Player player2) {
 
-        player1.addPokemon(new GSCPokemon("snorlax"));
-        player1.getCurrentPokemon().addMoves(new GSCMove("bodySlam"));
-        player1.getCurrentPokemon().setHeldItem(Item.LEFTOVERS);
+    public GSCGameRunner(GSCPokemon pokemonPlayerOne, GSCMove[] pokemonPlayerOneMoves, Item pokemonPlayerOneItem)    {
+
+    }
+
+    public GSCGameRunner(int simulationCount) {
+
+        player1.addPokemon(new GSCPokemon.Builder("snorlax")
+                .moves("bodySlam")
+                .item(LEFTOVERS)
+                .build());
+        player2.addPokemon(new GSCPokemon.Builder("zapdos")
+                .moves("thunder")
+                .item(LEFTOVERS)
+                .build());
+
         playerOnePermanentItem = player1.getCurrentPokemon().getHeldItem();
-        player2.addPokemon(new GSCPokemon("zapdos"));
-        player2.getCurrentPokemon().addMoves(new GSCMove("thunder"));
-        player2.getCurrentPokemon().setHeldItem(Item.LEFTOVERS);
         playerTwoPermanentItem = player2.getCurrentPokemon().getHeldItem();
 
         for (int i = 0; i < simulationCount; i++)   {
-
-            refreshTeams();
 
             switch (new GSCGame().getWinner())  {
                 case 0:
@@ -45,6 +50,9 @@ public class GSCGameRunner {
                     playerTwoWins();
                     break;
             }
+
+            refreshTeams();
+
         }
     }
 
@@ -67,11 +75,12 @@ public class GSCGameRunner {
 
     public void playerOneWins()  {
         this.playerOneWinnerCount++;
-        System.out.println(currentResults());
+        System.out.println(currentResults() + System.lineSeparator());
     }
 
     public void playerTwoWins() {
         this.playerTwoWinnerCount++;
+        System.out.println(currentResults() + System.lineSeparator());
     }
 
     public void nobodyWins()    {

@@ -2,6 +2,8 @@ package com.abrastat.general;
 
 import java.io.*;
 import javax.json.*;
+
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +52,7 @@ abstract class Species {
         return this.species;
     }
 
-    public void setSpecies(String speciesName)    {
+    public void setSpecies(@NotNull String speciesName)    {
         this.species = speciesName.substring(0, 1).toUpperCase() + speciesName.substring(1).toLowerCase();
     }
 
@@ -58,13 +60,13 @@ abstract class Species {
         return allowedAbilities;
     }
 
-    public void setAllowedAbilities(JsonObject allowedAbilities) {
+    public void setAllowedAbilities(@NotNull JsonObject allowedAbilities) {
         this.allowedAbilities[0] = allowedAbilities.getValue("0").toString();
         this.allowedAbilities[1] = allowedAbilities.getValue("1").toString();
         this.allowedAbilities[2] = allowedAbilities.getValue("H").toString();
     }
 
-    public void setBaseStats(JsonObject baseStats) {
+    public void setBaseStats(@NotNull JsonObject baseStats) {
         this.baseHp =               baseStats.getInt("hp");
         this.baseAttack =           baseStats.getInt("attack");
         this.baseDefense =          baseStats.getInt("defense");
@@ -101,7 +103,7 @@ abstract class Species {
         return height;
     }
 
-    public void setHeight(JsonObject jsonHeight) {
+    public void setHeight(@NotNull JsonObject jsonHeight) {
         height = jsonHeight.getJsonNumber("height").doubleValue();
     }
 
@@ -109,7 +111,7 @@ abstract class Species {
         return weight;
     }
 
-    public void setWeight(JsonObject weight) {
+    public void setWeight(@NotNull JsonObject weight) {
         this.weight = weight.getJsonNumber("weight").doubleValue();
     }
 
@@ -117,7 +119,7 @@ abstract class Species {
         return types;
     }
 
-    public void setTypes(JsonArray types) {
+    public void setTypes(@NotNull JsonArray types) {
         final String type0 = types.getJsonString(0)
                 .toString()
                 .replace("\"", "")

@@ -19,15 +19,14 @@ public abstract class Pokemon extends Species {
     private Gender gender;
     private Ability ability;
     private Move move1, move2, move3, move4;
-    private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
-    private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;        // default min
-    private int level = 100;
+    private int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
+    private int evHP, evAtk, evDef, evSpA, evSpD, evSpe;
+    private int level;
+    private Item heldItem;
 
     private Status nonVolatileStatus = Status.HEALTHY;
     private HashSet<Status> volatileStatus = new HashSet<>();
 
-    public abstract Item getHeldItem();
-    public abstract void setHeldItem(Item heldItem);
     public abstract int getCurrentHP();
     public abstract void applyHeal(int healAmount);
     public abstract void applyDamage(int damage);
@@ -39,43 +38,107 @@ public abstract class Pokemon extends Species {
 
     }
 
-    public Pokemon(String species)    {
+    public Pokemon(String species, @NotNull Builder<? extends Pokemon> builder)   {
+
         super(species);
+
+        this.nickname = builder.nickname;
+        this.ivHP = builder.ivHP;
+        this.ivAtk = builder.ivAtk;
+        this.ivDef = builder.ivDef;
+        this.ivSpA = builder.ivSpA;
+        this.ivSpD = builder.ivSpD;
+        this.ivSpe = builder.ivSpe;
+        this.evHP = builder.evHP;
+        this.evAtk = builder.evAtk;
+        this.evSpA = builder.evSpA;
+        this.evSpD = builder.evSpD;
+        this.evSpe = builder.evSpe;
+        this.level = builder.level;
+        this.heldItem = builder.heldItem;
+        this.gender = builder.gender;
+        this.ability = builder.ability;
+
+    }
+    public abstract static class Builder<Pokemon> {
+
+        private Pokemon pokemon;
+        private String nickname;
+        private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
+        private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;        // default min
+        private int level = 100; // default max
+        private Ability ability;
+        private Item heldItem;
+        private Gender gender;
+
+        public Builder()  {}
+
+        public Builder nickname(String name)    {
+            this.nickname = name;
+            return this;
+        }
+
+        public abstract Builder moves(String move1);
+        public abstract Builder moves(String move1, String move2);
+        public abstract Builder moves(String move1, String move2, String move3);
+        public abstract Builder moves(String move1, String move2, String move3, String move4);
+
+        public Builder ivs(int ivHP, int ivAtk, int ivDef, int ivSpA, int ivSpD, int ivSpe)    {
+            this.ivHP = ivHP;
+            this.ivAtk = ivAtk;
+            this.ivDef = ivDef;
+            this.ivSpA = ivSpA;
+            this.ivSpD = ivSpD;
+            this.ivSpe = ivSpe;
+            return this;
+        }
+        public Builder evs(int evHP, int evAtk, int evDef, int evSpA, int evSpD, int evSpe) {
+            this.evHP = evHP;
+            this.evAtk = evAtk;
+            this.evDef = evDef;
+            this.evSpA = evSpA;
+            this.evSpD = evSpD;
+            this.evSpe = evSpe;
+            return this;
+        }
+
+        public Builder level(int level)   {
+            this.level = level;
+            return this;
+        }
+
+        // TODO
+        public Builder gender()   {
+            return this;
+        }
+
+        public Builder item(Item item)  {
+            this.heldItem = item;
+            return this;
+        }
+
+        public abstract com.abrastat.general.Pokemon build();
+
     }
 
-    public boolean hasMove(Move move)   {
-        return move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move);
-    }
-
-    protected abstract void initMoves();
     protected abstract void initIVs();
     protected abstract void initEVs();
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
-    protected abstract void initGender();
 
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public boolean hasMove(Move move)   {
+        return move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move);
     }
 
     public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
     public int getIvHP() {
         return ivHP;
     }
 
-    public void setIvHP(int ivHP) {
+    protected void setIvHP(int ivHP) {
         this.ivHP = ivHP;
     }
 
@@ -83,7 +146,7 @@ public abstract class Pokemon extends Species {
         return ivAtk;
     }
 
-    public void setIvAtk(int ivAtk) {
+    protected void setIvAtk(int ivAtk) {
         this.ivAtk = ivAtk;
     }
 
@@ -91,7 +154,7 @@ public abstract class Pokemon extends Species {
         return ivDef;
     }
 
-    public void setIvDef(int ivDef) {
+    protected void setIvDef(int ivDef) {
         this.ivDef = ivDef;
     }
 
@@ -99,7 +162,7 @@ public abstract class Pokemon extends Species {
         return ivSpA;
     }
 
-    public void setIvSpA(int ivSpA) {
+    protected void setIvSpA(int ivSpA) {
         this.ivSpA = ivSpA;
     }
 
@@ -107,7 +170,7 @@ public abstract class Pokemon extends Species {
         return ivSpD;
     }
 
-    public void setIvSpD(int ivSpD) {
+    protected void setIvSpD(int ivSpD) {
         this.ivSpD = ivSpD;
     }
 
@@ -115,7 +178,7 @@ public abstract class Pokemon extends Species {
         return ivSpe;
     }
 
-    public void setIvSpe(int ivSpe) {
+    protected void setIvSpe(int ivSpe) {
         this.ivSpe = ivSpe;
     }
 
@@ -123,7 +186,7 @@ public abstract class Pokemon extends Species {
         return evHP;
     }
 
-    public void setEvHP(int evHP) {
+    protected void setEvHP(int evHP) {
         this.evHP = evHP;
     }
 
@@ -131,7 +194,7 @@ public abstract class Pokemon extends Species {
         return evAtk;
     }
 
-    public void setEvAtk(int evAtk) {
+    protected void setEvAtk(int evAtk) {
         this.evAtk = evAtk;
     }
 
@@ -139,7 +202,7 @@ public abstract class Pokemon extends Species {
         return evDef;
     }
 
-    public void setEvDef(int evDef) {
+    protected void setEvDef(int evDef) {
         this.evDef = evDef;
     }
 
@@ -147,7 +210,7 @@ public abstract class Pokemon extends Species {
         return evSpA;
     }
 
-    public void setEvSpA(int evSpA) {
+    protected void setEvSpA(int evSpA) {
         this.evSpA = evSpA;
     }
 
@@ -155,7 +218,7 @@ public abstract class Pokemon extends Species {
         return evSpD;
     }
 
-    public void setEvSpD(int evSpD) {
+    protected void setEvSpD(int evSpD) {
         this.evSpD = evSpD;
     }
 
@@ -163,7 +226,7 @@ public abstract class Pokemon extends Species {
         return evSpe;
     }
 
-    public void setEvSpe(int evSpe) {
+    protected void setEvSpe(int evSpe) {
         this.evSpe = evSpe;
     }
 
@@ -171,7 +234,7 @@ public abstract class Pokemon extends Species {
         return level;
     }
 
-    public void setLevel(int level) {
+    protected void setLevel(int level) {
         this.level = level;
     }
 
@@ -189,42 +252,12 @@ public abstract class Pokemon extends Species {
 
     }
 
-    public Pokemon addMove(Move move) {
-
-        Move[] currentMoves = this.getMoves();
-
-        // Java convention says the iterator starts at 0, whereas Pokemon convention
-        // indicates that the first moveslot starts at 1.
-        // This method just checks for the first null slot and fills it in.
-        for (int i = 0; i < 4; i++) {
-            if (currentMoves[i] == null) {
-                this.addMove(move, i + 1);
-            }
-            return (this);
-        }
-        LOGGER.error("tried to add a move to {} but it already has" +
-                "4 moves. Please remove a move or resubmit all moves.", this.getSpecies());
-        return (this);
-    }
-
     public Pokemon addMoves(Move move1, Move move2, Move move3, Move move4)    {
         this.move1 = move1;
         this.move2 = move2;
         this.move3 = move3;
         this.move4 = move4;
         return (this);
-    }
-
-    private void addMoves(Move move1, Move move2, Move move3)    {
-        this.addMoves(move1, move2, move3, null);
-    }
-
-    private void addMoves(Move move1, Move move2)    {
-        this.addMoves(move1, move2, null);
-    }
-
-    public void addMoves(Move move) {
-        this.addMoves(move, null);
     }
 
     public Move[] getMoves()    {
@@ -234,6 +267,14 @@ public abstract class Pokemon extends Species {
     public Status getNonVolatileStatus()  {
 
         return this.nonVolatileStatus;
+    }
+
+    public Item getHeldItem()  {
+        return this.heldItem;
+    }
+
+    public void setHeldItem(Item heldItem) {
+        this.heldItem = heldItem;
     }
 
     public void applySecondaryEffect(@NotNull MoveSecondaryEffect effect)    {
@@ -316,5 +357,5 @@ public abstract class Pokemon extends Species {
     public void resetMoveOnePP()  {
         this.move1.resetCurrentPP();
     }
-
+    
 }

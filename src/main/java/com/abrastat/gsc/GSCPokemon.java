@@ -1,9 +1,6 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.Item;
-import com.abrastat.general.Pokemon;
-import com.abrastat.general.Status;
-import com.abrastat.general.Type;
+import com.abrastat.general.*;
 import org.jetbrains.annotations.NotNull;
 
 public class GSCPokemon extends Pokemon {
@@ -11,7 +8,6 @@ public class GSCPokemon extends Pokemon {
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int currentHP;
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
-    private Item heldItem;
 
     // all counters below to be handled incrementally (for consistency)
     private int sleepCounter = 0;
@@ -20,10 +16,16 @@ public class GSCPokemon extends Pokemon {
     private int disableCounter = 0;
     private int perishCounter = 0;
 
-    public GSCPokemon(String speciesName) {
-        super(speciesName);
+    private GSCPokemon(String speciesName, Builder builder) {
+        super(speciesName, builder);
         this.initIVs();
         this.initEVs();
+        this.initHPStat();
+        this.initOtherStats();
+        this.addMoves(builder.move1, builder.move2, builder.move3, builder.move4);
+
+        // TODO implement 'if' statement to override IVs
+        // for when this Pokemon knows the move "Hidden Power"
 
         // TODO implement 'if' statement to override level due to user definition
         // if (true) {this.setLevel();}
@@ -38,20 +40,54 @@ public class GSCPokemon extends Pokemon {
         // TODO implement 'if' statement to override Stat Experience due to user definition
         // if (true) {this.overrideEVs();}
 
-        this.initHPStat();
-        this.initOtherStats();
         this.currentHP = statHP;
     }
 
-    @Override
-    protected void initMoves() {
+    public static class Builder extends Pokemon.Builder<GSCPokemon> {
 
+        private GSCMove move1, move2, move3, move4;
+        private GSCPokemon pokemon;
+        private final String speciesName;
+
+        public Builder(String speciesName)    {
+            super();
+            this.speciesName = speciesName;
+        }
+
+        public Builder moves(String move1)  {
+            this.move1 = new GSCMove(move1);
+            return this;
+        }
+        public Builder moves(String move1, String move2)  {
+            this.move1 = new GSCMove(move1);
+            this.move2 = new GSCMove(move2);
+            return this;
+        }
+        public Builder moves(String move1, String move2, String move3) {
+            this.move1 = new GSCMove(move1);
+            this.move2 = new GSCMove(move2);
+            this.move3 = new GSCMove(move3);
+            return this;
+        }
+        public Builder moves(String move1, String move2, String move3, String move4)  {
+            this.move1 = new GSCMove(move1);
+            this.move2 = new GSCMove(move2);
+            this.move3 = new GSCMove(move3);
+            this.move4 = new GSCMove(move4);
+            return this;
+        }
+
+        @Override
+        public GSCPokemon build() {
+            pokemon = new GSCPokemon(speciesName, this);
+            return pokemon;
+
+        }
     }
 
     // DVs are essentially IVs but halved; 15 is the maximum DV you can have in a stat.
-    @Override
-    protected void initIVs() {
-        int maxDV = 15;
+    public void initIVs()   {
+        final int maxDV = 15;
         this.setIvHP(maxDV);
         this.setIvAtk(maxDV);
         this.setIvDef(maxDV);
@@ -63,9 +99,8 @@ public class GSCPokemon extends Pokemon {
     // Stat Experience is essentially EVs multiplied by 256.
     // Each base stat can be completely filled with Stat Experience to the maximum.
     */
-    @Override
-    protected void initEVs() {
-        int maxStatExp = 65535;
+    public void initEVs()   {
+        final int maxStatExp = 65535;
         this.setEvHP(maxStatExp);
         this.setEvAtk(maxStatExp);
         this.setEvDef(maxStatExp);
@@ -74,17 +109,8 @@ public class GSCPokemon extends Pokemon {
         this.setEvSpe(maxStatExp);
     }
 
-    private void overrideIVs(int atk, int def, int spa, int spd, int spe)    {
-
-    }
-
-    //TODO
     private void overrideIVs(Type hiddenPowerType)  {
-
-    }
-
-    private void overrideEVs(int atk, int def, int spa, int spd, int spe)    {
-
+        //TODO
     }
 
     @Override
@@ -98,35 +124,22 @@ public class GSCPokemon extends Pokemon {
 
     @Override
     protected void initOtherStats() {
+
         int level = this.getLevel();
         this.statAtk = initOtherStatsFormula(this.getBaseAttack(), this.getIvAtk(), this.getEvAtk(), level);
         this.statDef = initOtherStatsFormula(this.getBaseDefense(), this.getIvDef(), this.getEvDef(), level);
         this.statSpA = initOtherStatsFormula(this.getBaseSpecialAttack(), this.getIvSpA(), this.getEvSpA(), level);
         this.statSpD = initOtherStatsFormula(this.getBaseSpecialDefense(), this.getIvSpD(), this.getEvSpD(), level);
         this.statSpe = initOtherStatsFormula(this.getBaseSpeed(), this.getIvSpe(), this.getEvSpe(), level);
+
     }
 
-    private int initOtherStatsFormula(int baseStat, int ivStat, int evStat, int level)   {
+    private static int initOtherStatsFormula(int baseStat, int ivStat, int evStat, int level)   {
         return (int)
                 Math.floor(((baseStat + ivStat) * 2)
                     + (Math.floor((Math.sqrt(evStat) / 4)) * level)
                     / 100)
                     + 5;
-    }
-
-    @Override
-    protected void initGender() {
-
-    }
-
-    @Override
-    public Item getHeldItem() {
-        return this.heldItem;
-    }
-
-    @Override
-    public void setHeldItem(Item heldItem) {
-        this.heldItem = heldItem;
     }
 
     public int getStatHP() {

@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 
 class GSCSpeciesTest {
 
-    Pokemon bulbasaur = new GSCPokemon("bulbasaur");
+    Pokemon bulbasaur = new GSCPokemon.Builder("bulbasaur")
+            .build();
 
     @Test
     @DisplayName("Bulbasaur Species Name Test")
