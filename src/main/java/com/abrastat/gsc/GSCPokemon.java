@@ -34,7 +34,7 @@ public class GSCPokemon extends Pokemon {
         this.setCurrentHP(this.getStatHP());
     }
 
-    public static class Builder extends Pokemon.Builder<GSCPokemon> {
+    public static class Builder extends Pokemon.Builder {
 
         private GSCMove move1, move2, move3, move4;
         private GSCPokemon pokemon;
@@ -72,7 +72,6 @@ public class GSCPokemon extends Pokemon {
         public GSCPokemon build() {
             pokemon = new GSCPokemon(speciesName, this);
             return pokemon;
-
         }
     }
 

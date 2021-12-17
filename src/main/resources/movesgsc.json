@@ -60,6 +60,15 @@
 		"chance": 		256
 	},
 
+	"surf": 		{
+		"move": 		"attack",
+		"type": 		"water",
+		"basepower":	95,
+		"pp":			24,
+		"accuracy": 	255,
+		"secondary": 	"none"
+	},
+
 	"thunder":		{
 		"move":			"attack",
 		"type":			"electric",

@@ -2,6 +2,7 @@ package com.abrastat.runners;
 
 import com.abrastat.general.Game;
 import com.abrastat.general.Item;
+import com.abrastat.general.Player;
 import com.abrastat.gsc.GSCGame;
 import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
@@ -9,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-import static com.abrastat.general.Game.player1;
-import static com.abrastat.general.Game.player2;
 import static com.abrastat.general.Item.*;
 
 public class GSCGameRunner {
 
+    private Player player1 = new Player();
+    private Player player2 = new Player();
     private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
     private ArrayList<? extends Game> gameList = new ArrayList<>();
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
@@ -25,8 +26,11 @@ public class GSCGameRunner {
 
     public GSCGameRunner(int simulationCount) {
 
-        player1.addPokemon(new GSCPokemon.Builder("snorlax")
-                .moves("bodySlam")
+        this.player1.setName("Youngster Joey");
+        this.player2.setName("Bug Catcher Don");
+
+        player1.addPokemon(new GSCPokemon.Builder("cloyster")
+                .moves("surf")
                 .item(LEFTOVERS)
                 .build());
         player2.addPokemon(new GSCPokemon.Builder("zapdos")
@@ -39,7 +43,7 @@ public class GSCGameRunner {
 
         for (int i = 0; i < simulationCount; i++)   {
 
-            switch (new GSCGame().getWinner())  {
+            switch (new GSCGame(player1, player2).getWinner())  {
                 case 0:
                     nobodyWins();
                     break;

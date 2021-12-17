@@ -6,9 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Game {
 
-    Player player1 = new Player();
-    Player player2 = new Player();
-
     static boolean checkPokemonAreNotFainted(@NotNull GSCPokemon attackingPokemon, GSCPokemon defendingPokemon) {
         return attackingPokemon.getCurrentHP() == 0 || defendingPokemon.getCurrentHP() == 0;
     }

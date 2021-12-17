@@ -62,7 +62,7 @@ public abstract class Pokemon extends Species {
 
     }
 
-    public Pokemon(String species, @NotNull Builder<? extends Pokemon> builder)   {
+    public Pokemon(String species, @NotNull Builder builder)   {
 
         super(species);
 
@@ -75,6 +75,7 @@ public abstract class Pokemon extends Species {
         this.ivSpe = builder.ivSpe;
         this.evHP = builder.evHP;
         this.evAtk = builder.evAtk;
+        this.evDef = builder.evDef;
         this.evSpA = builder.evSpA;
         this.evSpD = builder.evSpD;
         this.evSpe = builder.evSpe;
@@ -84,9 +85,8 @@ public abstract class Pokemon extends Species {
         this.ability = builder.ability;
 
     }
-    public abstract static class Builder<Pokemon> {
+    public abstract static class Builder {
 
-        private Pokemon pokemon;
         private String nickname;
         private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
         private int evHP = 0, evAtk = 0, evDef = 0, evSpA = 0, evSpD = 0, evSpe = 0;        // default min
@@ -141,7 +141,7 @@ public abstract class Pokemon extends Species {
             return this;
         }
 
-        public abstract com.abrastat.general.Pokemon build();
+        public abstract Pokemon build();
 
     }
 
@@ -338,7 +338,7 @@ public abstract class Pokemon extends Species {
         return evaMod;
     }
 
-    public void raiseStat(@NotNull Stat stat, int amount)    {
+    protected void raiseStat(@NotNull Stat stat, int amount)    {
         switch (stat)   {
             case ATTACK:
                 this.atkMod = checkModUpperLimit(atkMod, amount);
@@ -363,7 +363,7 @@ public abstract class Pokemon extends Species {
         }
     }
 
-    public void lowerStat(@NotNull Stat stat, int amount)    {
+    protected void dropStat(@NotNull Stat stat, int amount)    {
         switch (stat)   {
             case ATTACK:
                 this.atkMod = checkModLowerLimit(atkMod, amount);
@@ -437,7 +437,7 @@ public abstract class Pokemon extends Species {
         }
     }
 
-    public Pokemon addMoves(Move move1, Move move2, Move move3, Move move4)    {
+    protected Pokemon addMoves(Move move1, Move move2, Move move3, Move move4)    {
         this.move1 = move1;
         this.move2 = move2;
         this.move3 = move3;

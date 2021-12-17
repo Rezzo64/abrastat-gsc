@@ -4,6 +4,8 @@ import com.abrastat.general.*;
 import com.abrastat.runners.GSCGameRunner;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import com.abrastat.general.MoveSecondaryEffect;
 import static com.abrastat.gsc.GSCDamageCalc.*;
@@ -22,10 +24,7 @@ public class GSCGame implements Game {
     private int p1SafeguardCounter = 0, p2SafeguardCounter = 0;
     private GSCMove lastMoveUsed;
 
-    public GSCGame() {
-
-        this.player1.setName("Youngster Joey");
-        this.player2.setName("Bug Catcher Don");
+    public GSCGame(@NotNull Player player1, @NotNull Player player2) {
 
         this.pokemonPlayerOne = (GSCPokemon) player1.getCurrentPokemon();
         this.pokemonPlayerTwo = (GSCPokemon) player2.getCurrentPokemon();
@@ -90,10 +89,12 @@ public class GSCGame implements Game {
 
     public boolean someoneFainted() {
         if (pokemonPlayerOne.getCurrentHP() == 0)  {
+            pokemonPlayerOne.removeNonVolatileStatusDebuff();
             pokemonPlayerOne.isFainted();
             Messages.logFainted(pokemonPlayerOne);
         }
         if (pokemonPlayerTwo.getCurrentHP() == 0)  {
+            pokemonPlayerTwo.removeNonVolatileStatusDebuff();
             pokemonPlayerTwo.isFainted();
             Messages.logFainted(pokemonPlayerTwo);
         }

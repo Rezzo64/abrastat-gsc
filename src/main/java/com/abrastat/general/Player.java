@@ -1,12 +1,11 @@
 package com.abrastat.general;
 
 
-import com.abrastat.gsc.GSCMove;
-
 public class Player {
 
     private String playerName;
     private Pokemon[] pokemonTeam = new Pokemon[6];
+    private PlayerBehaviour behaviour;
 
     public void setName(String name)    {
         this.playerName = name;

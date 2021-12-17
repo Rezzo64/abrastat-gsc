@@ -5,14 +5,11 @@ import com.abrastat.general.Messages;
 import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
 
-import static com.abrastat.general.Game.player1;
-import static com.abrastat.general.Game.player2;
-
-public class SlamLaxVersusThunderZapdos {
+public class SingleInstanceMain {
 
     public static void main(String[] args) {
 
-        GSCGameRunner runner = new GSCGameRunner(1000000);
+        GSCGameRunner runner = new GSCGameRunner(100000);
 
         Messages.gameOver();
         System.exit(0);
