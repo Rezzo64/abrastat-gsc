@@ -1,14 +1,10 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.*;
-import com.abrastat.runners.GSCGameRunner;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractMap;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import com.abrastat.general.MoveSecondaryEffect;
-import static com.abrastat.gsc.GSCDamageCalc.*;
+
 import static com.abrastat.general.Status.*;
 import static com.abrastat.general.Game.checkPokemonAreNotFainted;
 

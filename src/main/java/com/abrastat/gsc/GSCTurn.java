@@ -116,9 +116,9 @@ public class GSCTurn {
     }
 
     private static void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Move move) {
-        MoveSecondaryEffect effect = move.getSecondaryEffect();
+        MoveEffect effect = move.getSecondaryEffect();
 
-        if (effect.getTarget() == MoveSecondaryEffect.Target.NONE)   {
+        if (effect.getTarget() == MoveEffect.Target.NONE)   {
             return;
         }
 
@@ -127,7 +127,7 @@ public class GSCTurn {
         if (roll < move.getSecondaryChance()) {
 
             switch (effect) {
-                case PARALYSIS:
+                case PRZ30:
                     if (opponent.getNonVolatileStatus() != HEALTHY)
                     { break; }
 

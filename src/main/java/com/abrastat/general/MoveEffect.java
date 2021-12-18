@@ -1,15 +1,17 @@
 package com.abrastat.general;
 
-import static com.abrastat.general.MoveSecondaryEffect.Target.*;
+import static com.abrastat.general.MoveEffect.Target.*;
 
-public enum MoveSecondaryEffect {
+public enum MoveEffect {
     NONE(Target.NONE),
     CRITRATE(SELF),
     SLEEP(OPPONENT),
-    POISON(OPPONENT),
-    ABSORB(BOTH),
-    BURN(OPPONENT),
-    FREEZE(OPPONENT),
+    PSN30(OPPONENT),
+    PSN10(OPPONENT),
+    PSN(OPPONENT),
+    ABSORB(OPPONENT),
+    BRN10(OPPONENT),
+    FRZ10(OPPONENT),
     SELFDESTRUCT(SELF),
     DREAMEATER(BOTH),
     MIRRORMOVE(BOTH),
@@ -21,7 +23,9 @@ public enum MoveSecondaryEffect {
     VITALTHROW(SELF),
     OPP_ATTACKDROP1(OPPONENT),
     OPP_DEFENSEDROP1(OPPONENT),
-    OPP_SPDEFDROP1(OPPONENT),
+    PSYCHICSPDEFDROP(OPPONENT),
+    CRUNCHSPDEFDROP(OPPONENT),
+    ACIDSPDEFDROP(OPPONENT),
     OPP_SPEEDDROP1(OPPONENT),
     OPP_ACCURACYDROP1(OPPONENT),
     OPP_EVASIONDROP1(OPPONENT),
@@ -30,7 +34,8 @@ public enum MoveSecondaryEffect {
     THRASH(SELF),
     ROAR(OPPONENT),
     MULTIATTACK(OPPONENT),
-    FLINCH(OPPONENT),
+    FLINCH10(OPPONENT),
+    FLINCH30(OPPONENT),
     RECOVER(SELF),
     REST(SELF),
     TOXIC(OPPONENT),
@@ -44,7 +49,7 @@ public enum MoveSecondaryEffect {
     WRAP(OPPONENT),
     DOUBLEATTACK(OPPONENT),
     FOCUSENERGY(SELF),
-    RECOILQUARTER(SELF),
+    RECOIL25(SELF),
     RAGE(SELF),
     OPP_CONFUSION(OPPONENT),
     SELF_ATTACKRAISE2(SELF),
@@ -55,7 +60,10 @@ public enum MoveSecondaryEffect {
     OPP_ATTACKDROP2(OPPONENT),
     OPP_DEFENSEDROP2(OPPONENT),
     OPP_SPEEDDROP2(OPPONENT),
-    PARALYSIS(OPPONENT),
+    PRZ10(OPPONENT),
+    PRZ30(OPPONENT),
+    PRZ100(OPPONENT),
+    PRZ(OPPONENT),
     SKYATTACK(BOTH),
     TWINNEEDLE(OPPONENT),
     SUBSTITUTE(SELF),
@@ -122,7 +130,9 @@ public enum MoveSecondaryEffect {
     BEATUP(SELF),
     FLY(SELF),
     DIG(SELF),
-    DEFENSECURL(SELF);
+    DEFENSECURL(SELF),
+    ENCORE(OPPONENT),
+    CONFUSE100(OPPONENT);
 
     private Target target;
 
@@ -133,7 +143,7 @@ public enum MoveSecondaryEffect {
         NONE
     }
 
-    MoveSecondaryEffect(Target target)   {
+    MoveEffect(Target target)   {
         this.target = target;
     }
 

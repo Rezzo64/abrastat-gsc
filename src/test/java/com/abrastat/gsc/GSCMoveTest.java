@@ -1,7 +1,7 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.Move;
-import com.abrastat.general.MoveSecondaryEffect;
+import com.abrastat.general.MoveEffect;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,7 +60,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Body Slam secondary effect test")
     void bodySlamSecondaryEffectTest()  {
-        assertEquals(MoveSecondaryEffect.PARALYSIS, bodySlam.getSecondaryEffect());
+        assertEquals(MoveEffect.PRZ30, bodySlam.getSecondaryEffect());
     }
 
     @Test
@@ -205,7 +205,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Drill Peck secondary effect test")
     void drillPeckSecondaryEffectTest()   {
-        assertEquals(MoveSecondaryEffect.NONE, drillPeck.getSecondaryEffect());
+        assertEquals(MoveEffect.NONE, drillPeck.getSecondaryEffect());
     }
 
     @Test

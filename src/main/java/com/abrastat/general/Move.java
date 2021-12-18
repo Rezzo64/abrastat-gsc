@@ -20,7 +20,7 @@ public abstract class Move {
     private int basePower;
     private int accuracy;
     private int MaxPP;
-    private MoveSecondaryEffect secondaryEffect;
+    private MoveEffect secondaryEffect;
     private int secondaryChance;
 
     // inherits the movelist json file from the correct gen
@@ -132,7 +132,7 @@ public abstract class Move {
     public abstract int getCurrentPP();
     public abstract void setCurrentPP(int ppValue);
 
-    public MoveSecondaryEffect getSecondaryEffect() {
+    public MoveEffect getSecondaryEffect() {
         return secondaryEffect;
     }
 
@@ -140,11 +140,11 @@ public abstract class Move {
         String secondaryEffectCaps = secondaryEffect.getString("secondary").toUpperCase();
 
         try {
-            this.secondaryEffect = MoveSecondaryEffect.valueOf(secondaryEffectCaps);
+            this.secondaryEffect = MoveEffect.valueOf(secondaryEffectCaps);
         } catch (IllegalArgumentException e)   {
             System.out.println("Secondary effect '" + secondaryEffectCaps + "' wasn't found. " +
                     "no secondary effect will be applied. ");
-            this.secondaryEffect = MoveSecondaryEffect.NONE;
+            this.secondaryEffect = MoveEffect.NONE;
         }
     }
 

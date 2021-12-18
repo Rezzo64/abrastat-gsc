@@ -461,13 +461,13 @@ public abstract class Pokemon extends Species {
         this.heldItem = heldItem;
     }
 
-    public void applySecondaryEffect(@NotNull MoveSecondaryEffect effect)    {
+    public void applySecondaryEffect(@NotNull MoveEffect effect)    {
         // TODO write cases for every effect
         switch (effect) {
-            case PARALYSIS:
+            case PRZ30:
                 applyNonVolatileStatus(Status.PARALYSIS);
                 break;
-            case RECOILQUARTER:
+            case RECOIL25:
                 this.applyDamage(lastDamageTaken / 4);
                 break;
         }
