@@ -17,7 +17,7 @@ public enum Messages {
     }
 
     // For debugging purposes only, records any effects which aren't yet handled.
-    public static void notImplementedYet(Object o)  {
+    public static void notImplementedYet(@NotNull Object o)  {
 
         messageBuffer = ("DEBUG: " + o + " not implemented yet. No effect logged.");
         handleMessage();
@@ -44,6 +44,8 @@ public enum Messages {
 
     public static void statusFailed(Pokemon pokemon, @NotNull Status status) {
         switch (status) {
+            case FAINT:
+                return;
             case BURN:
                 messageBuffer = (pokemon.getSpecies() + " is already burned!");
                 break;
@@ -116,6 +118,7 @@ public enum Messages {
                 break;
             default:
                 messageBuffer = (pokemon.getSpecies() + "is no longer affected by " + status + "!");
+                break;
         }
 
         handleMessage();
@@ -139,6 +142,7 @@ public enum Messages {
                 break;
             default:
                 messageBuffer = (pokemon.getSpecies() + " is affected by " + status + "!");
+                break;
         }
 
         handleMessage();
@@ -172,7 +176,6 @@ public enum Messages {
         else    {
             return;
         }
-
         handleMessage();
     }
 

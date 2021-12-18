@@ -299,4 +299,28 @@ public enum GSCMoves {
         this.moveEffect = moveEffect;
     }
 
+    public boolean isAttack()   {
+        return this.isAttack;
+    }
+
+    public Type getType()   {
+        return this.type;
+    }
+
+    public int getPp() {
+        return this.pp;
+    }
+
+    public int getAccuracy()    {
+        return this.accuracy;
+    }
+
+    public int getBasePower()   {
+        return this.basePower;
+    }
+
+    public MoveEffect getMoveEffect()   {
+        return this.moveEffect;
+    }
+
 }

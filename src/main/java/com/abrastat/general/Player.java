@@ -45,5 +45,5 @@ public class Player {
 //        addPokemon(p1, 0);
 //        addPokemon(p2, 1);
 //    }
-
 }
+

@@ -1,17 +1,15 @@
 package com.abrastat.general;
 
-import java.util.HashMap;
-import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
-public class PlayerPair {
+import java.util.function.BiFunction;
+
+public final class PlayerPair {
 
     private final Player playerOne;
     private final Player playerTwo;
 
-    public PlayerPair(Player player1, Player player2)   {
-        assert player1 != null;
-        assert player2 != null;
-
+    public PlayerPair(@NotNull Player player1, @NotNull Player player2)   {
         this.playerOne = player1;
         this.playerTwo = player2;
     }
@@ -24,7 +22,7 @@ public class PlayerPair {
         return playerTwo;
     }
 
-    public Player getOtherPlayer(Player thisPlayer) {
-        return thisPlayer;
+    public Player getOpponent(Player thisPlayer) {
+        return (playerOne.equals(thisPlayer) ? playerTwo : playerOne);
     }
 }
