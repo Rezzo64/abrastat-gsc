@@ -36,7 +36,7 @@ public enum GSCDamageCalc {
             entry(METAL_COAT, STEEL)
     );
 
-    private static boolean sameTypeAttackBonus(@NotNull Pokemon pokemon, @NotNull Moves move) {
+    private static boolean sameTypeAttackBonus(@NotNull Pokemon pokemon, @NotNull Move move) {
 
         Type moveType = move.type();
         if (pokemon.getTypes()[0] == moveType || pokemon.getTypes()[1] == moveType) {
@@ -72,14 +72,14 @@ public enum GSCDamageCalc {
     }
 
     public static void calcDamage(
-            @NotNull GSCPokemon attackingPokemon, @NotNull GSCPokemon defendingPokemon, @NotNull GSCMoves attack) {
+            @NotNull GSCPokemon attackingPokemon, @NotNull GSCPokemon defendingPokemon, @NotNull GSCMove attack) {
 
         int level = attackingPokemon.getLevel();
         int basePower = attack.basePower();
         int attackStat, defenseStat;
 
-        attackStat = Move.isPhysicalAttack(attack) ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
-        defenseStat = Move.isPhysicalAttack(attack) ? defendingPokemon.getStatDef() : defendingPokemon.getStatSpD();
+        attackStat = attack.isPhysical() ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
+        defenseStat = attack.isPhysical() ? defendingPokemon.getStatDef() : defendingPokemon.getStatSpD();
 
         if (attackStat > 255 || defenseStat > 255)  {
             attackStat /= 4;

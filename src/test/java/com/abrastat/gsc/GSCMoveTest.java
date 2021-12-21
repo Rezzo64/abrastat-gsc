@@ -1,217 +1,176 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.Move;
 import com.abrastat.general.MoveEffect;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
 
 import static com.abrastat.general.Type.*;
+import static com.abrastat.gsc.GSCMove.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GSCMoveTest {
 
-    private static final Move bodySlam   = new GSCMove("bodySlam");
-    private static final Move charm      = new GSCMove("charm");
-    private static final Move rest       = new GSCMove("rest");
-    private static final Move drillPeck  = new GSCMove("drillPeck");
-
     @Test
     @DisplayName("Body Slam move test")
     void bodySlamMoveTest() {
-        assertEquals("Body Slam", bodySlam.getMove());
+        assertEquals("BODY SLAM", BODY_SLAM.toString());
     }
 
     @Test
     @DisplayName("Body Slam 'is attack' test")
     void bodySlamIsAttackTest() {
-        assertTrue(bodySlam.isAttack);
+        assertTrue(BODY_SLAM.isAttack());
     }
 
     @Test
     @DisplayName("Body Slam type test")
     void bodySlamTypeTest() {
-        assertEquals(NORMAL, bodySlam.getMoveType());
+        assertEquals(NORMAL, BODY_SLAM.type());
     }
 
     @Test
     @DisplayName("Body Slam base power test")
     void bodySlamBasePowerTest()    {
-        assertEquals(85, bodySlam.getBasePower());
+        assertEquals(85, BODY_SLAM.basePower());
     }
 
     @Test
     @DisplayName("Body Slam PP test")
     void bodySlamPPTest()   {
-        assertEquals(24, bodySlam.getMaxPP());
+        assertEquals(24, BODY_SLAM.pp());
     }
 
     @Test
     @DisplayName("Body Slam accuracy test")
     void bodySlamAccuracyTest() {
-        assertEquals(255, bodySlam.getAccuracy());
+        assertEquals(255, BODY_SLAM.accuracy());
     }
 
     @Test
     @DisplayName("Body Slam secondary effect test")
     void bodySlamSecondaryEffectTest()  {
-        assertEquals(MoveEffect.PRZ30, bodySlam.getSecondaryEffect());
+        assertEquals(MoveEffect.PRZ30, BODY_SLAM.effect());
     }
 
     @Test
     @DisplayName("Body Slam secondary effect chance test")
     void bodySlamSecondaryEffectChanceTest()    {
-        assertEquals(76, bodySlam.getSecondaryChance());
+        assertEquals(76, BODY_SLAM.effect().chance());
     }
 
     @Test
     @DisplayName("Body Slam unused target property test")
     void bodySlamUnusedTargetPropertyTest()    {
-        assertTrue(bodySlam.opponentIsTarget);
+        assertTrue(BODY_SLAM.isAttack());
     }
 
     @Test
     @DisplayName("Charm move test")
     void charmMoveTest()    {
-        assertEquals("Charm", charm.getMove());
+        assertEquals("CHARM", CHARM.toString());
     }
 
     @Test
     @DisplayName("Charm 'is attack' test")
     void charmIsAttackTest() {
-        assertFalse(charm.isAttack);
+        assertFalse(CHARM.isAttack());
     }
 
     @Test
     @DisplayName("Charm target test")
     void charmTargetTest()  {
-        assertTrue(charm.opponentIsTarget);
+        assertEquals(MoveEffect.Target.OPPONENT, CHARM.effect().target());
     }
 
     @Test
     @DisplayName("Charm type test")
     void charmTypeTest()    {
-        assertEquals(NONE, charm.getMoveType());
+        assertEquals(NORMAL, CHARM.type());
     }
 
     @Test
     @DisplayName("Charm PP test")
     void charmPPTest()  {
-        assertEquals(32, charm.getMaxPP());
+        assertEquals(32, CHARM.pp());
     }
 
     @Test
     @DisplayName("Charm accuracy test")
     void charmAccuracyTest()    {
-        assertEquals(255, charm.getAccuracy());
-    }
-
-    @ParameterizedTest
-    @MethodSource("charmNullProperties")
-    @DisplayName("Charm unused properties test")
-    void charmUnusedPropertiesTest(Object t)    {
-        assertTrue(t == Integer.valueOf(0) || t == null);
-    }
-
-    private static Stream<Arguments> charmNullProperties()  {
-        return Stream.of(
-                Arguments.of(charm.getBasePower()),
-                Arguments.of(charm.getSecondaryChance()),
-                Arguments.of(charm.getSecondaryEffect())
-        );
+        assertEquals(255, CHARM.accuracy());
     }
 
     @Test
     @DisplayName("Rest move test")
     void restMoveTest() {
-        assertEquals("Rest", rest.getMove());
+        assertEquals("REST", REST.toString());
     }
 
     @Test
     @DisplayName("Rest 'is attack' test")
     void restIsAttackTest() {
-        assertFalse(rest.isAttack);
+        assertFalse(REST.isAttack());
     }
 
     @Test
     @DisplayName("Rest target test")
     void restTargetTest()   {
-        assertFalse(rest.opponentIsTarget);
+        assertFalse(REST.isAttack());
     }
 
     @Test
     @DisplayName("Rest PP test")
     void restPPTest()   {
-        assertEquals(16, rest.getMaxPP());
-    }
-
-    @ParameterizedTest
-    @MethodSource("restNullProperties")
-    @DisplayName("Rest unused properties test")
-    void restUnusedPropertiesTest(Object t) {
-        assertTrue(t == Integer.valueOf(0) || t == null);
-    }
-
-    private static Stream<Arguments> restNullProperties()   {
-        return Stream.of(
-                Arguments.of(rest.getBasePower()),
-                Arguments.of(rest.getAccuracy()),
-                Arguments.of(rest.getSecondaryEffect()),
-                Arguments.of(rest.getSecondaryChance())
-        );
+        assertEquals(16, REST.pp());
     }
 
     @Test
     @DisplayName("Drill Peck move test")
     void drillPeckMoveTest()    {
-        assertEquals("Drill Peck", drillPeck.getMove());
+        assertEquals("DRILL PECK", DRILL_PECK.toString());
     }
 
     @Test
     @DisplayName("Drill Peck 'is attack' test")
     void drillPeckIsAttackTest()    {
-        assertTrue(drillPeck.isAttack);
+        assertTrue(DRILL_PECK.isAttack());
     }
 
     @Test
     @DisplayName("Drill Peck base power test")
     void drillPeckBasePowerTest()   {
-        assertEquals(80, drillPeck.getBasePower());
+        assertEquals(80, DRILL_PECK.basePower());
     }
 
     @Test
     @DisplayName("Drill Peck PP test")
     void drillPeckPPTest()  {
-        assertEquals(32, drillPeck.getMaxPP());
+        assertEquals(32, DRILL_PECK.pp());
     }
 
     @Test
     @DisplayName("Drill Peck accuracy test")
     void drillPeckAccuracyTest()    {
-        assertEquals(255, drillPeck.getAccuracy());
+        assertEquals(255, DRILL_PECK.accuracy());
     }
 
     @Test
     @DisplayName("Drill Peck type test")
     void drillPeckTypeTest()    {
-        assertEquals(FLYING, drillPeck.getMoveType());
+        assertEquals(FLYING, DRILL_PECK.type());
     }
 
     @Test
     @DisplayName("Drill Peck secondary effect test")
     void drillPeckSecondaryEffectTest()   {
-        assertEquals(MoveEffect.NONE, drillPeck.getSecondaryEffect());
+        assertEquals(MoveEffect.NONE, DRILL_PECK.effect());
     }
 
     @Test
     @DisplayName("Drill Peck secondary chance test")
     void drillPeckSecondaryChanceTest()   {
-        assertEquals(0, drillPeck.getSecondaryChance());
+        assertEquals(0, DRILL_PECK.effect().chance());
     }
 
 }

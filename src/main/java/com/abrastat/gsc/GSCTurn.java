@@ -11,7 +11,7 @@ import static com.abrastat.gsc.GSCDamageCalc.calcDamage;
 
 public class GSCTurn {
 
-    public GSCTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMoves move) {
+    public GSCTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
 
         // check neither pokemon is fainted
         if (checkPokemonAreNotFainted(attackingPokemon, defendingPokemon)) {
@@ -117,7 +117,7 @@ public class GSCTurn {
         return (accuracy < roll);
     }
 
-    private static void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Moves move) {
+    private static void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Move move) {
         MoveEffect effect = move.effect();
         if (effect.target() == MoveEffect.Target.NONE)   {
             return;

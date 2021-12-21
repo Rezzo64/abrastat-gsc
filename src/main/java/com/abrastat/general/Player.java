@@ -1,7 +1,5 @@
 package com.abrastat.general;
 
-import com.abrastat.gsc.GSCPokemon;
-
 public abstract class Player {
 
     private String playerName;
@@ -38,7 +36,7 @@ public abstract class Player {
     }
 
     // eventually going to handle the logic sequence of selecting a preferred move.
-    public abstract Moves chooseAttack();
+    public abstract Move chooseAttack();
 
 //    public void addPokemon(Pokemon pokemon, int partyPosition)  {
 //        this.pokemonTeam[partyPosition] = pokemon;

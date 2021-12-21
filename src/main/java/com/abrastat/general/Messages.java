@@ -1,10 +1,7 @@
 package com.abrastat.general;
 
-import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
 import org.jetbrains.annotations.NotNull;
-
-import static com.abrastat.general.Status.*;
 
 public enum Messages {
 
@@ -23,7 +20,7 @@ public enum Messages {
         handleMessage();
     }
 
-    private static void logIssue(Pokemon pokemon, Moves move) {
+    private static void logIssue(Pokemon pokemon, Move move) {
         // TODO write this to a file or something
         // messageBuffer.write();
     }
@@ -167,7 +164,7 @@ public enum Messages {
         handleMessage();
     }
 
-    public static void logAttack(@NotNull Pokemon pokemon, @NotNull Moves move)    {
+    public static void logAttack(@NotNull Pokemon pokemon, @NotNull Move move)    {
         messageBuffer = (pokemon.getSpecies() + " used " + move + "!");
         handleMessage();
     }
@@ -248,7 +245,7 @@ public enum Messages {
         handleMessage();
     }
 
-    public static void ppFailedToDeduct(Pokemon pokemon, Moves move) {
+    public static void ppFailedToDeduct(Pokemon pokemon, Move move) {
         messageBuffer = ("Failed to identify the move " + move + " on " + pokemon + ". No PP was deducted.");
         logIssue(pokemon, move);
         handleMessage();

@@ -37,8 +37,8 @@ public class GSCGameRunner {
     }
 
     public GSCGameRunner(
-            String pkPl1, GSCMoves @NotNull [] pkPl1Moves, Item pkPl1Item,
-            String pkPl2, GSCMoves @NotNull [] pkPl2Moves, Item pkPl2Item,
+            String pkPl1, GSCMove @NotNull [] pkPl1Moves, Item pkPl1Item,
+            String pkPl2, GSCMove @NotNull [] pkPl2Moves, Item pkPl2Item,
             int simulationCount
             ) {
 
@@ -67,11 +67,11 @@ public class GSCGameRunner {
         this.player2.setName("Bug Catcher Don");
 
         player1.addPokemon(new GSCPokemon.Builder("snorlax")
-                .moves(GSCMoves.BODY_SLAM)
+                .moves(GSCMove.BODY_SLAM)
                 .item(LEFTOVERS)
                 .build());
         player2.addPokemon(new GSCPokemon.Builder("zapdos")
-                .moves(GSCMoves.THUNDER)
+                .moves(GSCMove.THUNDER)
                 .item(LEFTOVERS)
                 .build());
 

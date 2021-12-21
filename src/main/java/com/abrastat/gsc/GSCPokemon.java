@@ -34,7 +34,7 @@ public class GSCPokemon extends Pokemon {
 
     }
 
-    public static class Builder extends Pokemon.Builder<GSCMoves> {
+    public static class Builder extends Pokemon.Builder<GSCMove> {
 
         private GSCPokemon pokemon;
         private final String speciesName;
@@ -45,22 +45,22 @@ public class GSCPokemon extends Pokemon {
         }
 
         @Override
-        public Builder moves(@NotNull GSCMoves move1)  {
-            return this.moves(move1, GSCMoves.EMPTY, GSCMoves.EMPTY, GSCMoves.EMPTY);
+        public Builder moves(@NotNull GSCMove move1)  {
+            return this.moves(move1, GSCMove.EMPTY, GSCMove.EMPTY, GSCMove.EMPTY);
         }
 
         @Override
-        public Builder moves(@NotNull GSCMoves move1, @NotNull GSCMoves move2)  {
-            return this.moves(move1, move2, GSCMoves.EMPTY, GSCMoves.EMPTY);
+        public Builder moves(@NotNull GSCMove move1, @NotNull GSCMove move2)  {
+            return this.moves(move1, move2, GSCMove.EMPTY, GSCMove.EMPTY);
         }
 
         @Override
-        public Builder moves(@NotNull GSCMoves move1, @NotNull GSCMoves move2, @NotNull GSCMoves move3) {
-            return this.moves(move1, move2, move3, GSCMoves.EMPTY);
+        public Builder moves(@NotNull GSCMove move1, @NotNull GSCMove move2, @NotNull GSCMove move3) {
+            return this.moves(move1, move2, move3, GSCMove.EMPTY);
         }
 
         @Override
-        public Builder moves(@NotNull GSCMoves move1, @NotNull GSCMoves move2, @NotNull GSCMoves move3, @NotNull GSCMoves move4)  {
+        public Builder moves(@NotNull GSCMove move1, @NotNull GSCMove move2, @NotNull GSCMove move3, @NotNull GSCMove move4)  {
             this.addMove(move1, 1)
                 .addMove(move2, 2)
                 .addMove(move3, 3)

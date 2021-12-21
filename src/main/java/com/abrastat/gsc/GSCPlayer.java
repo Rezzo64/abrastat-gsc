@@ -10,7 +10,7 @@ public class GSCPlayer extends Player {
     }
 
     @Override
-    public GSCMoves chooseAttack() {
-        return (GSCMoves) this.getCurrentPokemon().getMoves()[0];
+    public GSCMove chooseAttack() {
+        return (GSCMove) this.getCurrentPokemon().getMoves()[0];
     }
 }

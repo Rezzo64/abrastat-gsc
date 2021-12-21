@@ -2,7 +2,6 @@ package com.abrastat.gsc;
 
 import com.abrastat.general.*;
 import org.jetbrains.annotations.NotNull;
-import com.abrastat.gsc.GSCPlayer;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,7 +18,7 @@ public class GSCGame implements Game {
     private int p1ReflectCounter = 0, p2ReflectCounter = 0;
     private int p1LightScreenCounter = 0, p2LightScreenCounter = 0;
     private int p1SafeguardCounter = 0, p2SafeguardCounter = 0;
-    private GSCMoves lastMoveUsed;
+    private GSCMove lastMoveUsed;
 
     public GSCGame(@NotNull GSCPlayer player1, @NotNull GSCPlayer player2) {
 
@@ -33,13 +32,13 @@ public class GSCGame implements Game {
         // Messages.announceSwitch(player2, pokemonPlayerTwo);
 
         while (!someoneFainted())   {
-            GSCMoves movePlayerOne = player1.chooseAttack();
-            GSCMoves movePlayerTwo = player2.chooseAttack();
+            GSCMove movePlayerOne = player1.chooseAttack();
+            GSCMove movePlayerTwo = player2.chooseAttack();
             initTurn(movePlayerOne, movePlayerTwo);
         }
     }
 
-    public void initTurn(GSCMoves movePlayerOne, GSCMoves movePlayerTwo)   {
+    public void initTurn(GSCMove movePlayerOne, GSCMove movePlayerTwo)   {
         turnNumber++;
         Messages.announceTurn(turnNumber);
         Messages.displayCurrentHP(pokemonPlayerOne);
@@ -152,12 +151,12 @@ public class GSCGame implements Game {
     }
 
     @Override
-    public Moves getLastMoveUsed() {
+    public Move getLastMoveUsed() {
         return this.lastMoveUsed;
     }
 
     @Override
-    public void setLastMoveUsed(GSCMoves move) {
+    public void setLastMoveUsed(GSCMove move) {
         this.lastMoveUsed = move;
     }
 }

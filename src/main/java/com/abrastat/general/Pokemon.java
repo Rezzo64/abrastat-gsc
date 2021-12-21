@@ -18,7 +18,7 @@ public abstract class Pokemon extends Species {
     private String nickname;
     private Gender gender;
     private Ability ability;
-    private Moves move1, move2, move3, move4;
+    private Move move1, move2, move3, move4;
     private int move1pp, move2pp, move3pp, move4pp;
     private int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
     private int evHP, evAtk, evDef, evSpA, evSpD, evSpe;
@@ -93,7 +93,7 @@ public abstract class Pokemon extends Species {
 
     }
 
-    public abstract static class Builder<T extends Moves> {
+    public abstract static class Builder<T extends Move> {
 
         private String nickname;
         private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
@@ -102,7 +102,7 @@ public abstract class Pokemon extends Species {
         private Ability ability;
         private Item heldItem;
         private Gender gender;
-        private Moves move1, move2, move3, move4;
+        private Move move1, move2, move3, move4;
 
         protected Builder()  {}
 
@@ -116,7 +116,7 @@ public abstract class Pokemon extends Species {
         public abstract Builder<T> moves(T move1, T move2, T move3);
         public abstract Builder<T> moves(T move1, T move2, T move3, T move4);
 
-        public Builder<T> addMove(Moves move, int moveSlot) {
+        public Builder<T> addMove(Move move, int moveSlot) {
             switch (moveSlot)   {
                 case 1:
                     this.move1 = move;
@@ -173,7 +173,7 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
 
-    public boolean hasMove(Moves move)   {
+    public boolean hasMove(Move move)   {
         return move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move);
     }
 
@@ -381,7 +381,7 @@ public abstract class Pokemon extends Species {
         this.move4pp--;
     }
 
-    public void decrementMovePp(@NotNull Moves move) {
+    public void decrementMovePp(@NotNull Move move) {
         if (move.equals(move1))         {
             decrementMoveOnePp();
         }
@@ -513,7 +513,7 @@ public abstract class Pokemon extends Species {
         this.level = level;
     }
 
-    protected Pokemon addMoves(@NotNull Moves move1, @NotNull Moves move2, @NotNull Moves move3, @NotNull Moves move4)    {
+    protected Pokemon addMoves(@NotNull Move move1, @NotNull Move move2, @NotNull Move move3, @NotNull Move move4)    {
         this.move1 = move1;
         this.move2 = move2;
         this.move3 = move3;
@@ -521,8 +521,8 @@ public abstract class Pokemon extends Species {
         return (this);
     }
 
-    public Moves[] getMoves()    {
-        return new Moves[] { move1, move2, move3, move4 };
+    public Move[] getMoves()    {
+        return new Move[] { move1, move2, move3, move4 };
     }
 
     public Status getNonVolatileStatus()  {
