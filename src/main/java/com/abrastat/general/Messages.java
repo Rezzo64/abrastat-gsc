@@ -113,7 +113,7 @@ public enum Messages {
                 messageBuffer = (pokemon.getSpecies() + " woke up!");
                 break;
             case FREEZE:
-                messageBuffer = (pokemon.getSpecies() + " thawed!");
+                messageBuffer = (pokemon.getSpecies() + " thawed out!");
                 break;
             case CONFUSION:
             case FATIGUE:

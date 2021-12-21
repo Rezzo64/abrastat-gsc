@@ -4,8 +4,6 @@ import com.abrastat.general.*;
 import com.abrastat.gsc.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
 import static com.abrastat.general.Item.*;
 
 public class GSCGameRunner {
@@ -13,8 +11,9 @@ public class GSCGameRunner {
     private final GSCPlayer player1 = new GSCPlayer();
     private final GSCPlayer player2 = new GSCPlayer();
 
+    private final GSCPlayerPair playerPair = new GSCPlayerPair(player1, player2);
+
     private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
-    private ArrayList<? extends Game> gameList = new ArrayList<>();
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
     private int simulationCount = 1000;
 

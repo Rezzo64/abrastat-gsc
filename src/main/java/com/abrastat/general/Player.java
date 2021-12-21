@@ -1,10 +1,17 @@
 package com.abrastat.general;
 
+import java.util.ArrayList;
+
 public abstract class Player {
 
     private String playerName;
     private Pokemon[] pokemonTeam = new Pokemon[6];
-    private PlayerBehaviour behaviour;
+    protected boolean justUseFirstAttack = true;
+    protected ArrayList<PlayerBehaviour> behaviours;
+
+    public Player() {
+
+    }
 
     public void setName(String name)    {
         this.playerName = name;
@@ -26,6 +33,21 @@ public abstract class Player {
 
     public abstract Pokemon getCurrentPokemon();
 
+    // eventually going to handle the logic sequence of selecting a preferred move.
+    public abstract Move chooseMove(Player opponent);
+
+    public ArrayList<PlayerBehaviour> getBehaviours()    {
+        return this.behaviours;
+    }
+
+    public void setBehaviours(PlayerBehaviour[] behaviours) {
+
+        // Firstly, disable mindlessly attacking with the strongest move
+        justUseFirstAttack = false;
+
+    }
+
+
     //TODO eventually...
     public void swapCurrentPokemon()    {
 
@@ -35,9 +57,6 @@ public abstract class Player {
         return this.pokemonTeam;
     }
 
-    // eventually going to handle the logic sequence of selecting a preferred move.
-    public abstract Move chooseAttack();
-
 //    public void addPokemon(Pokemon pokemon, int partyPosition)  {
 //        this.pokemonTeam[partyPosition] = pokemon;
 //    }
@@ -45,5 +64,10 @@ public abstract class Player {
 //        addPokemon(p1, 0);
 //        addPokemon(p2, 1);
 //    }
+
+    @Override
+    public String toString()    {
+        return this.playerName;
+    }
 }
 

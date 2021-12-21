@@ -130,4 +130,8 @@ public enum GSCDamageCalc {
         Messages.logDamageTaken(defendingPokemon, damage);
     }
 
+    // This is used for preprocessing - it always assumes max damage roll
+    public static int calcDamageEstimate()  {
+
+    }
 }

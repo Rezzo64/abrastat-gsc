@@ -32,8 +32,8 @@ public class GSCGame implements Game {
         // Messages.announceSwitch(player2, pokemonPlayerTwo);
 
         while (!someoneFainted())   {
-            GSCMove movePlayerOne = player1.chooseAttack();
-            GSCMove movePlayerTwo = player2.chooseAttack();
+            GSCMove movePlayerOne = player1.chooseMove(player2);
+            GSCMove movePlayerTwo = player2.chooseMove(player1);
             initTurn(movePlayerOne, movePlayerTwo);
         }
     }
@@ -64,8 +64,23 @@ public class GSCGame implements Game {
         // IF battle effects like Perish Song, Light Screen, Safeguard
 
         applyLeftovers(playerOneIsFaster());
-
         // thaw chance
+        if (pokemonPlayerOne.getNonVolatileStatus() == FREEZE) {
+            removeFreeze(pokemonPlayerOne);
+        }
+        if (pokemonPlayerTwo.getNonVolatileStatus() == FREEZE) {
+            removeFreeze(pokemonPlayerTwo);
+        }
+
+
+    }
+
+    private void removeFreeze(GSCPokemon pokemon) {
+        int roll = ThreadLocalRandom.current().nextInt(256);
+        if (roll < 25) {
+            pokemon.removeNonVolatileStatus();
+            Messages.statusChanged(pokemon, FREEZE);
+        }
     }
 
     private boolean playerOneIsFaster() {
