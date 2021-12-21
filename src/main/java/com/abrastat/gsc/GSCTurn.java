@@ -11,7 +11,7 @@ import static com.abrastat.gsc.GSCDamageCalc.calcDamage;
 
 public class GSCTurn {
 
-    public GSCTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
+    public GSCTurn(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMoves move) {
 
         // check neither pokemon is fainted
         if (checkPokemonAreNotFainted(attackingPokemon, defendingPokemon)) {
@@ -24,7 +24,7 @@ public class GSCTurn {
 
             Messages.logAttack(attackingPokemon, move);
 
-            if (didAttackMiss(move.getAccuracy())) {
+            if (didAttackMiss(move.accuracy())) {
 
                 Messages.logMissedAttack(attackingPokemon);
 
@@ -35,7 +35,7 @@ public class GSCTurn {
                 rollSecondaryEffects(attackingPokemon, defendingPokemon, move);
             }
 
-            move.reduceCurrentPP();
+            attackingPokemon.decrementMovePp(move);
 
         }
     }
@@ -60,10 +60,12 @@ public class GSCTurn {
                 case CONFUSION:
                 case FATIGUE:
                     roll = ThreadLocalRandom.current().nextInt(256);
+                    attackingPokemon.incrementConfuseCounter();
                     // increment counter, roll hurt self chance, check for end chance
                     break;
                 case ENCORE:
                     roll = ThreadLocalRandom.current().nextInt(256);
+                    attackingPokemon.incrementEncoreCounter();
                     // increment counter, override attack to instead be previously used attack, check for end chance
                     break;
                 case LOCKON:
@@ -115,25 +117,59 @@ public class GSCTurn {
         return (accuracy < roll);
     }
 
-    private static void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Move move) {
-        MoveEffect effect = move.getSecondaryEffect();
+    private static void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Moves move) {
+        MoveEffect effect = move.effect();
+        if (effect.target() == MoveEffect.Target.NONE)   {
+            return;
+        }
 
-        if (effect.getTarget() == MoveEffect.Target.NONE)   {
+        // Guaranteed effects go here!
+        if (effect.chance() == 0)   {
+            switch (effect) {
+                case RECOIL25:
+                case STRUGGLE:
+                    int recoil = opponent.getLastDamageTaken() / 4;
+                    self.applyDamage(recoil);
+                    Messages.logRecoil(self, recoil);
+            }
             return;
         }
 
         int roll = ThreadLocalRandom.current().nextInt(256);
 
-        if (roll < move.getSecondaryChance()) {
+        // Chance probability attacks go here!
+        if (roll < move.effect().chance()) {
 
             switch (effect) {
+                case THUNDER:
+                case PRZ100:
                 case PRZ30:
+                case PRZ10:
+                case PRZ:
+
                     if (opponent.getNonVolatileStatus() != HEALTHY)
                     { break; }
 
                     opponent.applyNonVolatileStatus(PARALYSIS);
                     Messages.logNewStatus(opponent, PARALYSIS);
                     break;
+
+                case FRZ10:
+                    if (opponent.getNonVolatileStatus() != HEALTHY)
+                    { break; }
+
+                    opponent.applyNonVolatileStatus(FREEZE);
+                    Messages.logNewStatus(opponent, FREEZE);
+                    break;
+
+                case BRN10:
+                case SACREDFIRE:
+                case FLAMEWHEEL:
+                    if (opponent.getNonVolatileStatus() != HEALTHY)
+                    { break; }
+
+                    opponent.applyNonVolatileStatus(FREEZE);
+                    Messages.logNewStatus(opponent, FREEZE);
 
                 // TODO other effects
                 default:

@@ -1,10 +1,13 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.Move;
 import com.abrastat.general.MoveEffect;
+import com.abrastat.general.Moves;
 import com.abrastat.general.Type;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public enum GSCMoves {
+public enum GSCMoves implements Moves {
 
     ABSORB(Type.GRASS, 32, 255, 20, MoveEffect.ABSORB),
     ACID(Type.POISON, 48, 255, 40, MoveEffect.ACIDSPDEFDROP),
@@ -63,6 +66,7 @@ public enum GSCMoves {
     EARTHQUAKE(Type.GROUND, 16, 255, 100),
 //    EGG_BOMB,
 //    EMBER,
+    EMPTY(Type.NONE, 0, MoveEffect.NONE),
     ENCORE(Type.NORMAL, 8, 255, MoveEffect.ENCORE),
 //    ENDURE,
 //    EXPLOSION,
@@ -234,7 +238,7 @@ public enum GSCMoves {
 //    TELEPORT,
     THIEF(Type.DARK, 16, 255, 40, MoveEffect.THIEF),
 //    THRASH,
-    THUNDER(Type.ELECTRIC, 16, 178, 120, MoveEffect.PRZ10),
+    THUNDER(Type.ELECTRIC, 16, 178, 120, MoveEffect.THUNDER),
     THUNDER_WAVE(Type.ELECTRIC, 32, 255, MoveEffect.PRZ),
     THUNDERBOLT(Type.ELECTRIC, 24, 255, 95, MoveEffect.PRZ10),
 //    THUNDERPUNCH,
@@ -256,18 +260,18 @@ public enum GSCMoves {
 //    WRAP,
     ZAP_CANNON(Type.ELECTRIC, 8, 127, 100, MoveEffect.PRZ100);
 
-    private boolean isAttack;
-    private Type type;
+    private final boolean isAttack;
+    private final Type type;
     private int basePower;
-    private int pp;
+    private final int maxPp;
     private int accuracy;
-    private MoveEffect moveEffect;
+    private final MoveEffect moveEffect;
 
     // Attack constructor
     GSCMoves(Type type, int pp, int accuracy, int basePower, MoveEffect moveEffect)   {
         this.isAttack = true;
         this.type = type;
-        this.pp = pp;
+        this.maxPp = pp;
         this.accuracy = accuracy;
         this.basePower = basePower;
         this.moveEffect = moveEffect;
@@ -276,17 +280,17 @@ public enum GSCMoves {
     GSCMoves(Type type, int pp, int accuracy, int basePower)   {
         this.isAttack = true;
         this.type = type;
-        this.pp = pp;
+        this.maxPp = pp;
         this.accuracy = accuracy;
         this.basePower = basePower;
-        this.moveEffect = moveEffect.NONE;
+        this.moveEffect = MoveEffect.NONE;
     }
 
     // Status constructor for moves that DO check accuracy
     GSCMoves(Type type, int pp, int accuracy, MoveEffect moveEffect)  {
         this.isAttack = false;
         this.type = type;
-        this.pp = pp;
+        this.maxPp = pp;
         this.accuracy = accuracy;
         this.moveEffect = moveEffect;
     }
@@ -295,7 +299,7 @@ public enum GSCMoves {
     GSCMoves(Type type, int pp, MoveEffect moveEffect) {
         this.isAttack = false;
         this.type = type;
-        this.pp = pp;
+        this.maxPp = pp;
         this.moveEffect = moveEffect;
     }
 
@@ -303,24 +307,29 @@ public enum GSCMoves {
         return this.isAttack;
     }
 
-    public Type getType()   {
+    public Type type()   {
         return this.type;
     }
 
-    public int getPp() {
-        return this.pp;
+    public int pp() {
+        return this.maxPp;
     }
 
-    public int getAccuracy()    {
+    public int accuracy()    {
         return this.accuracy;
     }
 
-    public int getBasePower()   {
+    public int basePower()   {
         return this.basePower;
     }
 
-    public MoveEffect getMoveEffect()   {
+    public MoveEffect effect()   {
         return this.moveEffect;
+    }
+
+    @Override
+    public @NotNull String toString()    {
+        return super.toString().replace("_", " ");
     }
 
 }

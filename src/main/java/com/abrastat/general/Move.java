@@ -3,7 +3,7 @@ package com.abrastat.general;
 import java.io.*;
 import javax.json.*;
 
-import com.abrastat.gsc.GSCMove;
+import com.abrastat.gsc.GSCMoves;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.*;
 import org.jetbrains.annotations.NotNull;
@@ -156,8 +156,8 @@ public abstract class Move {
         this.secondaryChance = secondaryChance.getInt("chance");
     }
 
-    public static boolean isPhysicalAttack(@NotNull GSCMove attack)    {
-        switch (attack.getMoveType()) {
+    public static boolean isPhysicalAttack(@NotNull GSCMoves attack)    {
+        switch (attack.type()) {
             case NORMAL:
             case FIGHTING:
             case FLYING:

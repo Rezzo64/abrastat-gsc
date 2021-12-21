@@ -36,9 +36,9 @@ public enum GSCDamageCalc {
             entry(METAL_COAT, STEEL)
     );
 
-    private static boolean sameTypeAttackBonus(@NotNull Pokemon pokemon, @NotNull Move move) {
+    private static boolean sameTypeAttackBonus(@NotNull Pokemon pokemon, @NotNull Moves move) {
 
-        Type moveType = move.getMoveType();
+        Type moveType = move.type();
         if (pokemon.getTypes()[0] == moveType || pokemon.getTypes()[1] == moveType) {
             return true;
         } else {
@@ -72,10 +72,10 @@ public enum GSCDamageCalc {
     }
 
     public static void calcDamage(
-            @NotNull GSCPokemon attackingPokemon, @NotNull GSCPokemon defendingPokemon, @NotNull GSCMove attack) {
+            @NotNull GSCPokemon attackingPokemon, @NotNull GSCPokemon defendingPokemon, @NotNull GSCMoves attack) {
 
         int level = attackingPokemon.getLevel();
-        int basePower = attack.getBasePower();
+        int basePower = attack.basePower();
         int attackStat, defenseStat;
 
         attackStat = Move.isPhysicalAttack(attack) ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
@@ -91,7 +91,7 @@ public enum GSCDamageCalc {
         boolean doesItemBoostDamage;
         // comparing item's boosting type against selected attack's type
         if (heldItem != null && damageBoostingItems.get(heldItem) != null) {
-            doesItemBoostDamage = (damageBoostingItems.get(heldItem) == attack.getMoveType());
+            doesItemBoostDamage = (damageBoostingItems.get(heldItem) == attack.type());
         } else {
             doesItemBoostDamage = false;
         }
@@ -100,7 +100,7 @@ public enum GSCDamageCalc {
         int attackModifier, defenseModifier;
 
         double typeEffectiveness =
-            CalcEffectiveness(attack.getMoveType(),
+            CalcEffectiveness(attack.type(),
                     defendingPokemon.getTypes()[0],
                     defendingPokemon.getTypes()[1]);
 
@@ -122,6 +122,8 @@ public enum GSCDamageCalc {
 
         damage *= damageRoll();
         damage = (int) Math.floor(damage / 255);
+
+        damage = Math.min(damage, defendingPokemon.getCurrentHP());
 
         defendingPokemon.applyDamage(damage);
         defendingPokemon.setLastDamageTaken(damage);

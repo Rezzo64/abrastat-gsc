@@ -18,7 +18,8 @@ public abstract class Pokemon extends Species {
     private String nickname;
     private Gender gender;
     private Ability ability;
-    private Move move1, move2, move3, move4;
+    private Moves move1, move2, move3, move4;
+    private int move1pp, move2pp, move3pp, move4pp;
     private int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
     private int evHP, evAtk, evDef, evSpA, evSpD, evSpe;
     private int level;
@@ -34,6 +35,7 @@ public abstract class Pokemon extends Species {
     private int toxicCounter = 0;
     private int confuseCounter = 0;
     private int disableCounter = 0;
+    private int encoreCounter = 0;
 
     public void applyHeal(int healAmount) {
         if (this.currentHP + healAmount >= this.statHP) {
@@ -44,15 +46,12 @@ public abstract class Pokemon extends Species {
     }
 
     public void applyDamage(int damage) {
-        if (damage >= this.currentHP)   {
-            this.setLastDamageTaken(this.currentHP);
-            this.currentHP = 0;
+        this.setLastDamageTaken(damage);
+        this.currentHP -= damage;
+    }
 
-        }
-        else    {
-            this.setLastDamageTaken(damage);
-            this.currentHP -= damage;
-        }
+    public void incrementEncoreCounter()    {
+        this.encoreCounter++;
     }
 
     enum Gender {
@@ -83,9 +82,18 @@ public abstract class Pokemon extends Species {
         this.heldItem = builder.heldItem;
         this.gender = builder.gender;
         this.ability = builder.ability;
+        this.move1 = builder.move1;
+        this.move2 = builder.move2;
+        this.move3 = builder.move3;
+        this.move4 = builder.move4;
+        this.move1pp = move1.pp();
+        this.move2pp = move2.pp();
+        this.move3pp = move3.pp();
+        this.move4pp = move4.pp();
 
     }
-    public abstract static class Builder {
+
+    public abstract static class Builder<T extends Moves> {
 
         private String nickname;
         private int ivHP = 31, ivAtk = 31, ivDef = 31, ivSpA = 31, ivSpD = 31, ivSpe = 31;  // default max
@@ -94,20 +102,35 @@ public abstract class Pokemon extends Species {
         private Ability ability;
         private Item heldItem;
         private Gender gender;
+        private Moves move1, move2, move3, move4;
 
-        public Builder()  {}
+        protected Builder()  {}
 
-        public Builder nickname(String name)    {
+        public Builder<T> nickname(String name)    {
             this.nickname = name;
             return this;
         }
 
-        public abstract Builder moves(String move1);
-        public abstract Builder moves(String move1, String move2);
-        public abstract Builder moves(String move1, String move2, String move3);
-        public abstract Builder moves(String move1, String move2, String move3, String move4);
+        public abstract Builder<T> moves(T move1);
+        public abstract Builder<T> moves(T move1, T move2);
+        public abstract Builder<T> moves(T move1, T move2, T move3);
+        public abstract Builder<T> moves(T move1, T move2, T move3, T move4);
 
-        public Builder ivs(int ivHP, int ivAtk, int ivDef, int ivSpA, int ivSpD, int ivSpe)    {
+        public Builder<T> addMove(Moves move, int moveSlot) {
+            switch (moveSlot)   {
+                case 1:
+                    this.move1 = move;
+                case 2:
+                    this.move2 = move;
+                case 3:
+                    this.move3 = move;
+                case 4:
+                    this.move4 = move;
+            }
+            return this;
+        }
+
+        public Builder<T> ivs(int ivHP, int ivAtk, int ivDef, int ivSpA, int ivSpD, int ivSpe)    {
             this.ivHP = ivHP;
             this.ivAtk = ivAtk;
             this.ivDef = ivDef;
@@ -116,7 +139,7 @@ public abstract class Pokemon extends Species {
             this.ivSpe = ivSpe;
             return this;
         }
-        public Builder evs(int evHP, int evAtk, int evDef, int evSpA, int evSpD, int evSpe) {
+        public Builder<T> evs(int evHP, int evAtk, int evDef, int evSpA, int evSpD, int evSpe) {
             this.evHP = evHP;
             this.evAtk = evAtk;
             this.evDef = evDef;
@@ -126,17 +149,17 @@ public abstract class Pokemon extends Species {
             return this;
         }
 
-        public Builder level(int level)   {
+        public Builder<T> level(int level)   {
             this.level = level;
             return this;
         }
 
         // TODO
-        public Builder gender()   {
+        public Builder<T> gender()   {
             return this;
         }
 
-        public Builder item(Item item)  {
+        public Builder<T> item(Item item)  {
             this.heldItem = item;
             return this;
         }
@@ -150,7 +173,7 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
 
-    public boolean hasMove(Move move)   {
+    public boolean hasMove(Moves move)   {
         return move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move);
     }
 
@@ -310,6 +333,72 @@ public abstract class Pokemon extends Species {
         this.statSpe = spe;
     }
 
+    public int getMoveOnePp() {
+        return this.move1pp;
+    }
+
+    protected void setMoveOnePp(int pp)   {
+        this.move1pp = pp;
+    }
+
+    protected void decrementMoveOnePp()   {
+        this.move1pp--;
+    }
+
+    public int getMoveTwoPp() {
+        return this.move2pp;
+    }
+
+    protected void setMoveTwoPp(int pp)   {
+        this.move2pp = pp;
+    }
+
+    protected void decrementMoveTwoPp()   {
+        this.move2pp--;
+    }
+
+    public int getMoveThreePp() {
+        return this.move3pp;
+    }
+
+    protected void setMoveThreePp(int pp)   {
+        this.move3pp = pp;
+    }
+
+    protected void decrementMoveThreePp()   {
+        this.move3pp--;
+    }
+
+    public int getMoveFourPp() {
+        return this.move4pp;
+    }
+
+    protected void setMoveFourPp(int pp)   {
+        this.move4pp = pp;
+    }
+
+    protected void decrementMoveFourPp()   {
+        this.move4pp--;
+    }
+
+    public void decrementMovePp(@NotNull Moves move) {
+        if (move.equals(move1))         {
+            decrementMoveOnePp();
+        }
+        else if (move.equals(move2))    {
+            decrementMoveTwoPp();
+        }
+        else if (move.equals(move3))    {
+            decrementMoveThreePp();
+        }
+        else if (move.equals(move4))    {
+            decrementMoveFourPp();
+        }
+        else                            {
+            Messages.ppFailedToDeduct(this, move);
+        }
+    }
+
     public int getAtkMod() {
         return atkMod;
     }
@@ -424,20 +513,7 @@ public abstract class Pokemon extends Species {
         this.level = level;
     }
 
-    private void addMove(Move move, int moveslot) {
-        switch (moveslot)   {
-            case 1:
-                this.move1 = move;
-            case 2:
-                this.move2 = move;
-            case 3:
-                this.move3 = move;
-            case 4:
-                this.move4 = move;
-        }
-    }
-
-    protected Pokemon addMoves(Move move1, Move move2, Move move3, Move move4)    {
+    protected Pokemon addMoves(@NotNull Moves move1, @NotNull Moves move2, @NotNull Moves move3, @NotNull Moves move4)    {
         this.move1 = move1;
         this.move2 = move2;
         this.move3 = move3;
@@ -445,8 +521,8 @@ public abstract class Pokemon extends Species {
         return (this);
     }
 
-    public Move[] getMoves()    {
-        return new Move[] { move1, move2, move3, move4 };
+    public Moves[] getMoves()    {
+        return new Moves[] { move1, move2, move3, move4 };
     }
 
     public Status getNonVolatileStatus()  {
@@ -465,9 +541,12 @@ public abstract class Pokemon extends Species {
         // TODO write cases for every effect
         switch (effect) {
             case PRZ30:
+            case PRZ10:
+            case PRZ100:
                 applyNonVolatileStatus(Status.PARALYSIS);
                 break;
             case RECOIL25:
+            case STRUGGLE:
                 this.applyDamage(lastDamageTaken / 4);
                 break;
         }
@@ -621,14 +700,19 @@ public abstract class Pokemon extends Species {
     }
 
     public void resetAllPP()    {
-        this.move1.resetCurrentPP();
-        this.move2.resetCurrentPP();
-        this.move3.resetCurrentPP();
-        this.move4.resetCurrentPP();
+        this.move1pp = move1.pp();
+        this.move2pp = move2.pp();
+        this.move3pp = move3.pp();
+        this.move4pp = move4.pp();
     }
 
     public void resetMoveOnePP()  {
-        this.move1.resetCurrentPP();
+        this.move1pp = move1.pp();
+    }
+
+    @Override
+    public String toString()    {
+        return this.getSpecies();
     }
     
 }

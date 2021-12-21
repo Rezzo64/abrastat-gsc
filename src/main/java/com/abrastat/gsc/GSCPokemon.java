@@ -13,7 +13,6 @@ public class GSCPokemon extends Pokemon {
         this.initEVs();
         this.initHPStat();
         this.initOtherStats();
-        this.addMoves(builder.move1, builder.move2, builder.move3, builder.move4);
 
         // TODO implement 'if' statement to override IVs
         // for when this Pokemon knows the move "Hidden Power"
@@ -32,11 +31,11 @@ public class GSCPokemon extends Pokemon {
         // if (true) {this.overrideEVs();}
 
         this.setCurrentHP(this.getStatHP());
+
     }
 
-    public static class Builder extends Pokemon.Builder {
+    public static class Builder extends Pokemon.Builder<GSCMoves> {
 
-        private GSCMove move1, move2, move3, move4;
         private GSCPokemon pokemon;
         private final String speciesName;
 
@@ -45,26 +44,27 @@ public class GSCPokemon extends Pokemon {
             this.speciesName = speciesName;
         }
 
-        public Builder moves(String move1)  {
-            this.move1 = new GSCMove(move1);
-            return this;
+        @Override
+        public Builder moves(@NotNull GSCMoves move1)  {
+            return this.moves(move1, GSCMoves.EMPTY, GSCMoves.EMPTY, GSCMoves.EMPTY);
         }
-        public Builder moves(String move1, String move2)  {
-            this.move1 = new GSCMove(move1);
-            this.move2 = new GSCMove(move2);
-            return this;
+
+        @Override
+        public Builder moves(@NotNull GSCMoves move1, @NotNull GSCMoves move2)  {
+            return this.moves(move1, move2, GSCMoves.EMPTY, GSCMoves.EMPTY);
         }
-        public Builder moves(String move1, String move2, String move3) {
-            this.move1 = new GSCMove(move1);
-            this.move2 = new GSCMove(move2);
-            this.move3 = new GSCMove(move3);
-            return this;
+
+        @Override
+        public Builder moves(@NotNull GSCMoves move1, @NotNull GSCMoves move2, @NotNull GSCMoves move3) {
+            return this.moves(move1, move2, move3, GSCMoves.EMPTY);
         }
-        public Builder moves(String move1, String move2, String move3, String move4)  {
-            this.move1 = new GSCMove(move1);
-            this.move2 = new GSCMove(move2);
-            this.move3 = new GSCMove(move3);
-            this.move4 = new GSCMove(move4);
+
+        @Override
+        public Builder moves(@NotNull GSCMoves move1, @NotNull GSCMoves move2, @NotNull GSCMoves move3, @NotNull GSCMoves move4)  {
+            this.addMove(move1, 1)
+                .addMove(move2, 2)
+                .addMove(move3, 3)
+                .addMove(move4, 4);
             return this;
         }
 

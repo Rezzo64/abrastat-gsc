@@ -1,7 +1,8 @@
 package com.abrastat.general;
 
+import com.abrastat.gsc.GSCPokemon;
 
-public class Player {
+public abstract class Player {
 
     private String playerName;
     private Pokemon[] pokemonTeam = new Pokemon[6];
@@ -21,9 +22,11 @@ public class Player {
         this.pokemonTeam[0] = pokemon;
     }
 
-    public Pokemon getCurrentPokemon()  {
-        return this.pokemonTeam[0];
+    public Pokemon getPokemon(int partyPosition)    {
+        return this.pokemonTeam[partyPosition];
     }
+
+    public abstract Pokemon getCurrentPokemon();
 
     //TODO eventually...
     public void swapCurrentPokemon()    {
@@ -35,9 +38,8 @@ public class Player {
     }
 
     // eventually going to handle the logic sequence of selecting a preferred move.
-    public Move chooseAttack() {
-        return this.pokemonTeam[0].getMoves()[0];
-    }
+    public abstract Moves chooseAttack();
+
 //    public void addPokemon(Pokemon pokemon, int partyPosition)  {
 //        this.pokemonTeam[partyPosition] = pokemon;
 //    }

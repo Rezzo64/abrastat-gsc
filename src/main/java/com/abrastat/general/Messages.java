@@ -23,6 +23,11 @@ public enum Messages {
         handleMessage();
     }
 
+    private static void logIssue(Pokemon pokemon, Moves move) {
+        // TODO write this to a file or something
+        // messageBuffer.write();
+    }
+
     public static void announceTeam(@NotNull Player player) {
         StringBuilder s = new StringBuilder((player.getName() + ": " + System.lineSeparator()));
         for (Pokemon pokemon : player.getCurrentTeam()) {
@@ -91,7 +96,8 @@ public enum Messages {
                 break;
             case CONFUSION:
             case FATIGUE:
-                messageBuffer = (pokemon.getSpecies() + " hurt itself in confusion!");
+                messageBuffer = (pokemon.getSpecies() + " hurt itself in confusion! ("
+                        + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
                 break;
             case ATTRACT:
                 messageBuffer = (pokemon.getSpecies() + " is immobilised by love!");
@@ -127,11 +133,13 @@ public enum Messages {
     public static void logEffect(Pokemon pokemon, @NotNull Status status)    {
         switch (status) {
             case BURN:
-                messageBuffer = (pokemon.getSpecies() + " is hurt by its burn!");
+                messageBuffer = (pokemon.getSpecies() + " is hurt by its burn! ("
+                        + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
                 break;
             case POISON:
             case TOXIC:
-                messageBuffer = (pokemon.getSpecies() + " is hurt by poison!");
+                messageBuffer = (pokemon.getSpecies() + " is hurt by poison! ("
+                    + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
                 break;
             case CONFUSION:
             case FATIGUE:
@@ -149,7 +157,8 @@ public enum Messages {
     }
 
     public static void leftoversHeal(@NotNull Pokemon pokemon)   {
-        messageBuffer = (pokemon.getSpecies() + " restored health using its Leftovers!");
+        messageBuffer = (pokemon.getSpecies() + " restored health using its Leftovers! ("
+                + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
         handleMessage();
     }
 
@@ -158,8 +167,8 @@ public enum Messages {
         handleMessage();
     }
 
-    public static void logAttack(@NotNull Pokemon pokemon, @NotNull Move move)    {
-        messageBuffer = (pokemon.getSpecies() + " used " + move.getMove() + "!");
+    public static void logAttack(@NotNull Pokemon pokemon, @NotNull Moves move)    {
+        messageBuffer = (pokemon.getSpecies() + " used " + move + "!");
         handleMessage();
     }
 
@@ -185,7 +194,8 @@ public enum Messages {
     }
 
     public static void logDamageTaken(@NotNull Pokemon pokemon, int damage)  {
-        messageBuffer = (pokemon.getSpecies() + " took " + damage + " hit points of damage.");
+        messageBuffer = (pokemon.getSpecies() + " took " + damage + " hit points of damage. ("
+                + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
         handleMessage();
     }
 
@@ -235,6 +245,18 @@ public enum Messages {
                 " current HP: " + pokemon.getCurrentHP() +
                 " / " +
                 pokemon.getStatHP());
+        handleMessage();
+    }
+
+    public static void ppFailedToDeduct(Pokemon pokemon, Moves move) {
+        messageBuffer = ("Failed to identify the move " + move + " on " + pokemon + ". No PP was deducted.");
+        logIssue(pokemon, move);
+        handleMessage();
+    }
+
+    public static void logRecoil(@NotNull GSCPokemon pokemon, int recoil) {
+        messageBuffer = (pokemon.getSpecies() + " took " + recoil + " hit points of recoil damage! ("
+                + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
         handleMessage();
     }
 }

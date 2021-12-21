@@ -1,11 +1,7 @@
 package com.abrastat.runners;
 
-import com.abrastat.general.Game;
-import com.abrastat.general.Item;
-import com.abrastat.general.Player;
-import com.abrastat.gsc.GSCGame;
-import com.abrastat.gsc.GSCMove;
-import com.abrastat.gsc.GSCPokemon;
+import com.abrastat.general.*;
+import com.abrastat.gsc.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,14 +10,55 @@ import static com.abrastat.general.Item.*;
 
 public class GSCGameRunner {
 
-    private Player player1 = new Player();
-    private Player player2 = new Player();
+    private final GSCPlayer player1 = new GSCPlayer();
+    private final GSCPlayer player2 = new GSCPlayer();
+
     private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
     private ArrayList<? extends Game> gameList = new ArrayList<>();
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
+    private int simulationCount = 1000;
 
-    public GSCGameRunner(GSCPokemon pokemonPlayerOne, GSCMove[] pokemonPlayerOneMoves, Item pokemonPlayerOneItem)    {
+    public GSCGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)  {
+        player1.setName("Youngster Joey");
+        player2.setName("Bug Catcher Don");
+        this.player1.addPokemon(pokemonPlayerOne);
+        this.player2.addPokemon(pokemonPlayerTwo);
+    }
 
+    public GSCGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo, int simulationCount) {
+        player1.setName("Youngster Joey");
+        player2.setName("Bug Catcher Don");
+        this.player1.addPokemon(pokemonPlayerOne);
+        this.player2.addPokemon(pokemonPlayerTwo);
+        this.simulationCount = simulationCount;
+
+        this.setPermanentItems();
+        this.simulate(simulationCount);
+    }
+
+    public GSCGameRunner(
+            String pkPl1, GSCMoves @NotNull [] pkPl1Moves, Item pkPl1Item,
+            String pkPl2, GSCMoves @NotNull [] pkPl2Moves, Item pkPl2Item,
+            int simulationCount
+            ) {
+
+        player1.setName("Youngster Joey");
+        player2.setName("Bug Catcher Don");
+
+        this.player1.addPokemon(new GSCPokemon.Builder(pkPl1)
+                .moves(pkPl1Moves[0], pkPl1Moves[1], pkPl1Moves[2], pkPl2Moves[3])
+                .item(pkPl1Item)
+                .build()
+        );
+
+        this.player2.addPokemon(new GSCPokemon.Builder(pkPl2)
+                .moves(pkPl2Moves[0], pkPl2Moves[1], pkPl2Moves[2], pkPl2Moves[3])
+                .item(pkPl2Item)
+                .build()
+        );
+
+        this.setPermanentItems();
+        this.simulate(simulationCount);
     }
 
     public GSCGameRunner(int simulationCount) {
@@ -29,35 +66,23 @@ public class GSCGameRunner {
         this.player1.setName("Youngster Joey");
         this.player2.setName("Bug Catcher Don");
 
-        player1.addPokemon(new GSCPokemon.Builder("cloyster")
-                .moves("surf")
+        player1.addPokemon(new GSCPokemon.Builder("snorlax")
+                .moves(GSCMoves.BODY_SLAM)
                 .item(LEFTOVERS)
                 .build());
         player2.addPokemon(new GSCPokemon.Builder("zapdos")
-                .moves("thunder")
+                .moves(GSCMoves.THUNDER)
                 .item(LEFTOVERS)
                 .build());
 
+        this.setPermanentItems();
+        this.simulate(simulationCount);
+
+    }
+
+    private void setPermanentItems() {
         playerOnePermanentItem = player1.getCurrentPokemon().getHeldItem();
         playerTwoPermanentItem = player2.getCurrentPokemon().getHeldItem();
-
-        for (int i = 0; i < simulationCount; i++)   {
-
-            switch (new GSCGame(player1, player2).getWinner())  {
-                case 0:
-                    nobodyWins();
-                    break;
-                case 1:
-                    playerOneWins();
-                    break;
-                case 2:
-                    playerTwoWins();
-                    break;
-            }
-
-            refreshTeams();
-
-        }
     }
 
     private void refreshTeams() {
@@ -76,35 +101,63 @@ public class GSCGameRunner {
         }
 
     }
+    private void simulate(int simulationCount) {
+
+        int i;
+
+        for (i = 0; i < simulationCount; i++) {
+
+            switch (new GSCGame(player1, player2).getWinner()) {
+                case 0:
+                    this.nobodyWins();
+                    break;
+                case 1:
+                    playerOneWins();
+                    break;
+                case 2:
+                    playerTwoWins();
+                    break;
+            }
+            System.out.println(currentResults());
+            System.out.println(resultsPercentages(i) + System.lineSeparator());
+            refreshTeams();
+        }
+    }
+
+    private @NotNull String resultsPercentages(int simCount) {
+        return "Player 1: " + ((displayP1Wins() * 100f) / (simCount + 1))
+                + "%, Player 2: " + ((displayP2Wins() * 100f) / (simCount + 1))
+                + "%, Draws: " + ((displayDraws() * 100f / (simCount + 1))
+                + "%");
+    }
+
 
     public void playerOneWins()  {
         this.playerOneWinnerCount++;
-        System.out.println(currentResults() + System.lineSeparator());
     }
 
     public void playerTwoWins() {
         this.playerTwoWinnerCount++;
-        System.out.println(currentResults() + System.lineSeparator());
     }
 
     public void nobodyWins()    {
         drawCount++;
     }
 
-    public int displayP1Wins()   {
+    private int displayP1Wins()   {
         return playerOneWinnerCount;
     }
 
-    public int displayP2Wins()  {
+    private int displayP2Wins()  {
         return playerTwoWinnerCount;
     }
 
-    public int displayDraws()   {
+    private int displayDraws()   {
         return drawCount;
     }
 
-    private @NotNull String currentResults() {
-        return "Player 1: " + displayP1Wins() + ", Player 2: " + displayP2Wins();
+    public @NotNull String currentResults() {
+        return "Player 1: " + displayP1Wins() + ", Player 2: " + displayP2Wins() + ", Draws: " + displayDraws();
     }
 
 }

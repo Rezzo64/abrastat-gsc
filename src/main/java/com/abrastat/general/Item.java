@@ -138,6 +138,9 @@ public enum Item  {
     }},
     METAL_COAT(false, new Format[]{GSC})    {public void itemEffect()   {
 
+    }},
+    NONE(false, new Format[]{RBY, GSC, ADV, DPP, BW, ORAS, SM, SWSH})   {public void itemEffect() {
+
     }}
     ;
 

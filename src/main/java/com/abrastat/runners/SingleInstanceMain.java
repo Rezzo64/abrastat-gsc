@@ -9,7 +9,7 @@ public class SingleInstanceMain {
 
     public static void main(String[] args) {
 
-        GSCGameRunner runner = new GSCGameRunner(100000);
+        new GSCGameRunner(100000);
 
         Messages.gameOver();
         System.exit(0);
