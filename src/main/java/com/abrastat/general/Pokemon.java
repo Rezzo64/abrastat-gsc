@@ -18,7 +18,7 @@ public abstract class Pokemon extends Species {
     private String nickname;
     private Gender gender;
     private Ability ability;
-    private Move move1, move2, move3, move4;
+    protected Move[] moves;
     private int move1pp, move2pp, move3pp, move4pp;
     private int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
     private int evHP, evAtk, evDef, evSpA, evSpD, evSpe;
@@ -82,14 +82,14 @@ public abstract class Pokemon extends Species {
         this.heldItem = builder.heldItem;
         this.gender = builder.gender;
         this.ability = builder.ability;
-        this.move1 = builder.move1;
-        this.move2 = builder.move2;
-        this.move3 = builder.move3;
-        this.move4 = builder.move4;
-        this.move1pp = move1.pp();
-        this.move2pp = move2.pp();
-        this.move3pp = move3.pp();
-        this.move4pp = move4.pp();
+        this.moves[0] = builder.move1;
+        this.moves[1] = builder.move2;
+        this.moves[2] = builder.move3;
+        this.moves[3] = builder.move4;
+        this.move1pp = moves[0].pp();
+        this.move2pp = moves[1].pp();
+        this.move3pp = moves[2].pp();
+        this.move4pp = moves[3].pp();
 
     }
 
@@ -174,7 +174,7 @@ public abstract class Pokemon extends Species {
     protected abstract void initOtherStats();
 
     public boolean hasMove(Move move)   {
-        return move1.equals(move) || move2.equals(move) || move3.equals(move) || move4.equals(move);
+        return moves[0].equals(move) || moves[1].equals(move) || moves[2].equals(move) || moves[3].equals(move);
     }
 
     public Gender getGender() {
@@ -382,16 +382,16 @@ public abstract class Pokemon extends Species {
     }
 
     public void decrementMovePp(@NotNull Move move) {
-        if (move.equals(move1))         {
+        if (move.equals(moves[0]))         {
             decrementMoveOnePp();
         }
-        else if (move.equals(move2))    {
+        else if (move.equals(moves[1]))    {
             decrementMoveTwoPp();
         }
-        else if (move.equals(move3))    {
+        else if (move.equals(moves[2]))    {
             decrementMoveThreePp();
         }
-        else if (move.equals(move4))    {
+        else if (move.equals(moves[3]))    {
             decrementMoveFourPp();
         }
         else                            {
@@ -514,16 +514,14 @@ public abstract class Pokemon extends Species {
     }
 
     protected Pokemon addMoves(@NotNull Move move1, @NotNull Move move2, @NotNull Move move3, @NotNull Move move4)    {
-        this.move1 = move1;
-        this.move2 = move2;
-        this.move3 = move3;
-        this.move4 = move4;
+        this.moves[0] = move1;
+        this.moves[1] = move2;
+        this.moves[2] = move3;
+        this.moves[3] = move4;
         return (this);
     }
 
-    public Move[] getMoves()    {
-        return new Move[] { move1, move2, move3, move4 };
-    }
+    public abstract Move[] getMoves();
 
     public Status getNonVolatileStatus()  {
         return this.nonVolatileStatus;
@@ -700,14 +698,14 @@ public abstract class Pokemon extends Species {
     }
 
     public void resetAllPP()    {
-        this.move1pp = move1.pp();
-        this.move2pp = move2.pp();
-        this.move3pp = move3.pp();
-        this.move4pp = move4.pp();
+        this.move1pp = moves[0].pp();
+        this.move2pp = moves[1].pp();
+        this.move3pp = moves[2].pp();
+        this.move4pp = moves[3].pp();
     }
 
     public void resetMoveOnePP()  {
-        this.move1pp = move1.pp();
+        this.move1pp = moves[0].pp();
     }
 
     @Override

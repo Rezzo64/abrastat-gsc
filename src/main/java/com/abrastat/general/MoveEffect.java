@@ -135,7 +135,8 @@ public enum MoveEffect {
     DIG(SELF, 0),
     DEFENSECURL(SELF, 0),
     ENCORE(OPPONENT, 0),
-    CONFUSE100(OPPONENT, 255);
+    CONFUSE100(OPPONENT, 255),
+    CURSE_GHOST(BOTH, 0);
 
     private Target target;
     private int effectChance;

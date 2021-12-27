@@ -125,6 +125,11 @@ public class GSCPokemon extends Pokemon {
 
     }
 
+    @Override
+    public GSCMove[] getMoves() {
+        return (GSCMove[]) this.moves;
+    }
+
     private static int initOtherStatsFormula(int baseStat, int ivStat, int evStat, int level)   {
         return (int)
                 Math.floor(((baseStat + ivStat) * 2)

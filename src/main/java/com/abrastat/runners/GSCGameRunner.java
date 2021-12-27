@@ -106,7 +106,7 @@ public class GSCGameRunner {
 
         for (i = 0; i < simulationCount; i++) {
 
-            switch (new GSCGame(player1, player2).getWinner()) {
+            switch (new GSCGame(new GSCPlayerPair(player1, player2)).getWinner()) {
                 case 0:
                     this.nobodyWins();
                     break;

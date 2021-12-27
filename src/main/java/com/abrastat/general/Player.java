@@ -1,13 +1,17 @@
 package com.abrastat.general;
 
-import java.util.ArrayList;
+import com.abrastat.gsc.GSCMove;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.HashSet;
 
 public abstract class Player {
 
     private String playerName;
     private Pokemon[] pokemonTeam = new Pokemon[6];
     protected boolean justUseFirstAttack = true;
-    protected ArrayList<PlayerBehaviour> behaviours;
+    protected HashSet<PlayerBehaviour> behaviours;
 
     public Player() {
 
@@ -33,19 +37,11 @@ public abstract class Player {
 
     public abstract Pokemon getCurrentPokemon();
 
-    // eventually going to handle the logic sequence of selecting a preferred move.
-    public abstract Move chooseMove(Player opponent);
-
-    public ArrayList<PlayerBehaviour> getBehaviours()    {
+    public HashSet<PlayerBehaviour> getBehaviours()    {
         return this.behaviours;
     }
 
-    public void setBehaviours(PlayerBehaviour[] behaviours) {
-
-        // Firstly, disable mindlessly attacking with the strongest move
-        justUseFirstAttack = false;
-
-    }
+    public abstract void setBehaviours();
 
 
     //TODO eventually...

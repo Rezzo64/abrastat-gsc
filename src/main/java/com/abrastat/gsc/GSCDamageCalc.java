@@ -131,7 +131,7 @@ public enum GSCDamageCalc {
     }
 
     // This is used for preprocessing - it always assumes max damage roll
-    public static int calcDamageEstimate()  {
+    public static int calcDamageEstimate(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove attack)  {
 
     }
 }

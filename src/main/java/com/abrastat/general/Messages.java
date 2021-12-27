@@ -1,5 +1,6 @@
 package com.abrastat.general;
 
+import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
 import org.jetbrains.annotations.NotNull;
 
@@ -254,6 +255,11 @@ public enum Messages {
     public static void logRecoil(@NotNull GSCPokemon pokemon, int recoil) {
         messageBuffer = (pokemon.getSpecies() + " took " + recoil + " hit points of recoil damage! ("
                 + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
+        handleMessage();
+    }
+
+    public static void logNoGSCMoveBehaviourFound(GSCPokemon pokemon, GSCMove move) {
+        messageBuffer = (pokemon + "'s move " + move + "has no defined behaviour, this move will not be used in battle.");
         handleMessage();
     }
 }

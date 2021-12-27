@@ -12,7 +12,8 @@ public class GSCGame implements Game {
 
     private int turnNumber = 0;
 
-    private GSCPokemon pokemonPlayerOne, pokemonPlayerTwo;
+    private final GSCPokemon pokemonPlayerOne;
+    private final GSCPokemon pokemonPlayerTwo;
     private int winner; // 0 = draw, 1 = p1, 2 = p2
 
     private int p1ReflectCounter = 0, p2ReflectCounter = 0;

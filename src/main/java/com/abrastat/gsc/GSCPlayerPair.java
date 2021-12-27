@@ -13,15 +13,15 @@ public class GSCPlayerPair {
         this.playerTwo = player2;
     }
 
-    public Player playerOne() {
+    public GSCPlayer playerOne() {
         return this.playerOne;
     }
 
-    public Player playerTwo() {
+    public GSCPlayer playerTwo() {
         return this.playerTwo;
     }
 
-    public Player opponent(GSCPlayer thisPlayer) {
+    public GSCPlayer opponent(GSCPlayer thisPlayer) {
         return (playerOne.equals(thisPlayer) ? playerTwo : playerOne);
     }
 }
