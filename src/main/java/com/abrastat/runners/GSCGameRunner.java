@@ -11,8 +11,6 @@ public class GSCGameRunner {
     private final GSCPlayer player1 = new GSCPlayer();
     private final GSCPlayer player2 = new GSCPlayer();
 
-    private final GSCPlayerPair playerPair = new GSCPlayerPair(player1, player2);
-
     private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
     private int simulationCount = 1000;
@@ -106,7 +104,7 @@ public class GSCGameRunner {
 
         for (i = 0; i < simulationCount; i++) {
 
-            switch (new GSCGame(new GSCPlayerPair(player1, player2)).getWinner()) {
+            switch (new GSCGame(player1, player2).getWinner()) {
                 case 0:
                     this.nobodyWins();
                     break;

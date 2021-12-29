@@ -195,7 +195,8 @@ public class GSCPlayer extends Player {
                         int dmg = GSCDamageCalc.calcDamageEstimate(
                                 this.getCurrentPokemon(),
                                 opponent.getCurrentPokemon(),
-                                move);
+                                move,
+                                false);
 
                         if (dmg > strongestAttack) {
                             moveChosen = move;

@@ -67,12 +67,15 @@ public enum GSCDamageCalc {
     private static int critRoll()  {
         return ThreadLocalRandom.current().nextInt(256);
     }
+
     private static int damageRoll()    {
         return (ThreadLocalRandom.current().nextInt(217, 256));
     }
 
     public static void calcDamage(
-            @NotNull GSCPokemon attackingPokemon, @NotNull GSCPokemon defendingPokemon, @NotNull GSCMove attack) {
+            @NotNull GSCPokemon attackingPokemon,
+            @NotNull GSCPokemon defendingPokemon,
+            @NotNull GSCMove attack) {
 
         int level = attackingPokemon.getLevel();
         int basePower = attack.basePower();
@@ -104,8 +107,7 @@ public enum GSCDamageCalc {
                     defendingPokemon.getTypes()[0],
                     defendingPokemon.getTypes()[1]);
 
-        var damage = (int)
-            ((Math.floor(Math.floor(((Math.floor((level * 2) / 5) + 2) * Math.max(1, attackStat) * basePower) / Math.max(1, defenseStat)) / 50) * critModifier() * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness);
+        var damage = damageFormula(level, attackStat, basePower, defenseStat, critModifier(), doesItemBoostDamage, typeEffectiveness);
 
         if (sameTypeAttackBonus(attackingPokemon, attack))  {
             damage = (int) Math.floor(damage * 1.5);
@@ -113,7 +115,7 @@ public enum GSCDamageCalc {
 
         if (typeEffectiveness != 1) {
 
-            // nve will be 0 < typeEffectiveness < 1, so multiply to get around this
+            // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
             // dirty fix and not optimised, come back and change if performance needs it
 
             typeEffectiveness *= 10;
@@ -130,8 +132,79 @@ public enum GSCDamageCalc {
         Messages.logDamageTaken(defendingPokemon, damage);
     }
 
-    // This is used for preprocessing - it always assumes max damage roll
-    public static int calcDamageEstimate(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove attack)  {
+    // This is used for pre-processing - it always assumes max damage roll
+    public static int calcDamageEstimate(
+            @NotNull GSCPokemon attackingPokemon,
+            GSCPokemon defendingPokemon,
+            @NotNull GSCMove attack,
+            boolean isCrit)  {
+
+        int level = attackingPokemon.getLevel();
+        int basePower = attack.basePower();
+        int attackStat, defenseStat;
+        int critValue = 255;
+
+        if (isCrit) {
+            critValue = 1; // any crit mod value < 16 forces critical hit
+        }
+
+        attackStat = attack.isPhysical() ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
+        defenseStat = attack.isPhysical() ? defendingPokemon.getStatDef() : defendingPokemon.getStatSpD();
+
+        if (attackStat > 255 || defenseStat > 255)  {
+            attackStat /= 4;
+            defenseStat /= 4;
+        }
+
+        Item heldItem = attackingPokemon.getHeldItem();
+
+        boolean doesItemBoostDamage;
+        // comparing item's boosting type against selected attack's type
+        if (heldItem != null && damageBoostingItems.get(heldItem) != null) {
+            doesItemBoostDamage = (damageBoostingItems.get(heldItem) == attack.type());
+        } else {
+            doesItemBoostDamage = false;
+        }
+
+        // Modifiers for effects from Growl, Screech, Focus Energy, etc.
+        int attackModifier, defenseModifier;
+
+        double typeEffectiveness =
+                CalcEffectiveness(attack.type(),
+                        defendingPokemon.getTypes()[0],
+                        defendingPokemon.getTypes()[1]);
+
+        var damage = damageFormula(level, attackStat, basePower, defenseStat, critValue, doesItemBoostDamage, typeEffectiveness);
+
+        if (sameTypeAttackBonus(attackingPokemon, attack))  {
+            damage = (int) Math.floor(damage * 1.5);
+        }
+
+        if (typeEffectiveness != 1) {
+
+            // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
+            // dirty fix and not optimised, come back and change if performance needs it
+
+            typeEffectiveness *= 10;
+            Messages.logTypeEffectiveness((int) typeEffectiveness);
+        }
+
+        damage = Math.min(damage, defendingPokemon.getCurrentHP());
+
+        return damage;
+
+    }
+
+    private static int damageFormula(
+            int level,
+            int attackStat,
+            int basePower,
+            int defenseStat,
+            int critModifier,
+            boolean doesItemBoostDamage,
+            double typeEffectiveness) {
+
+        return (int) ((Math.floor(Math.floor(((Math.floor((level * 2) / 5) + 2) * Math.max(1, attackStat) * basePower) / Math.max(1, defenseStat)) / 50) * critModifier * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness);
 
     }
 }
