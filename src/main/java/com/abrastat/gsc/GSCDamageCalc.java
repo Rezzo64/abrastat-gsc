@@ -80,6 +80,7 @@ public enum GSCDamageCalc {
         int level = attackingPokemon.getLevel();
         int basePower = attack.basePower();
         int attackStat, defenseStat;
+        Item heldItem = attackingPokemon.getHeldItem();
 
         attackStat = attack.isPhysical() ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
         defenseStat = attack.isPhysical() ? defendingPokemon.getStatDef() : defendingPokemon.getStatSpD();
@@ -88,8 +89,6 @@ public enum GSCDamageCalc {
             attackStat /= 4;
             defenseStat /= 4;
         }
-
-        Item heldItem = attackingPokemon.getHeldItem();
 
         boolean doesItemBoostDamage;
         // comparing item's boosting type against selected attack's type
@@ -143,6 +142,7 @@ public enum GSCDamageCalc {
         int basePower = attack.basePower();
         int attackStat, defenseStat;
         int critValue = 255;
+        Item heldItem = attackingPokemon.getHeldItem();
 
         if (isCrit) {
             critValue = 1; // any crit mod value < 16 forces critical hit
@@ -155,8 +155,6 @@ public enum GSCDamageCalc {
             attackStat /= 4;
             defenseStat /= 4;
         }
-
-        Item heldItem = attackingPokemon.getHeldItem();
 
         boolean doesItemBoostDamage;
         // comparing item's boosting type against selected attack's type

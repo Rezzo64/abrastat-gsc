@@ -173,10 +173,6 @@ public abstract class Pokemon extends Species {
     protected abstract void initHPStat();
     protected abstract void initOtherStats();
 
-    public boolean hasMove(Move move)   {
-        return moves[0].equals(move) || moves[1].equals(move) || moves[2].equals(move) || moves[3].equals(move);
-    }
-
     public Gender getGender() {
         return gender;
     }

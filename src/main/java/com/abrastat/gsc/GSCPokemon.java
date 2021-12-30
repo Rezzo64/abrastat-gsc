@@ -1,7 +1,10 @@
 package com.abrastat.gsc;
 
 import com.abrastat.general.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 public class GSCPokemon extends Pokemon {
 
@@ -129,6 +132,17 @@ public class GSCPokemon extends Pokemon {
     public GSCMove[] getMoves() {
         return (GSCMove[]) this.moves;
     }
+
+    public int hasMove(GSCMove move)    {
+
+        for (int i = 0; i < getMoves().length; i++) {
+            if (getMoves()[i] == move)  {
+                return i;
+            }
+        }
+        return -1; // negative number to denote that the move isn't in the moveset
+    }
+
 
     private static int initOtherStatsFormula(int baseStat, int ivStat, int evStat, int level)   {
         return (int)

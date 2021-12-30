@@ -11,8 +11,13 @@ import static com.abrastat.gsc.GSCMove.*;
 
 public class GSCPlayer extends Player {
 
+    private boolean hasSleepTalk;
+
     public GSCPlayer()  {
         super();
+        if (getCurrentPokemon().hasMove(SLEEP_TALK) > -1)    {
+            hasSleepTalk = true;
+        }
     }
 
     @Override
@@ -25,7 +30,7 @@ public class GSCPlayer extends Player {
         GSCMove chosenMove = EMPTY;
 
         if (justUseFirstAttack) {
-            return (GSCMove) this.getCurrentPokemon().getMoves()[0];
+            return this.getCurrentPokemon().getMoves()[0];
         }
 
         for (PlayerBehaviour behaviour : behaviours)    {
@@ -50,7 +55,7 @@ public class GSCPlayer extends Player {
         // attribute each attack to a behaviour type
         for (int i = 0; i < getCurrentPokemon().getMoves().length; i++) {
 
-            GSCMove currentMove = (GSCMove) getCurrentPokemon().getMoves()[i];
+            GSCMove currentMove = getCurrentPokemon().getMoves()[i];
 
             switch (currentMove) {
 
@@ -176,22 +181,25 @@ public class GSCPlayer extends Player {
         }
     }
 
-    // Helper works in ascending order, that is, the lowest behaviour in the switch
-    // will be the one who chooses which move to use
+
+    // each behaviour should exist as its own entity depending on the simulation state
 
     public GSCMove chooseMoveHelper(@NotNull PlayerBehaviour behaviour, GSCPlayer opponent)    {
 
+        // just choose the first move as default in case it's not clear what should be done
         GSCMove moveChosen = getCurrentPokemon().getMoves()[0];
+
+        if (hasSleepTalk && notAboutToWakeUp)   {
+
+        }
 
         switch (behaviour) {
 
             case JUST_ATTACK: // pre-processing damage calculations to choose the strongest attack
                 int strongestAttack = 0;
 
-                // just choose the first move as default in case it's not clear what should be done
-
                 for (GSCMove move : getCurrentPokemon().getMoves()) {
-                    if (move.isAttack()) {
+                    if (move.isAttack() && move.pp() > 0) {
                         int dmg = GSCDamageCalc.calcDamageEstimate(
                                 this.getCurrentPokemon(),
                                 opponent.getCurrentPokemon(),
@@ -201,8 +209,14 @@ public class GSCPlayer extends Player {
                         if (dmg > strongestAttack) {
                             moveChosen = move;
                         }
+                        // check if there's a move that has better accuracy and can KO in this range
+                        if (dmg == opponent.getCurrentPokemon().getCurrentHP() && move.accuracy() > moveChosen.accuracy())  {
+                            moveChosen = move;
+                        }
                     }
                 }
+            case RECOVER_RISKILY:
+
         }
 
         return moveChosen;
