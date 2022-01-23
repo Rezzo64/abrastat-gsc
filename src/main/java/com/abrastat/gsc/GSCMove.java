@@ -140,7 +140,7 @@ public enum GSCMove implements Move {
 //    MIST,
 //    MOONLIGHT,
 //    MORNING_SUN,
-//    MUDSLAP,
+//    MUD_SLAP,
     NIGHT_SHADE(Type.GHOST, 24, 255, 1, MoveEffect.SEISMICTOSS),
     NIGHTMARE(Type.GHOST, 24, 255, MoveEffect.NIGHTMARE),
 //    OCTAZOOKA,

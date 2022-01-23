@@ -1,9 +1,7 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.Messages;
-import com.abrastat.general.Move;
-import com.abrastat.general.Player;
-import com.abrastat.general.PlayerBehaviour;
+import com.abrastat.general.*;
+
 import static com.abrastat.general.PlayerBehaviour.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -189,8 +187,8 @@ public class GSCPlayer extends Player {
         // just choose the first move as default in case it's not clear what should be done
         GSCMove moveChosen = getCurrentPokemon().getMoves()[0];
 
-        if (hasSleepTalk && notAboutToWakeUp)   {
-
+        if (hasSleepTalk && notAboutToWake())   {
+            return SLEEP_TALK;
         }
 
         switch (behaviour) {
@@ -220,5 +218,17 @@ public class GSCPlayer extends Player {
         }
 
         return moveChosen;
+    }
+
+    private boolean notAboutToWake() {
+        if(getCurrentPokemon().getNonVolatileStatus() == Status.REST)   {
+            return getCurrentPokemon().getSleepCounter() < 2;
+        }
+
+        if (getCurrentPokemon().getNonVolatileStatus() == Status.SLEEP) {
+            return getCurrentPokemon().getSleepCounter() < 7;
+        }
+
+        return false;
     }
 }
