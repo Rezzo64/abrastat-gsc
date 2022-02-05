@@ -18,7 +18,7 @@ public abstract class Pokemon extends Species {
     private String nickname;
     private Gender gender;
     private Ability ability;
-    protected Move[] moves;
+    protected Move[] moves = new Move[4];
     private int move1pp, move2pp, move3pp, move4pp;
     private int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
     private int evHP, evAtk, evDef, evSpA, evSpD, evSpe;

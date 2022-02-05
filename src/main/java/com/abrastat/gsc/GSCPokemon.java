@@ -73,7 +73,7 @@ public class GSCPokemon extends Pokemon {
 
         @Override
         public GSCPokemon build() {
-            pokemon = new GSCPokemon(speciesName, this);
+            pokemon = new GSCPokemon(this.speciesName, this);
             return pokemon;
         }
     }
