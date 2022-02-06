@@ -7,7 +7,7 @@ public interface Move {
     String name();
     boolean isAttack();
     Type type();
-    int pp();
+    int maxPp();
     int accuracy();
     int basePower();
     MoveEffect effect();

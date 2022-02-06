@@ -99,6 +99,9 @@ public class GSCTurn {
                     Messages.statusChanged(attackingPokemon, SLEEP);
                     return true;
                 }
+            case FREEZE:
+                Messages.cantAttack(attackingPokemon, FREEZE);
+                return false;
                 // case FREEZE: // roll thaw chance, skip turn (always)
             case PARALYSIS:
                 if (roll < 64) {

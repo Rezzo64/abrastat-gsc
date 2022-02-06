@@ -38,7 +38,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Body Slam PP test")
     void bodySlamPPTest()   {
-        assertEquals(24, BODY_SLAM.pp());
+        assertEquals(24, BODY_SLAM.maxPp());
     }
 
     @Test
@@ -92,7 +92,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Charm PP test")
     void charmPPTest()  {
-        assertEquals(32, CHARM.pp());
+        assertEquals(32, CHARM.maxPp());
     }
 
     @Test
@@ -122,7 +122,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Rest PP test")
     void restPPTest()   {
-        assertEquals(16, REST.pp());
+        assertEquals(16, REST.maxPp());
     }
 
     @Test
@@ -146,7 +146,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Drill Peck PP test")
     void drillPeckPPTest()  {
-        assertEquals(32, DRILL_PECK.pp());
+        assertEquals(32, DRILL_PECK.maxPp());
     }
 
     @Test

@@ -4,35 +4,23 @@ import com.abrastat.general.*;
 import com.abrastat.gsc.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
 import static com.abrastat.general.Item.*;
 
 public class GSCGameRunner {
 
-    private final GSCPlayer player1 = new GSCPlayer();
-    private final GSCPlayer player2 = new GSCPlayer();
+    private GSCPlayer player1;
+    private GSCPlayer player2;
 
     private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
-    private ArrayList<? extends Game> gameList = new ArrayList<>();
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
     private int simulationCount = 1000;
 
     public GSCGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)  {
-        player1.setName("Youngster Joey");
-        player2.setName("Bug Catcher Don");
-        this.player1.addPokemon(pokemonPlayerOne);
-        this.player2.addPokemon(pokemonPlayerTwo);
+        gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
     }
 
     public GSCGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo, int simulationCount) {
-        player1.setName("Youngster Joey");
-        player2.setName("Bug Catcher Don");
-        this.player1.addPokemon(pokemonPlayerOne);
-        this.player2.addPokemon(pokemonPlayerTwo);
-        this.simulationCount = simulationCount;
-
-        this.setPermanentItems();
+        gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
         this.simulate(simulationCount);
     }
 
@@ -80,6 +68,16 @@ public class GSCGameRunner {
 
     }
 
+    private void gameRunnerHelper(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)   {
+        player1 = new GSCPlayer(pokemonPlayerOne);
+        player2 = new GSCPlayer(pokemonPlayerTwo);
+        player1.setName("Youngster Joey");
+        player2.setName("Bug Catcher Don");
+        this.player1.addPokemon(pokemonPlayerOne);
+        this.player2.addPokemon(pokemonPlayerTwo);
+        this.setPermanentItems();
+    }
+
     private void setPermanentItems() {
         playerOnePermanentItem = player1.getCurrentPokemon().getHeldItem();
         playerTwoPermanentItem = player2.getCurrentPokemon().getHeldItem();
@@ -87,10 +85,10 @@ public class GSCGameRunner {
 
     private void refreshTeams() {
         player1.getCurrentPokemon().resetStatHp();
-        player1.getCurrentPokemon().resetMoveOnePP();
+        player1.getCurrentPokemon().resetAllPp();
         player1.getCurrentPokemon().removeNonVolatileStatus();
         player2.getCurrentPokemon().resetStatHp();
-        player2.getCurrentPokemon().resetMoveOnePP();
+        player2.getCurrentPokemon().resetAllPp();
         player2.getCurrentPokemon().removeNonVolatileStatus();
 
         if (player1.getCurrentPokemon().getHeldItem() == null)  {
