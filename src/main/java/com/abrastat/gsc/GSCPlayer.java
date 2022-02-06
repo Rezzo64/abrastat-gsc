@@ -11,8 +11,9 @@ public class GSCPlayer extends Player {
 
     private boolean hasSleepTalk;
 
-    public GSCPlayer()  {
+    public GSCPlayer(Pokemon pokemon)  {
         super();
+        addPokemon(pokemon);
         if (getCurrentPokemon().hasMove(SLEEP_TALK) > -1)    {
             hasSleepTalk = true;
         }
@@ -197,7 +198,7 @@ public class GSCPlayer extends Player {
                 int strongestAttack = 0;
 
                 for (GSCMove move : getCurrentPokemon().getMoves()) {
-                    if (move.isAttack() && move.pp() > 0) {
+                    if (move.isAttack() && move.maxPp() > 0) {
                         int dmg = GSCDamageCalc.calcDamageEstimate(
                                 this.getCurrentPokemon(),
                                 opponent.getCurrentPokemon(),

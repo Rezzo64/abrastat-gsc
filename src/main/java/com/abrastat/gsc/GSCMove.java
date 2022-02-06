@@ -276,6 +276,7 @@ public enum GSCMove implements Move {
         this.moveEffect = moveEffect;
     }
 
+    // Attack constructor for moves with no secondary effects
     GSCMove(Type type, int pp, int accuracy, int basePower)   {
         this.isAttack = true;
         this.type = type;
@@ -310,7 +311,7 @@ public enum GSCMove implements Move {
         return this.type;
     }
 
-    public int pp() {
+    public int maxPp() {
         return this.maxPp;
     }
 
