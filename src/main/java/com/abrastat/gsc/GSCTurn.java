@@ -20,7 +20,7 @@ public class GSCTurn {
 
         checkStatusMoveEffects(attackingPokemon);
 
-        if (canAttack(attackingPokemon)) {
+        if (canAttack(attackingPokemon, move)) {
 
             Messages.logAttack(attackingPokemon, move);
 
@@ -80,7 +80,7 @@ public class GSCTurn {
         }
     }
 
-    private static boolean canAttack(@NotNull GSCPokemon attackingPokemon) {
+    private static boolean canAttack(@NotNull GSCPokemon attackingPokemon, @NotNull GSCMove move) {
 
         if (attackingPokemon.getNonVolatileStatus() == HEALTHY)    {
             return true;
@@ -89,20 +89,31 @@ public class GSCTurn {
         int roll = ThreadLocalRandom.current().nextInt(256);  // handles RNG factor
 
         switch (attackingPokemon.getNonVolatileStatus())   {
-            // case SLEEP: // roll sleep awakening chance, increment sleep counter, check for sleep talk call, skip turn otherwise
             case REST:
-                if (attackingPokemon.getSleepCounter() < 2) {
-                    Messages.cantAttack(attackingPokemon, REST);
-                    attackingPokemon.incrementSleepCounter();
-                    return false;
-                } else {
+            case SLEEP: // decrement sleep counter, check for sleep talk call, skip turn otherwise
+                if (attackingPokemon.getSleepCounter() > 0) {
+
+                    Messages.cantAttack(attackingPokemon, SLEEP);
+                    attackingPokemon.decrementSleepCounter();
+
+                    if (move == GSCMove.SLEEP_TALK) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+
+                else    {
                     Messages.statusChanged(attackingPokemon, SLEEP);
                     return true;
                 }
+
             case FREEZE:
+                // if (move != GSCMove.FLAME_WHEEL)
                 Messages.cantAttack(attackingPokemon, FREEZE);
                 return false;
-                // case FREEZE: // roll thaw chance, skip turn (always)
+
             case PARALYSIS:
                 if (roll < 64) {
                     Messages.cantAttack(attackingPokemon, PARALYSIS);
@@ -110,6 +121,7 @@ public class GSCTurn {
                 } else {
                     return true;
                 }
+
             default:
                 return true;
         }
@@ -171,8 +183,8 @@ public class GSCTurn {
                     if (opponent.getNonVolatileStatus() != HEALTHY)
                     { break; }
 
-                    opponent.applyNonVolatileStatus(FREEZE);
-                    Messages.logNewStatus(opponent, FREEZE);
+                    opponent.applyNonVolatileStatus(BURN);
+                    Messages.logNewStatus(opponent, BURN);
 
                 // TODO other effects
                 default:
