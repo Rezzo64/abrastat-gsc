@@ -224,10 +224,10 @@ public class GSCPokemon extends Pokemon {
 
         for (int i = 0; i < getMoves().length; i++) {
             if (getMoves()[i] == move)  {
-                return i;
+                return i; // return array position of move
             }
         }
-        return -1; // negative number to denote that the move isn't in the moveset
+        return -1; // return negative number to denote that the move isn't in the moveset
     }
 
 
