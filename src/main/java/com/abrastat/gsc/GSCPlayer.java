@@ -54,7 +54,7 @@ public class GSCPlayer extends Player {
         // attribute each attack to a behaviour type
         for (int i = 0; i < getCurrentPokemon().getMoves().length; i++) {
 
-            GSCMove currentMove = getCurrentPokemon().getMoves()[i];
+            GSCMove currentMove = this.getCurrentPokemon().getMoves()[i];
 
             switch (currentMove) {
 
@@ -195,25 +195,8 @@ public class GSCPlayer extends Player {
         switch (behaviour) {
 
             case JUST_ATTACK: // pre-processing damage calculations to choose the strongest attack
-                int strongestAttack = 0;
+                moveChosen = getStrongestAttack(opponent.getCurrentPokemon());
 
-                for (GSCMove move : getCurrentPokemon().getMoves()) {
-                    if (move.isAttack() && move.maxPp() > 0) {
-                        int dmg = GSCDamageCalc.calcDamageEstimate(
-                                this.getCurrentPokemon(),
-                                opponent.getCurrentPokemon(),
-                                move,
-                                false);
-
-                        if (dmg > strongestAttack) {
-                            moveChosen = move;
-                        }
-                        // check if there's a move that has better accuracy and can KO in this range
-                        if (dmg == opponent.getCurrentPokemon().getCurrentHP() && move.accuracy() > moveChosen.accuracy())  {
-                            moveChosen = move;
-                        }
-                    }
-                }
             case RECOVER_RISKILY:
 
         }
@@ -223,13 +206,54 @@ public class GSCPlayer extends Player {
 
     private boolean notAboutToWake() {
         if(getCurrentPokemon().getNonVolatileStatus() == Status.REST)   {
-            return getCurrentPokemon().getSleepCounter() < 2;
+            return this.getCurrentPokemon().getSleepCounter() > 2;
         }
 
         if (getCurrentPokemon().getNonVolatileStatus() == Status.SLEEP) {
-            return getCurrentPokemon().getSleepCounter() < 7;
+            return this.getCurrentPokemon().getSleepCounter() > 6;
         }
 
         return false;
+    }
+
+    public GSCMove getStrongestAttack(GSCPokemon defendingPokemon)    {
+        GSCMove strongestAttack = EMPTY;
+        int currentDamage = -1;
+        int strongestDamage = 0;
+        int emptyMove = 0;
+
+        for (int i = 0; i < 4; i++) {
+
+            if (this.getCurrentPokemon().getMovePp(i) < 1)   {
+                emptyMove++;
+                continue;
+            }
+
+            if (this.getCurrentPokemon().getMoves()[i].isAttack()) {
+                currentDamage = GSCDamageCalc.calcDamageEstimate(
+                        this.getCurrentPokemon(),
+                        defendingPokemon,
+                        this.getCurrentPokemon().getMoves()[i],
+                        false);
+
+                if (currentDamage > strongestDamage) {
+                    strongestDamage = currentDamage;
+                }
+
+                // check if there's a move that has better accuracy and can KO in this range
+                // TODO this only checks max damage roll. Implement something to assess individual damage rolls
+                if (currentDamage == defendingPokemon.getCurrentHP()
+                &&
+                this.getCurrentPokemon().getMoves()[i].accuracy() > strongestAttack.accuracy())
+                {
+                    strongestAttack = this.getCurrentPokemon().getMoves()[i];
+                }
+
+            } else {
+                strongestAttack = this.getCurrentPokemon().getMoves()[i];
+            }
+
+        }
+        return (emptyMove == 4 ? STRUGGLE : strongestAttack); // only and always struggle when all moves are out of pp
     }
 }

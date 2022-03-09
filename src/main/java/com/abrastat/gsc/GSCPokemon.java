@@ -7,7 +7,7 @@ public class GSCPokemon extends Pokemon {
 
     private int perishCounter = 0;
     private final GSCMove[] moves = new GSCMove[4];
-    private int move1pp, move2pp, move3pp, move4pp;
+    private int[] movesPp = new int[4];
 
     private GSCPokemon(String speciesName, Builder builder) {
         super(speciesName, builder);
@@ -19,10 +19,10 @@ public class GSCPokemon extends Pokemon {
         this.moves[1] = builder.move2;
         this.moves[2] = builder.move3;
         this.moves[3] = builder.move4;
-        this.move1pp = moves[0].maxPp();
-        this.move2pp = moves[1].maxPp();
-        this.move3pp = moves[2].maxPp();
-        this.move4pp = moves[3].maxPp();
+        this.movesPp[0] = moves[0].maxPp();
+        this.movesPp[1] = moves[1].maxPp();
+        this.movesPp[2] = moves[2].maxPp();
+        this.movesPp[3] = moves[3].maxPp();
 
         // TODO implement 'if' statement to override IVs
         // for when this Pokemon knows the move "Hidden Power"
@@ -138,62 +138,67 @@ public class GSCPokemon extends Pokemon {
 
     @Override
     public int getMoveOnePp() {
-        return this.move1pp;
+        return this.movesPp[0];
     }
 
     @Override
     protected void setMoveOnePp(int pp) {
-        this.move1pp = pp;
+        this.movesPp[0] = pp;
     }
 
     @Override
     protected void decrementMoveOnePp() {
-        this.move1pp--;
+        this.movesPp[0]--;
     }
 
     @Override
     public int getMoveTwoPp() {
-        return this.move2pp;
+        return this.movesPp[1];
     }
 
     @Override
     protected void setMoveTwoPp(int pp) {
-        this.move2pp = pp;
+        this.movesPp[1] = pp;
     }
 
     @Override
     protected void decrementMoveTwoPp() {
-        this.move2pp--;
+        this.movesPp[1]--;
     }
 
     @Override
     public int getMoveThreePp() {
-        return this.move3pp;
+        return this.movesPp[2];
     }
 
     @Override
     protected void setMoveThreePp(int pp) {
-        this.move3pp = pp;
+        this.movesPp[2] = pp;
     }
 
     @Override
     protected void decrementMoveThreePp() {
-        this.move3pp--;
+        this.movesPp[2]--;
     }
 
     @Override
     public int getMoveFourPp() {
-        return this.move4pp;
+        return this.movesPp[3];
     }
 
     @Override
     protected void setMoveFourPp(int pp) {
-        this.move4pp = pp;
+        this.movesPp[3] = pp;
     }
 
     @Override
     protected void decrementMoveFourPp() {
-        this.move4pp--;
+        this.movesPp[3]--;
+    }
+
+    @Override
+    public int getMovePp(int moveIndex) {
+        return this.movesPp[moveIndex];
     }
 
     @Override
@@ -276,10 +281,10 @@ public class GSCPokemon extends Pokemon {
 
     @Override
     public void resetAllPp() {
-        this.move1pp = moves[0].maxPp();
-        this.move2pp = moves[1].maxPp();
-        this.move3pp = moves[2].maxPp();
-        this.move4pp = moves[3].maxPp();
+        this.movesPp[0] = moves[0].maxPp();
+        this.movesPp[1] = moves[1].maxPp();
+        this.movesPp[2] = moves[2].maxPp();
+        this.movesPp[3] = moves[3].maxPp();
     }
 
 }

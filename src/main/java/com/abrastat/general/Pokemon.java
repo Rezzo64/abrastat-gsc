@@ -328,6 +328,8 @@ public abstract class Pokemon extends Species {
 
     protected abstract void decrementMoveFourPp();
 
+    public abstract int getMovePp(int moveIndex);
+
     public abstract void decrementMovePp(@NotNull Move move);
 
     public int getAtkMod() {
