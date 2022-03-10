@@ -286,4 +286,20 @@ public class GSCPokemon extends Pokemon {
         this.movesPp[2] = moves[2].maxPp();
         this.movesPp[3] = moves[3].maxPp();
     }
+
+    public int getAttackDamageMaxRoll(GSCPokemon opponent, GSCMove move) {
+        return GSCDamageCalc.calcDamageEstimate(
+                this,
+                opponent,
+                move,
+                false);
+    }
+
+    public int getAttackDamageCritMaxRoll(GSCPokemon opponent, GSCMove move)   {
+        return GSCDamageCalc.calcDamageEstimate(
+                this,
+                opponent,
+                move,
+                true);
+    }
 }

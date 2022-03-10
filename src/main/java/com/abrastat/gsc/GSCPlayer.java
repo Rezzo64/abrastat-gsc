@@ -10,6 +10,7 @@ import static com.abrastat.gsc.GSCMove.*;
 public class GSCPlayer extends Player {
 
     private boolean hasSleepTalk;
+    private PlayerBehaviour currentBehaviour;
 
     public GSCPlayer(Pokemon pokemon)  {
         super();
@@ -36,17 +37,13 @@ public class GSCPlayer extends Player {
             }
         }
 
-        for (PlayerBehaviour behaviour : behaviours)    {
-            chosenMove = chooseMoveHelper(behaviour, opponent);
-        }
-
+        chosenMove = chooseMoveHelper(opponent);
         return chosenMove;
 
     }
 
     // each behaviour should exist as its own entity depending on the simulation state
-
-    public GSCMove chooseMoveHelper(@NotNull PlayerBehaviour behaviour, GSCPlayer opponent)    {
+    public GSCMove chooseMoveHelper(GSCPlayer opponent)    {
 
         // just choose the first move as default in case it's not clear what should be done
         GSCMove moveChosen = getCurrentPokemon().getMoves()[0];
@@ -59,23 +56,21 @@ public class GSCPlayer extends Player {
             }
         }
 
-        switch (behaviour) {
-
-            case JUST_ATTACK: // pre-processing damage calculations to choose the strongest attack
-                moveChosen = getStrongestAttack(opponent.getCurrentPokemon());
-
-            case RECOVER_RISKILY:
-
-                if (this.opponentMayKO(opponent)) {
-                    moveChosen = this.chooseRecoveryMove();
-                }
-
-            case RECOVER_SAFELY:
-                if (this.opponentCritMayKO(opponent))   {
-                    moveChosen = this.chooseRecoveryMove();
-                }
+        if (this.currentBehaviour == RECOVER_SAFELY)  {
+            if (this.opponentCritMayKO(opponent))   {
+                moveChosen = this.chooseRecoveryMove();
+            }
         }
 
+        if (this.currentBehaviour == RECOVER_RISKILY) {
+            if (this.opponentMayKO(opponent)) {
+                moveChosen = this.chooseRecoveryMove();
+            }
+        }
+
+        if (this.currentBehaviour == JUST_ATTACK) {// pre-processing damage calculations to choose the strongest attack
+            moveChosen = getStrongestAttack(opponent.getCurrentPokemon());
+        }
         return moveChosen;
     }
 
@@ -227,7 +222,7 @@ public class GSCPlayer extends Player {
         return false;
     }
 
-    public GSCMove getStrongestAttack(GSCPokemon defendingPokemon)    {
+    public GSCMove getStrongestAttack(GSCPokemon opponent)    {
         GSCMove strongestAttack = EMPTY;
         int currentDamage = -1;
         int strongestDamage = 0;
@@ -241,11 +236,10 @@ public class GSCPlayer extends Player {
             }
 
             if (this.getCurrentPokemon().getMoves()[i].isAttack()) {
-                currentDamage = GSCDamageCalc.calcDamageEstimate(
-                        this.getCurrentPokemon(),
-                        defendingPokemon,
-                        this.getCurrentPokemon().getMoves()[i],
-                        false);
+                currentDamage = this.getCurrentPokemon().getAttackDamageMaxRoll(
+                        opponent,
+                        this.getCurrentPokemon().getMoves()[i]
+                );
 
                 if (currentDamage > strongestDamage) {
                     strongestDamage = currentDamage;
@@ -253,7 +247,7 @@ public class GSCPlayer extends Player {
 
                 // check if there's a move that has better accuracy and can KO in this range
                 // TODO this only checks max damage roll. Implement something to assess individual damage rolls
-                if (currentDamage == defendingPokemon.getCurrentHP()
+                if (currentDamage == opponent.getCurrentHP()
                 &&
                 this.getCurrentPokemon().getMoves()[i].accuracy() > strongestAttack.accuracy())
                 {
@@ -289,30 +283,28 @@ public class GSCPlayer extends Player {
 
     private boolean opponentMayKO(@NotNull GSCPlayer opponent) {
 
-        int damage = GSCDamageCalc.calcDamageEstimate(
-                opponent.getCurrentPokemon(),
+        int damage = opponent.getCurrentPokemon().getAttackDamageMaxRoll(
                 this.getCurrentPokemon(),
-                opponent.getStrongestAttack(this.getCurrentPokemon()),
-                false);
+                opponent.getStrongestAttack(this.getCurrentPokemon()));
 
         // double the risk if slower, in order to recover early
-        return (this.getCurrentPokemon().getStatSpe() < opponent.getCurrentPokemon().getStatSpe() ?
-            damage >= 2 * this.getCurrentPokemon().getCurrentHP()
-        :
-            damage >= this.getCurrentPokemon().getCurrentHP()
-        );
+        return (this.getCurrentPokemon().getStatSpe() < opponent.getCurrentPokemon().getStatSpe()
+                ?
+                damage >= 2 * this.getCurrentPokemon().getCurrentHP()
+                :
+                damage >= this.getCurrentPokemon().getCurrentHP()
+                );
     }
 
     private boolean opponentCritMayKO(@NotNull GSCPlayer opponent)  {
-        int damage = GSCDamageCalc.calcDamageEstimate(
-                opponent.getCurrentPokemon(),
+        int damage = opponent.getCurrentPokemon().getAttackDamageCritMaxRoll(
                 this.getCurrentPokemon(),
-                opponent.getStrongestAttack(this.getCurrentPokemon()),
-                true);
+                opponent.getStrongestAttack(this.getCurrentPokemon()));
 
-        // double the risk if slower, in order to recover early
-        return (this.getCurrentPokemon().getStatSpe() < opponent.getCurrentPokemon().getStatSpe() ?
-                damage >= 2 * this.getCurrentPokemon().getCurrentHP()
+        // 1.5* the risk if slower in order to recover early. Back-to-back crits are exceedingly unlikely
+        return (this.getCurrentPokemon().getStatSpe() < opponent.getCurrentPokemon().getStatSpe()
+                ?
+                damage >= Math.floor(1.5 * this.getCurrentPokemon().getCurrentHP())
                 :
                 damage >= this.getCurrentPokemon().getCurrentHP()
         );
