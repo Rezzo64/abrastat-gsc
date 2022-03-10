@@ -14,7 +14,7 @@ public class GSCPlayer extends Player {
     public GSCPlayer(Pokemon pokemon)  {
         super();
         addPokemon(pokemon);
-        if (getCurrentPokemon().hasMove(SLEEP_TALK) > -1)    {
+        if (this.getCurrentPokemon().hasMove(SLEEP_TALK) > -1)    {
             hasSleepTalk = true;
         }
     }
@@ -28,8 +28,12 @@ public class GSCPlayer extends Player {
 
         GSCMove chosenMove = EMPTY;
 
-        if (justUseFirstAttack) {
-            return this.getCurrentPokemon().getMoves()[0];
+        if (justUseFirstAttack) { // ignores other moves, use with caution
+            if (this.getCurrentPokemon().getMovePp(0) > 0) {
+                return this.getCurrentPokemon().getMoves()[0];
+            } else {
+                return STRUGGLE;
+            }
         }
 
         for (PlayerBehaviour behaviour : behaviours)    {
@@ -39,6 +43,43 @@ public class GSCPlayer extends Player {
         return chosenMove;
 
     }
+
+    // each behaviour should exist as its own entity depending on the simulation state
+
+    public GSCMove chooseMoveHelper(@NotNull PlayerBehaviour behaviour, GSCPlayer opponent)    {
+
+        // just choose the first move as default in case it's not clear what should be done
+        GSCMove moveChosen = getCurrentPokemon().getMoves()[0];
+
+        if (hasSleepTalk && notAboutToWake())   {
+
+            // check if any Sleep Talk PP remains
+            if (this.getCurrentPokemon().getMovePp(this.getCurrentPokemon().hasMove(SLEEP_TALK)) > 0) {
+                return SLEEP_TALK;
+            }
+        }
+
+        switch (behaviour) {
+
+            case JUST_ATTACK: // pre-processing damage calculations to choose the strongest attack
+                moveChosen = getStrongestAttack(opponent.getCurrentPokemon());
+
+            case RECOVER_RISKILY:
+
+                if (this.opponentMayKO(opponent)) {
+                    moveChosen = this.chooseRecoveryMove();
+                }
+
+            case RECOVER_SAFELY:
+                if (this.opponentCritMayKO(opponent))   {
+                    moveChosen = this.chooseRecoveryMove();
+                }
+        }
+
+        return moveChosen;
+    }
+
+
 
     @Override
     public void setBehaviours() {
@@ -52,11 +93,9 @@ public class GSCPlayer extends Player {
         justUseFirstAttack = false;
 
         // attribute each attack to a behaviour type
-        for (int i = 0; i < getCurrentPokemon().getMoves().length; i++) {
+        for (GSCMove move : this.getCurrentPokemon().getMoves()) {
 
-            GSCMove currentMove = this.getCurrentPokemon().getMoves()[i];
-
-            switch (currentMove) {
+            switch (move) {
 
                 // attacks without notable special secondary effects
                 case BEAT_UP:
@@ -173,46 +212,18 @@ public class GSCPlayer extends Player {
                     break;
 
                 default:
-                    Messages.logNoGSCMoveBehaviourFound(getCurrentPokemon(), currentMove);
+                    Messages.logNoGSCMoveBehaviourFound(getCurrentPokemon(), move);
                     break;
             }
 
         }
     }
 
-
-    // each behaviour should exist as its own entity depending on the simulation state
-
-    public GSCMove chooseMoveHelper(@NotNull PlayerBehaviour behaviour, GSCPlayer opponent)    {
-
-        // just choose the first move as default in case it's not clear what should be done
-        GSCMove moveChosen = getCurrentPokemon().getMoves()[0];
-
-        if (hasSleepTalk && notAboutToWake())   {
-            return SLEEP_TALK;
-        }
-
-        switch (behaviour) {
-
-            case JUST_ATTACK: // pre-processing damage calculations to choose the strongest attack
-                moveChosen = getStrongestAttack(opponent.getCurrentPokemon());
-
-            case RECOVER_RISKILY:
-
-        }
-
-        return moveChosen;
-    }
-
     private boolean notAboutToWake() {
-        if(getCurrentPokemon().getNonVolatileStatus() == Status.REST)   {
-            return this.getCurrentPokemon().getSleepCounter() > 2;
-        }
 
-        if (getCurrentPokemon().getNonVolatileStatus() == Status.SLEEP) {
-            return this.getCurrentPokemon().getSleepCounter() > 6;
+        if (this.getCurrentPokemon().getNonVolatileStatus() == Status.SLEEP) {
+            return this.getCurrentPokemon().getSleepCounter() > 0;
         }
-
         return false;
     }
 
@@ -256,4 +267,55 @@ public class GSCPlayer extends Player {
         }
         return (emptyMove == 4 ? STRUGGLE : strongestAttack); // only and always struggle when all moves are out of pp
     }
+
+    private GSCMove chooseRecoveryMove() {
+        if (this.getCurrentPokemon().hasMove(REST) > -1)   {
+            return REST;
+        }
+        else if (this.getCurrentPokemon().hasMove(RECOVER) > -1)    {
+            return RECOVER;
+        }
+        else if (this.getCurrentPokemon().hasMove(SOFTBOILED) > -1) {
+            return SOFTBOILED;
+        }
+        else if (this.getCurrentPokemon().hasMove(MILK_DRINK) > -1) {
+            return MILK_DRINK;
+        }
+        else    {
+            Messages.logNoRecoveryMoveFound(this.getCurrentPokemon());
+            return this.getCurrentPokemon().getMoves()[0];
+        }
+    }
+
+    private boolean opponentMayKO(@NotNull GSCPlayer opponent) {
+
+        int damage = GSCDamageCalc.calcDamageEstimate(
+                opponent.getCurrentPokemon(),
+                this.getCurrentPokemon(),
+                opponent.getStrongestAttack(this.getCurrentPokemon()),
+                false);
+
+        // double the risk if slower, in order to recover early
+        return (this.getCurrentPokemon().getStatSpe() < opponent.getCurrentPokemon().getStatSpe() ?
+            damage >= 2 * this.getCurrentPokemon().getCurrentHP()
+        :
+            damage >= this.getCurrentPokemon().getCurrentHP()
+        );
+    }
+
+    private boolean opponentCritMayKO(@NotNull GSCPlayer opponent)  {
+        int damage = GSCDamageCalc.calcDamageEstimate(
+                opponent.getCurrentPokemon(),
+                this.getCurrentPokemon(),
+                opponent.getStrongestAttack(this.getCurrentPokemon()),
+                true);
+
+        // double the risk if slower, in order to recover early
+        return (this.getCurrentPokemon().getStatSpe() < opponent.getCurrentPokemon().getStatSpe() ?
+                damage >= 2 * this.getCurrentPokemon().getCurrentHP()
+                :
+                damage >= this.getCurrentPokemon().getCurrentHP()
+        );
+    }
+
 }

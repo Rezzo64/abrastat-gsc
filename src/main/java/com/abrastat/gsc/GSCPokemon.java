@@ -286,5 +286,4 @@ public class GSCPokemon extends Pokemon {
         this.movesPp[2] = moves[2].maxPp();
         this.movesPp[3] = moves[3].maxPp();
     }
-
 }

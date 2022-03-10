@@ -63,7 +63,6 @@ public enum Messages {
                 messageBuffer = (pokemon.getSpecies() + " is already poisoned!");
                 break;
             case SLEEP:
-            case REST:
                 messageBuffer = (pokemon.getSpecies() + " is already asleep!");
                 break;
             case CONFUSION:
@@ -85,7 +84,6 @@ public enum Messages {
             case PARALYSIS:
                 messageBuffer = (pokemon.getSpecies() + " is fully paralysed!");
                 break;
-            case REST:
             case SLEEP:
                 messageBuffer = (pokemon.getSpecies() + " is fast asleep!");
                 break;
@@ -109,7 +107,6 @@ public enum Messages {
 
     public static void statusChanged(Pokemon pokemon, @NotNull Status status)    {
         switch (status) {
-            case REST:
             case SLEEP:
                 messageBuffer = (pokemon.getSpecies() + " woke up!");
                 break;
@@ -155,9 +152,13 @@ public enum Messages {
     }
 
     public static void leftoversHeal(@NotNull Pokemon pokemon)   {
-        messageBuffer = (pokemon.getSpecies() + " restored health using its Leftovers! ("
-                + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
-        handleMessage();
+
+        // only display message if there is health actually being restored by leftovers
+        if (pokemon.getCurrentHP() < pokemon.getStatHP()) {
+            messageBuffer = (pokemon.getSpecies() + " restored health using its Leftovers! ("
+                    + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
+            handleMessage();
+        }
     }
 
     public static void logCriticalHit() {
@@ -208,7 +209,6 @@ public enum Messages {
                 messageBuffer = (pokemon.getSpecies() + " is paralysed! It may be unable to move!");
                 break;
             case SLEEP:
-            case REST:
                 messageBuffer = (pokemon.getSpecies() + " has fallen asleep!");
                 break;
             case FREEZE:
@@ -260,6 +260,13 @@ public enum Messages {
 
     public static void logNoGSCMoveBehaviourFound(GSCPokemon pokemon, GSCMove move) {
         messageBuffer = (pokemon + "'s move " + move + "has no defined behaviour, this move will not be used in battle.");
+        handleMessage();
+    }
+
+    public static void logNoRecoveryMoveFound(@NotNull GSCPokemon pokemon) {
+        messageBuffer = ("RECOVER behaviour was passed, but no recovery move was found on "
+                + pokemon + ". Instead, using first move ("
+                + pokemon.getMoves()[0] + ").");
         handleMessage();
     }
 }

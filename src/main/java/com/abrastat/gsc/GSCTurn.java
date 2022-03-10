@@ -89,7 +89,6 @@ public class GSCTurn {
         int roll = ThreadLocalRandom.current().nextInt(256);  // handles RNG factor
 
         switch (attackingPokemon.getNonVolatileStatus())   {
-            case REST:
             case SLEEP: // decrement sleep counter, check for sleep talk call, skip turn otherwise
                 if (attackingPokemon.getSleepCounter() > 0) {
 
