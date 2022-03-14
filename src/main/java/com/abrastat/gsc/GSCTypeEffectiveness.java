@@ -118,6 +118,7 @@ public final class GSCTypeEffectiveness    {
                         "is this an error?");
                 return 1.0;
             default:
+                System.out.println("Move type not found during damage calculation.");
                 return 1.0;
         }
         return result;

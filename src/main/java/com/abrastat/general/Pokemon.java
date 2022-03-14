@@ -17,9 +17,7 @@ public abstract class Pokemon extends Species {
 
     private String nickname;
     private Gender gender;
-    private Ability ability;
-    // protected Move[] moves = new Move[4];
-    private int move1pp, move2pp, move3pp, move4pp;
+    private Ability ability; // PLACEHOLDER - this will be handled by children, delete later
     private int ivHP, ivAtk, ivDef, ivSpA, ivSpD, ivSpe;
     private int evHP, evAtk, evDef, evSpA, evSpD, evSpe;
     private int level;
@@ -94,7 +92,6 @@ public abstract class Pokemon extends Species {
         private Ability ability;
         private Item heldItem;
         private Gender gender;
-        private Move move1, move2, move3, move4;
 
         protected Builder()  {}
 
@@ -331,6 +328,8 @@ public abstract class Pokemon extends Species {
 
     protected abstract void decrementMoveFourPp();
 
+    public abstract int getMovePp(int moveIndex);
+
     public abstract void decrementMovePp(@NotNull Move move);
 
     public int getAtkMod() {
@@ -461,20 +460,6 @@ public abstract class Pokemon extends Species {
         this.heldItem = heldItem;
     }
 
-    public void applySecondaryEffect(@NotNull MoveEffect effect)    {
-        // TODO write cases for every effect
-        switch (effect) {
-            case PRZ30:
-            case PRZ10:
-            case PRZ100:
-                applyNonVolatileStatus(Status.PARALYSIS);
-                break;
-            case RECOIL25:
-            case STRUGGLE:
-                this.applyDamage(lastDamageTaken / 4);
-                break;
-        }
-    }
     // only one non-volatile status can be applied at a time.
     public void applyNonVolatileStatus(Status status)   {
         if (this.nonVolatileStatus == Status.HEALTHY) {
@@ -572,8 +557,8 @@ public abstract class Pokemon extends Species {
         return sleepCounter;
     }
 
-    public void incrementSleepCounter() {
-        this.sleepCounter++;
+    public void decrementSleepCounter() {
+        this.sleepCounter--;
     }
 
     public void incrementToxicCounter() {

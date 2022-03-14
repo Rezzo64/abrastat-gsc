@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 class GSCSpeciesTest {
 
     Pokemon bulbasaur = new GSCPokemon.Builder("bulbasaur")
+            .moves(GSCMove.BODY_SLAM)
             .build();
 
     @Test
