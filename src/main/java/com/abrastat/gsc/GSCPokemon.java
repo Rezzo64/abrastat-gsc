@@ -3,6 +3,8 @@ package com.abrastat.gsc;
 import com.abrastat.general.*;
 import org.jetbrains.annotations.NotNull;
 
+import static com.abrastat.general.Type.*;
+
 public class GSCPokemon extends Pokemon {
 
     private int perishCounter = 0;
@@ -27,6 +29,10 @@ public class GSCPokemon extends Pokemon {
         // TODO implement 'if' statement to override IVs
         // for when this Pokemon knows the move "Hidden Power"
 
+        if (builder.hiddenPowerType != DARK) {
+            this.overrideIVs(builder.hiddenPowerType);
+        }
+
         // TODO implement 'if' statement to override level due to user definition
         // if (true) {this.setLevel();}
 
@@ -49,6 +55,7 @@ public class GSCPokemon extends Pokemon {
         private GSCPokemon pokemon;
         private final String speciesName;
         private GSCMove move1, move2, move3, move4;
+        private Type hiddenPowerType = DARK;
 
         public Builder(String speciesName)    {
             super();
@@ -76,6 +83,11 @@ public class GSCPokemon extends Pokemon {
             this.move2 = move2;
             this.move3 = move3;
             this.move4 = move4;
+            return this;
+        }
+
+        public Builder hiddenPowerType(@NotNull Type type)   {
+            this.hiddenPowerType = type;
             return this;
         }
 
@@ -110,8 +122,95 @@ public class GSCPokemon extends Pokemon {
         this.setEvSpe(maxStatExp);
     }
 
-    private void overrideIVs(Type hiddenPowerType)  {
-        //TODO
+    private void overrideIVs(@NotNull Type hiddenPowerType)  {
+        switch (hiddenPowerType) {
+            case NONE:
+            case FAIRY: // no Fairy Hidden Power type
+            case NORMAL: // no Normal Hidden Power type
+            case DARK: // max DVs
+                break;
+
+            case FIRE:
+                this.setIvHP(3);
+                this.setIvAtk(14);
+                this.setIvDef(12);
+                break;
+
+            case WATER:
+                this.setIvHP(7);
+                this.setIvAtk(14);
+                this.setIvDef(13);
+                break;
+
+            case ELECTRIC:
+                this.setIvHP(7);
+                this.setIvAtk(14);
+                break;
+
+            case GRASS:
+                this.setIvHP(3);
+                this.setIvAtk(14);
+                this.setIvDef(14);
+                break;
+
+            case ICE:
+                this.setIvDef(13);
+                break;
+
+            case FIGHTING:
+                this.setIvHP(3);
+                this.setIvAtk(12);
+                this.setIvDef(12);
+                break;
+
+            case POISON:
+                this.setIvHP(3);
+                this.setIvAtk(12);
+                this.setIvDef(14);
+                break;
+
+            case GROUND:
+                this.setIvHP(7);
+                this.setIvAtk(12);
+                break;
+
+            case FLYING:
+                this.setIvHP(7);
+                this.setIvAtk(12);
+                this.setIvDef(13);
+                break;
+
+            case PSYCHIC:
+                this.setIvHP(11);
+                this.setIvDef(12);
+                break;
+
+            case BUG:
+                this.setIvAtk(13);
+                this.setIvDef(13);
+                break;
+
+            case ROCK:
+                this.setIvHP(11);
+                this.setIvAtk(13);
+                this.setIvDef(12);
+                break;
+
+            case GHOST:
+                this.setIvHP(11);
+                this.setIvAtk(13);
+                this.setIvDef(14);
+                break;
+
+            case DRAGON:
+                this.setIvHP(11);
+                this.setIvDef(14);
+                break;
+
+            case STEEL:
+                this.setIvAtk(13);
+                break;
+        }
     }
 
     @Override
