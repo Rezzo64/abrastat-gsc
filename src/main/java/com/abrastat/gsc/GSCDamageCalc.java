@@ -141,12 +141,8 @@ public enum GSCDamageCalc {
         int level = attackingPokemon.getLevel();
         int basePower = attack.basePower();
         int attackStat, defenseStat;
-        int critValue = 255;
+        int critValue = isCrit ? 1 : 255; // any crit mod value < 16 forces critical hit
         Item heldItem = attackingPokemon.getHeldItem();
-
-        if (isCrit) {
-            critValue = 1; // any crit mod value < 16 forces critical hit
-        }
 
         attackStat = attack.isPhysical() ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
         defenseStat = attack.isPhysical() ? defendingPokemon.getStatDef() : defendingPokemon.getStatSpD();
