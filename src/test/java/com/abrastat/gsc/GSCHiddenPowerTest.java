@@ -2,9 +2,9 @@ package com.abrastat.gsc;
 
 import com.abrastat.general.Item;
 import com.abrastat.general.Pokemon;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
 
 import static com.abrastat.general.Type.*;
 import static com.abrastat.gsc.GSCMove.HIDDEN_POWER;
@@ -92,6 +92,10 @@ class GSCHiddenPowerTest {
             .moves(HIDDEN_POWER)
             .hiddenPowerType(DARK)
             .build();
+
+    Pokemon[] abras = { abraDark, abraFire, abraWater, abraElectric, abraGrass, abraIce,
+    abraFighting, abraPoison, abraGround, abraFlying, abraPsychic, abraBug, abraRock,
+    abraGhost, abraDragon, abraSteel };
 
     @Test
     @DisplayName("Hidden Power Dark test")
@@ -251,5 +255,18 @@ class GSCHiddenPowerTest {
                 () -> assertEquals(13, abraSteel.getIvAtk()),
                 () -> assertEquals(15, abraSteel.getIvDef())
         );
+    }
+
+    @AfterEach
+    @Test
+    @DisplayName("Testing Special and Speed stats are unchanged")
+    void otherStatsTest()   {
+        for (Pokemon abra : abras) {
+            assertAll("checking SpA, SpD and Spe are 15",
+                    () -> assertEquals(15, abra.getIvSpA()),
+                    () -> assertEquals(15, abra.getIvSpD()),
+                    () -> assertEquals(15, abra.getIvSpe())
+            );
+        }
     }
 }
