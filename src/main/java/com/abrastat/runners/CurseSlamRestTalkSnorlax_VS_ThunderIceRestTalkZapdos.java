@@ -11,7 +11,7 @@ public class CurseSlamRestTalkSnorlax_VS_ThunderIceRestTalkZapdos {
 
     public static void main(String[] args) {
         Pokemon snorlax = new GSCPokemon.Builder("snorlax")
-                .moves(BODY_SLAM,CURSE, REST, SLEEP_TALK)
+                .moves(BODY_SLAM, CURSE, REST, SLEEP_TALK)
                 .item(Item.LEFTOVERS)
                 .build();
 
