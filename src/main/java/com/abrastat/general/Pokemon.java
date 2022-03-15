@@ -197,26 +197,26 @@ public abstract class Pokemon extends Species {
     }
 
     // RBY and GSC method
-    public void setIvSpecial(int ivSpecial) {
-        this.ivSpA = ivSpecial;
-        this.ivSpD = ivSpecial;
+    public void setDvSpecial(int dvSpecial) {
+        this.ivSpA = dvSpecial;
+        this.ivSpD = dvSpecial;
     }
 
-    public void calculateIvHP() {
-        int ivHP = 0;
+    public void calculateDvHP() {
+        int dvHP = 0;
         if (getIvAtk() % 2 == 1) {
-            ivHP += 8;
+            dvHP += 8;
         }
         if (getIvDef() % 2 == 1) {
-            ivHP += 4;
+            dvHP += 4;
         }
         if (getIvSpe() % 2 == 1) {
-            ivHP += 2;
+            dvHP += 2;
         }
         if (getIvSpA() % 2 == 1) {
-            ivHP += 1;
+            dvHP += 1;
         }
-        this.ivHP = ivHP;
+        this.ivHP = dvHP;
     }
 
     protected void setIvSpe(int ivSpe) {
