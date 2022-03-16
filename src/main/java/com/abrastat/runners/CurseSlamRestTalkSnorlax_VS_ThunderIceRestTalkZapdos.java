@@ -22,7 +22,7 @@ public class CurseSlamRestTalkSnorlax_VS_ThunderIceRestTalkZapdos {
                 .build();
 
 
-        new GSCGameRunner(snorlax, zapdos, 100000);
+        new GSCGameRunner(snorlax, zapdos, 1);
 
         Messages.gameOver();
         System.exit(0);

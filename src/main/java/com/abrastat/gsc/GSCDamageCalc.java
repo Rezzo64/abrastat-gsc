@@ -10,6 +10,7 @@ import static com.abrastat.gsc.GSCTypeEffectiveness.CalcEffectiveness;
 import static com.abrastat.general.Item.*;
 import static com.abrastat.general.Type.*;
 import static java.util.Map.*;
+import static com.abrastat.gsc.GSCMove.isPhysical;
 
 public enum GSCDamageCalc {
 
@@ -36,10 +37,9 @@ public enum GSCDamageCalc {
             entry(METAL_COAT, STEEL)
     );
 
-    private static boolean sameTypeAttackBonus(@NotNull Pokemon pokemon, @NotNull Move move) {
+    private static boolean sameTypeAttackBonus(@NotNull Pokemon pokemon, @NotNull Type type) {
 
-        Type moveType = move.type();
-        if (pokemon.getTypes()[0] == moveType || pokemon.getTypes()[1] == moveType) {
+        if (pokemon.getTypes()[0] == type || pokemon.getTypes()[1] == type) {
             return true;
         } else {
             return false;
@@ -72,7 +72,7 @@ public enum GSCDamageCalc {
         return (ThreadLocalRandom.current().nextInt(217, 256));
     }
 
-    public static void calcDamage(
+    public static int calcDamage(
             @NotNull GSCPokemon attackingPokemon,
             @NotNull GSCPokemon defendingPokemon,
             @NotNull GSCMove attack) {
@@ -108,7 +108,7 @@ public enum GSCDamageCalc {
 
         var damage = damageFormula(level, attackStat, basePower, defenseStat, critModifier(), doesItemBoostDamage, typeEffectiveness);
 
-        if (sameTypeAttackBonus(attackingPokemon, attack))  {
+        if (sameTypeAttackBonus(attackingPokemon, attack.type()))  {
             damage = (int) Math.floor(damage * 1.5);
         }
 
@@ -126,9 +126,7 @@ public enum GSCDamageCalc {
 
         damage = Math.min(damage, defendingPokemon.getCurrentHP());
 
-        defendingPokemon.applyDamage(damage);
-        defendingPokemon.setLastDamageTaken(damage);
-        Messages.logDamageTaken(defendingPokemon, damage);
+        return damage;
     }
 
     // This is used for pre-processing - it always assumes max damage roll
@@ -170,7 +168,7 @@ public enum GSCDamageCalc {
 
         var damage = damageFormula(level, attackStat, basePower, defenseStat, critValue, doesItemBoostDamage, typeEffectiveness);
 
-        if (sameTypeAttackBonus(attackingPokemon, attack))  {
+        if (sameTypeAttackBonus(attackingPokemon, attack.type()))  {
             damage = (int) Math.floor(damage * 1.5);
         }
 
@@ -187,6 +185,60 @@ public enum GSCDamageCalc {
 
         return damage;
 
+    }
+
+    public static int calcHiddenPowerDamage(@NotNull GSCPokemon attackingPokemon, @NotNull GSCPokemon defendingPokemon) {
+
+            int level = attackingPokemon.getLevel();
+            int basePower = attackingPokemon.getGscHiddenPowerBasePower();
+            int attackStat, defenseStat;
+            Item heldItem = attackingPokemon.getHeldItem();
+
+            attackStat = isPhysical(attackingPokemon.getGscHiddenPowerType()) ? attackingPokemon.getStatAtk() : attackingPokemon.getStatSpA();
+            defenseStat = isPhysical(attackingPokemon.getGscHiddenPowerType()) ? defendingPokemon.getStatDef() : defendingPokemon.getStatSpD();
+
+            if (attackStat > 255 || defenseStat > 255)  {
+                attackStat /= 4;
+                defenseStat /= 4;
+            }
+
+            boolean doesItemBoostDamage;
+            // comparing item's boosting type against selected attack's type
+            if (heldItem != null && damageBoostingItems.get(heldItem) != null) {
+                doesItemBoostDamage = (damageBoostingItems.get(heldItem) == attackingPokemon.getGscHiddenPowerType());
+            } else {
+                doesItemBoostDamage = false;
+            }
+
+            // Modifiers for effects from Growl, Screech, Focus Energy, etc.
+            int attackModifier, defenseModifier;
+
+            double typeEffectiveness =
+                    CalcEffectiveness(attackingPokemon.getGscHiddenPowerType(),
+                            defendingPokemon.getTypes()[0],
+                            defendingPokemon.getTypes()[1]);
+
+            var damage = damageFormula(level, attackStat, basePower, defenseStat, critModifier(), doesItemBoostDamage, typeEffectiveness);
+
+            if (sameTypeAttackBonus(attackingPokemon, attackingPokemon.getGscHiddenPowerType()))  {
+                damage = (int) Math.floor(damage * 1.5);
+            }
+
+            if (typeEffectiveness != 1) {
+
+                // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
+                // dirty fix and not optimised, come back and change if performance needs it
+
+                typeEffectiveness *= 10;
+                Messages.logTypeEffectiveness((int) typeEffectiveness);
+            }
+
+            damage *= damageRoll();
+            damage = (int) Math.floor(damage / 255);
+
+            damage = Math.min(damage, defendingPokemon.getCurrentHP());
+
+            return damage;
     }
 
     private static int damageFormula(

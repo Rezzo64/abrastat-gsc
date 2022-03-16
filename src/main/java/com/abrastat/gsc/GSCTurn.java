@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static com.abrastat.general.Game.checkPokemonAreNotFainted;
 import static com.abrastat.general.Status.*;
 import static com.abrastat.gsc.GSCDamageCalc.calcDamage;
+import static com.abrastat.gsc.GSCStatusEffects.applyStatusEffects;
 
 public class GSCTurn {
 
@@ -25,14 +26,15 @@ public class GSCTurn {
             Messages.logAttack(attackingPokemon, move);
 
             if (didAttackMiss(move.accuracy())) {
-
                 Messages.logMissedAttack(attackingPokemon);
 
             } else {
-                calcDamage(attackingPokemon, defendingPokemon, move);
-
-                // for stuff like Counter as well as debugging
-                rollSecondaryEffects(attackingPokemon, defendingPokemon, move);
+                if (move.isAttack()) {
+                    calcAndApplyDamage(attackingPokemon, defendingPokemon, move);
+                    rollSecondaryEffects(attackingPokemon, defendingPokemon, move); // for stuff like Counter as well as debugging
+                } else {
+                    applyStatusEffects(attackingPokemon, defendingPokemon, move.effect());
+                }
             }
 
             attackingPokemon.decrementMovePp(move);
@@ -131,20 +133,28 @@ public class GSCTurn {
         return (accuracy < roll);
     }
 
+    private void calcAndApplyDamage(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
+        int damage = calcDamage(attackingPokemon, defendingPokemon, move);
+        defendingPokemon.applyDamage(damage);
+        defendingPokemon.setLastDamageTaken(damage);
+        Messages.logDamageTaken(defendingPokemon, damage);
+    }
+
     private static void rollSecondaryEffects(GSCPokemon self, GSCPokemon opponent, @NotNull Move move) {
-        MoveEffect effect = move.effect();
-        if (effect.target() == MoveEffect.Target.NONE)   {
+        if (move.effect().target() == MoveEffect.Target.NONE)   {
             return;
         }
 
         // Guaranteed effects go here!
-        if (effect.chance() == 0)   {
-            switch (effect) {
+        if (move.effect().chance() == 0)   {
+            switch (move.effect()) {
                 case RECOIL25:
                 case STRUGGLE:
                     int recoil = opponent.getLastDamageTaken() / 4;
                     self.applyDamage(recoil);
                     Messages.logRecoil(self, recoil);
+                    return;
+
             }
             return;
         }
@@ -154,7 +164,7 @@ public class GSCTurn {
         // Chance probability attacks go here!
         if (roll < move.effect().chance()) {
 
-            switch (effect) {
+            switch (move.effect()) {
                 case THUNDER:
                 case PRZ100:
                 case PRZ30:
@@ -187,7 +197,7 @@ public class GSCTurn {
 
                 // TODO other effects
                 default:
-                    Messages.notImplementedYet(effect);
+                    Messages.notImplementedYet(move.effect());
             }
         }
     }

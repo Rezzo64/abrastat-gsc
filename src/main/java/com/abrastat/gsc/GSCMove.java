@@ -99,7 +99,7 @@ public enum GSCMove implements Move {
 //    HEADBUTT,
 //    HEAL_BELL,
 //    HI_JUMP_KICK,
-    HIDDEN_POWER(Type.NORMAL, 24, 255, 1, MoveEffect.HIDDENPOWER),
+    HIDDEN_POWER(Type.NORMAL, 24, 255, MoveEffect.HIDDENPOWER),
 //    HORN_ATTACK,
 //    HORN_DRILL,
     HYDRO_PUMP(Type.WATER, 8, 204, 120),
@@ -328,7 +328,11 @@ public enum GSCMove implements Move {
     }
 
     public boolean isPhysical()  {
-        switch (this.type)  {
+        return isPhysical(this.type);
+    }
+
+    public static boolean isPhysical(@NotNull Type type)  {
+        switch (type)  {
             case NORMAL:
             case FIGHTING:
             case FLYING:
