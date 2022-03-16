@@ -27,6 +27,7 @@ public abstract class Pokemon extends Species {
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
     private int currentHP;
+    private Type hiddenPowerType;
 
     // all counters below to be handled incrementally (for consistency)
     private int sleepCounter = 0;
@@ -34,6 +35,7 @@ public abstract class Pokemon extends Species {
     private int confuseCounter = 0;
     private int disableCounter = 0;
     private int encoreCounter = 0;
+    private int perishCounter = 0;
 
     public void applyHeal(int healAmount) {
         if (this.currentHP + healAmount >= this.statHP) {
@@ -610,6 +612,18 @@ public abstract class Pokemon extends Species {
 
     public void resetDisableCounter() {
         this.disableCounter = 0;
+    }
+
+    public int getPerishCounter() {
+        return perishCounter;
+    }
+
+    public void resetPerishCounter() {
+        this.perishCounter = 0;
+    }
+
+    public void incrementPerishCounter() {
+        this.perishCounter++;
     }
 
     public abstract void resetAllCounters();

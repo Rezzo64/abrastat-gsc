@@ -67,16 +67,16 @@ public class GSCGame implements Game {
         applyLeftovers(playerOneIsFaster());
         // thaw chance
         if (pokemonPlayerOne.getNonVolatileStatus() == FREEZE) {
-            removeFreeze(pokemonPlayerOne);
+            rollFreezeThaw(pokemonPlayerOne);
         }
         if (pokemonPlayerTwo.getNonVolatileStatus() == FREEZE) {
-            removeFreeze(pokemonPlayerTwo);
+            rollFreezeThaw(pokemonPlayerTwo);
         }
 
 
     }
 
-    private void removeFreeze(GSCPokemon pokemon) {
+    private void rollFreezeThaw(GSCPokemon pokemon) {
         int roll = ThreadLocalRandom.current().nextInt(256);
         if (roll < 25) {
             pokemon.removeNonVolatileStatus();
