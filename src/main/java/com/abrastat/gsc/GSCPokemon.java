@@ -16,14 +16,19 @@ public class GSCPokemon extends Pokemon {
         super(speciesName, builder);
         this.initIVs();
         this.initEVs();
-        this.moves[0] = builder.move1;
-        this.moves[1] = builder.move2;
-        this.moves[2] = builder.move3;
-        this.moves[3] = builder.move4;
+        this.moves[0] = builder.moves[0];
+        this.moves[1] = builder.moves[1];
+        this.moves[2] = builder.moves[2];
+        this.moves[3] = builder.moves[3];
         this.movesPp[0] = moves[0].maxPp();
         this.movesPp[1] = moves[1].maxPp();
         this.movesPp[2] = moves[2].maxPp();
         this.movesPp[3] = moves[3].maxPp();
+
+        if (this.hasMove(GSCMove.SLEEP_TALK) > -1) { // put Sleep Talk as the last attack for efficiency
+            this.moves[this.hasMove(GSCMove.SLEEP_TALK)] = this.moves[3];
+            this.moves[3] = GSCMove.SLEEP_TALK;
+        }
 
         if (builder.hiddenPowerType != DARK) {
             this.overrideIVs(builder.hiddenPowerType);
@@ -45,7 +50,7 @@ public class GSCPokemon extends Pokemon {
 
         private GSCPokemon pokemon;
         private final String speciesName;
-        private GSCMove move1, move2, move3, move4;
+        private GSCMove[] moves;
         private Type hiddenPowerType = DARK;
 
         public Builder(String speciesName)    {
@@ -70,10 +75,10 @@ public class GSCPokemon extends Pokemon {
 
         @Override
         public Builder moves(@NotNull GSCMove move1, @NotNull GSCMove move2, @NotNull GSCMove move3, @NotNull GSCMove move4)  {
-            this.move1 = move1;
-            this.move2 = move2;
-            this.move3 = move3;
-            this.move4 = move4;
+            this.moves[0] = move1;
+            this.moves[1] = move2;
+            this.moves[2] = move3;
+            this.moves[3] = move4;
             return this;
         }
 

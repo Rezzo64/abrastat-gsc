@@ -252,21 +252,31 @@ public enum Messages {
         handleMessage();
     }
 
-    public static void logRecoil(@NotNull GSCPokemon pokemon, int recoil) {
+    public static void logRecoil(@NotNull Pokemon pokemon, int recoil) {
         messageBuffer = (pokemon.getSpecies() + " took " + recoil + " hit points of recoil damage! ("
                 + pokemon.getCurrentHP() + "/" + pokemon.getStatHP() + " HP)");
         handleMessage();
     }
 
-    public static void logNoGSCMoveBehaviourFound(GSCPokemon pokemon, GSCMove move) {
+    public static void logNoGSCMoveBehaviourFound(Pokemon pokemon, GSCMove move) {
         messageBuffer = (pokemon + "'s move " + move + "has no defined behaviour, this move will not be used in battle.");
         handleMessage();
     }
 
-    public static void logNoRecoveryMoveFound(@NotNull GSCPokemon pokemon) {
+    public static void logNoRecoveryMoveFound(@NotNull Pokemon pokemon) {
         messageBuffer = ("RECOVER behaviour was passed, but no recovery move was found on "
                 + pokemon + ". Instead, using first move ("
                 + pokemon.getMoves()[0] + ").");
+        handleMessage();
+    }
+
+    public static void logRest(Pokemon pokemon) {
+        messageBuffer = (pokemon + " slept and became healthy!");
+        handleMessage();
+    }
+
+    public static void cantRestFullHp(Pokemon pokemon) {
+        messageBuffer = ("But it failed! " + "(" + pokemon + "'s HP is already full)");
         handleMessage();
     }
 }

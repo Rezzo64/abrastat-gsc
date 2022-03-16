@@ -19,7 +19,7 @@ public class GSCTurn {
             return;
         }
 
-        checkStatusMoveEffects(attackingPokemon);
+        checkStatusEffects(attackingPokemon);
 
         if (canAttack(attackingPokemon, move)) {
 
@@ -29,12 +29,7 @@ public class GSCTurn {
                 Messages.logMissedAttack(attackingPokemon);
 
             } else {
-                if (move.isAttack()) {
-                    calcAndApplyDamage(attackingPokemon, defendingPokemon, move);
-                    rollSecondaryEffects(attackingPokemon, defendingPokemon, move); // for stuff like Counter as well as debugging
-                } else {
-                    applyStatusEffects(attackingPokemon, defendingPokemon, move.effect());
-                }
+                doAttack(attackingPokemon, defendingPokemon, move);
             }
 
             attackingPokemon.decrementMovePp(move);
@@ -42,7 +37,9 @@ public class GSCTurn {
         }
     }
 
-    private static void checkStatusMoveEffects(@NotNull GSCPokemon attackingPokemon) {
+
+
+    private static void checkStatusEffects(@NotNull GSCPokemon attackingPokemon) {
 
         int roll;    // handles RNG factor
 
@@ -133,7 +130,16 @@ public class GSCTurn {
         return (accuracy < roll);
     }
 
-    private void calcAndApplyDamage(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
+    static void doAttack(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, @NotNull GSCMove move) {
+        if (move.isAttack()) {
+            calcAndApplyDamage(attackingPokemon, defendingPokemon, move);
+            rollSecondaryEffects(attackingPokemon, defendingPokemon, move); // for stuff like Counter as well as debugging
+        } else {
+            applyStatusEffects(attackingPokemon, defendingPokemon, move.effect());
+        }
+    }
+
+    private static void calcAndApplyDamage(GSCPokemon attackingPokemon, GSCPokemon defendingPokemon, GSCMove move) {
         int damage = calcDamage(attackingPokemon, defendingPokemon, move);
         defendingPokemon.applyDamage(damage);
         defendingPokemon.setLastDamageTaken(damage);
@@ -201,5 +207,4 @@ public class GSCTurn {
             }
         }
     }
-
 }

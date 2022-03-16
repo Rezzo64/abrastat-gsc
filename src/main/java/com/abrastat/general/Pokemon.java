@@ -6,8 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
-
-
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public abstract class Pokemon extends Species {
@@ -385,7 +384,7 @@ public abstract class Pokemon extends Species {
         return evaMod;
     }
 
-    protected void raiseStat(@NotNull Stat stat, int amount)    {
+    public void raiseStat(@NotNull Stat stat, int amount)    {
         switch (stat)   {
             case ATTACK:
                 this.atkMod = checkModUpperLimit(atkMod, amount);
@@ -410,7 +409,7 @@ public abstract class Pokemon extends Species {
         }
     }
 
-    protected void dropStat(@NotNull Stat stat, int amount)    {
+    public void dropStat(@NotNull Stat stat, int amount)    {
         switch (stat)   {
             case ATTACK:
                 this.atkMod = checkModLowerLimit(atkMod, amount);
@@ -485,14 +484,9 @@ public abstract class Pokemon extends Species {
         this.heldItem = heldItem;
     }
 
-    // only one non-volatile status can be applied at a time.
     public void applyNonVolatileStatus(Status status)   {
-        if (this.nonVolatileStatus == Status.HEALTHY) {
-            this.nonVolatileStatus = status;
-            applyNonVolatileStatusDebuff(status);
-        } else {
-            Messages.statusFailed(this, this.nonVolatileStatus);
-        }
+        this.nonVolatileStatus = status;
+        applyNonVolatileStatusDebuff(status);
     }
 
     public void isFainted() {
@@ -640,6 +634,10 @@ public abstract class Pokemon extends Species {
     }
 
     public abstract void removeNonVolatileStatusDebuff();
+
+    public void setSleepCounter(int minSleep, int maxSleep) {
+        this.sleepCounter = ThreadLocalRandom.current().nextInt(minSleep, maxSleep);
+    }
 
     public void resetStatHp() {
         this.currentHP = this.statHP;

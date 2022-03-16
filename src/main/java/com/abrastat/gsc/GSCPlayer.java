@@ -9,15 +9,13 @@ import static com.abrastat.gsc.GSCMove.*;
 
 public class GSCPlayer extends Player {
 
-    private boolean hasSleepTalk;
+    private final int hasSleepTalk;
     private PlayerBehaviour currentBehaviour;
 
     public GSCPlayer(Pokemon pokemon)  {
         super();
         addPokemon(pokemon);
-        if (this.getCurrentPokemon().hasMove(SLEEP_TALK) > -1)    {
-            hasSleepTalk = true;
-        }
+        hasSleepTalk = this.getCurrentPokemon().hasMove(SLEEP_TALK);
     }
 
     @Override
@@ -48,7 +46,7 @@ public class GSCPlayer extends Player {
         // just choose the first move as default in case it's not clear what should be done
         GSCMove moveChosen = getCurrentPokemon().getMoves()[0];
 
-        if (hasSleepTalk && notAboutToWake())   {
+        if (hasSleepTalk > -1 && notAboutToWake())   {
 
             // check if any Sleep Talk PP remains
             if (this.getCurrentPokemon().getMovePp(this.getCurrentPokemon().hasMove(SLEEP_TALK)) > 0) {
