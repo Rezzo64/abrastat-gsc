@@ -21,10 +21,15 @@ public class GSCGame implements Game {
     private int p1SafeguardCounter = 0, p2SafeguardCounter = 0;
     private GSCMove lastMoveUsed;
 
-    public GSCGame(@NotNull GSCPlayer player1, @NotNull GSCPlayer player2) {
+    public GSCGame(@NotNull GSCPlayer player1,
+                   PlayerBehaviour p1Behaviour,
+                   @NotNull GSCPlayer player2,
+                   PlayerBehaviour p2Behaviour) {
 
         this.pokemonPlayerOne = player1.getCurrentPokemon();
+        player1.setCurrentBehaviour(p1Behaviour);
         this.pokemonPlayerTwo = player2.getCurrentPokemon();
+        player2.setCurrentBehaviour(p2Behaviour);
 
         Messages.announceTeam(player1);
         Messages.announceTeam(player2);
@@ -139,7 +144,7 @@ public class GSCGame implements Game {
         }
 
         if (pokemonPlayerOne.getHeldItem() == Item.LEFTOVERS && pokemonPlayerTwo.getHeldItem() == Item.LEFTOVERS)   {
-            if (playerOneIsFaster == true)  {
+            if (playerOneIsFaster)  {
                 pokemonPlayerOne.applyHeal(pokemonPlayerOne.getStatHP() / 16);
                 Messages.leftoversHeal(pokemonPlayerOne);
                 pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.getStatHP() / 16);
@@ -150,19 +155,16 @@ public class GSCGame implements Game {
                 pokemonPlayerOne.applyHeal(pokemonPlayerOne.getStatHP() / 16);
                 Messages.leftoversHeal(pokemonPlayerOne);
             }
-            return;
         }
 
         else if (pokemonPlayerOne.getHeldItem() == Item.LEFTOVERS)   {
             pokemonPlayerOne.applyHeal(pokemonPlayerOne.getStatHP() / 16);
             Messages.leftoversHeal(pokemonPlayerOne);
-            return;
         }
 
         else if (pokemonPlayerTwo.getHeldItem() == Item.LEFTOVERS)   {
             pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.getStatHP() / 16);
             Messages.leftoversHeal(pokemonPlayerTwo);
-            return;
         }
     }
 

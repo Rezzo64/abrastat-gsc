@@ -1,17 +1,16 @@
 package com.abrastat.general;
 
-import com.abrastat.gsc.GSCMove;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 import java.util.HashSet;
+
+import static com.abrastat.general.PlayerBehaviour.BehaviourGroup;
 
 public abstract class Player {
 
     private String playerName;
     private Pokemon[] pokemonTeam = new Pokemon[6];
     protected boolean justUseFirstAttack = true;
-    protected HashSet<PlayerBehaviour> behaviours;
+    protected HashSet<PlayerBehaviour> activeBehaviours = new HashSet<>();
+
 
     public Player() {
 
@@ -37,8 +36,8 @@ public abstract class Player {
 
     public abstract Pokemon getCurrentPokemon();
 
-    public HashSet<PlayerBehaviour> getBehaviours()    {
-        return this.behaviours;
+    public HashSet<PlayerBehaviour> getActiveBehaviours()    {
+        return this.activeBehaviours;
     }
 
     public abstract void setBehaviours();

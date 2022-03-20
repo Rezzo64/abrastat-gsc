@@ -1,6 +1,7 @@
 package com.abrastat.general;
 
 import com.abrastat.gsc.GSCMove;
+import com.abrastat.gsc.GSCPlayer;
 import com.abrastat.gsc.GSCPokemon;
 import org.jetbrains.annotations.NotNull;
 
@@ -279,4 +280,41 @@ public enum Messages {
         messageBuffer = ("But it failed! " + "(" + pokemon + "'s HP is already full)");
         handleMessage();
     }
+
+    public static void logCurrentBehaviour(@NotNull Player player, PlayerBehaviour behaviour) {
+        messageBuffer = (player + "'s strategy for this simulation with " +
+                player.getCurrentPokemon() + " is " + behaviour);
+        handleMessage();
+    }
+
+    public static void logStatDrop(Pokemon pokemon, Stat stat) {
+        messageBuffer = (pokemon + "'s " + stat + " fell!");
+        handleMessage();
+    }
+
+    public static void logStatRaise(Pokemon pokemon, Stat stat) {
+        messageBuffer = (pokemon + "'s " + stat + " rose!");
+        handleMessage();
+    }
+
+    public static void logStatSharplyDrop(Pokemon pokemon, Stat stat) {
+        messageBuffer = (pokemon + "'s " + stat + " sharply fell!");
+        handleMessage();
+    }
+
+    public static void logStatSharplyRaise(Pokemon pokemon, Stat stat) {
+        messageBuffer = (pokemon + "'s " + stat + " sharply rose!");
+        handleMessage();
+    }
+
+    public static void logStatWontGoAnyLower(Pokemon pokemon, Stat stat) {
+        messageBuffer = (pokemon + "'s " + stat + " won't go any lower!");
+        handleMessage();
+    }
+
+    public static void logStatWontGoAnyHigher(Pokemon pokemon, Stat stat) {
+        messageBuffer = (pokemon + "'s " + stat + " won't go any higher!");
+        handleMessage();
+    }
+
 }

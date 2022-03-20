@@ -50,7 +50,7 @@ public class GSCPokemon extends Pokemon {
 
         private GSCPokemon pokemon;
         private final String speciesName;
-        private GSCMove[] moves;
+        private GSCMove[] moves = new GSCMove[4];
         private Type hiddenPowerType = DARK;
 
         public Builder(String speciesName)    {

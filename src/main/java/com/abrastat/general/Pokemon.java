@@ -384,69 +384,94 @@ public abstract class Pokemon extends Species {
         return evaMod;
     }
 
-    public void raiseStat(@NotNull Stat stat, int amount)    {
+    public void raiseStat(@NotNull Stat stat)    {
         switch (stat)   {
             case ATTACK:
-                this.atkMod = checkModUpperLimit(atkMod, amount);
+                this.atkMod = checkModUpperLimit(atkMod, stat);
                 break;
             case DEFENSE:
-                this.defMod = checkModUpperLimit(defMod, amount);
+                this.defMod = checkModUpperLimit(defMod, stat);
                 break;
             case SPECIALATTACK:
-                this.spAMod = checkModUpperLimit(spAMod, amount);
+                this.spAMod = checkModUpperLimit(spAMod, stat);
                 break;
             case SPECIALDEFENSE:
-                this.spDMod = checkModUpperLimit(spDMod, amount);
+                this.spDMod = checkModUpperLimit(spDMod, stat);
                 break;
             case SPEED:
-                this.speMod = checkModUpperLimit(spDMod, amount);
+                this.speMod = checkModUpperLimit(spDMod, stat);
                 break;
             case ACCURACY:
-                this.accMod = checkModUpperLimit(accMod, amount);
+                this.accMod = checkModUpperLimit(accMod, stat);
                 break;
             case EVASION:
-                this.evaMod = checkModUpperLimit(evaMod, amount);
+                this.evaMod = checkModUpperLimit(evaMod, stat);
         }
     }
 
-    public void dropStat(@NotNull Stat stat, int amount)    {
+    public void dropStat(@NotNull Stat stat)    {
         switch (stat)   {
             case ATTACK:
-                this.atkMod = checkModLowerLimit(atkMod, amount);
+                this.atkMod = checkModLowerLimit(atkMod, stat);
                 break;
             case DEFENSE:
-                this.defMod = checkModLowerLimit(defMod, amount);
+                this.defMod = checkModLowerLimit(defMod, stat);
                 break;
             case SPECIALATTACK:
-                this.spAMod = checkModLowerLimit(spAMod, amount);
+                this.spAMod = checkModLowerLimit(spAMod, stat);
                 break;
             case SPECIALDEFENSE:
-                this.spDMod = checkModLowerLimit(spDMod, amount);
+                this.spDMod = checkModLowerLimit(spDMod, stat);
                 break;
             case SPEED:
-                this.speMod = checkModLowerLimit(spDMod, amount);
+                this.speMod = checkModLowerLimit(spDMod, stat);
                 break;
             case ACCURACY:
-                this.accMod = checkModLowerLimit(accMod, amount);
+                this.accMod = checkModLowerLimit(accMod, stat);
                 break;
             case EVASION:
-                this.evaMod = checkModLowerLimit(evaMod, amount);
+                this.evaMod = checkModLowerLimit(evaMod, stat);
+        }
+
+    }
+
+    public int checkModUpperLimit(int mod, Stat stat)   {
+        if ((mod + 1) < 6)   {
+            Messages.logStatRaise(this, stat);
+            return mod + 1;
+        } else {
+            Messages.logStatWontGoAnyHigher(this, stat);
+            return mod;
         }
     }
 
-    public static int checkModUpperLimit(int mod, int increase)   {
-        if (mod + Math.abs(increase) >= 5)   {
-            return 6;
+    public int checkModLowerLimit(int mod, Stat stat)   {
+        if (mod - 1 < -6)   {
+            Messages.logStatDrop(this, stat);
+            return mod - 1;
         } else {
-            return (mod + Math.abs(increase));
+            Messages.logStatWontGoAnyLower(this, stat);
+            return mod;
         }
     }
 
-    public static int checkModLowerLimit(int mod, int decrease)   {
-        if (mod - Math.abs(decrease) <= -5)   {
-            return -6;
+    public int checkSharpModUpperLimit(int mod, Stat stat) {
+        if ((mod + 1) < 6)   {
+            Messages.logStatSharplyRaise(this, stat);
+            return Math.min(mod + 2, 6);
         } else {
-            return (mod - Math.abs(decrease));
+            Messages.logStatWontGoAnyHigher(this, stat);
+            return mod;
+        }
+    }
+
+    public int checkSharpModLowerLimit(int mod, Stat stat) {
+        if (mod - 1 < -6)   {
+            Messages.logStatSharplyDrop(this, stat);
+            return Math.max(mod - 2, -6);
+        } else {
+            Messages.logStatWontGoAnyLower(this, stat);
+            return mod;
         }
     }
 

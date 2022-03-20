@@ -2,8 +2,12 @@ package com.abrastat.gsc;
 
 import com.abrastat.general.*;
 
-import static com.abrastat.general.PlayerBehaviour.*;
+import static com.abrastat.general.PlayerBehaviour.BehaviourGroup.*;
 import org.jetbrains.annotations.NotNull;
+
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 import static com.abrastat.gsc.GSCMove.*;
 
@@ -16,6 +20,7 @@ public class GSCPlayer extends Player {
         super();
         addPokemon(pokemon);
         hasSleepTalk = this.getCurrentPokemon().hasMove(SLEEP_TALK);
+        this.setBehaviours();
     }
 
     @Override
@@ -54,25 +59,42 @@ public class GSCPlayer extends Player {
             }
         }
 
-        if (this.currentBehaviour == RECOVER_SAFELY)  {
-            if (this.opponentCritMayKO(opponent))   {
-                moveChosen = this.chooseRecoveryMove();
-            }
-        }
+        switch (this.currentBehaviour) {
+            case JUST_ATTACK:
+                // pre-processing damage calculations to choose the strongest attack
+                moveChosen = getStrongestAttack(opponent.getCurrentPokemon());
+                break;
 
-        if (this.currentBehaviour == RECOVER_RISKILY) {
-            if (this.opponentMayKO(opponent)) {
-                moveChosen = this.chooseRecoveryMove();
-            }
-        }
+            case RECOVER_SAFELY:
+                if (!this.opponentCritMayKO(opponent)) {
 
-        if (this.currentBehaviour == JUST_ATTACK) {// pre-processing damage calculations to choose the strongest attack
-            moveChosen = getStrongestAttack(opponent.getCurrentPokemon());
+                } else {
+                    moveChosen = this.chooseRecoveryMove();
+                }
+                break;
+
+            case RECOVER_RISKILY:
+                if (!this.opponentMayKO(opponent)) {
+
+                } else {
+                    moveChosen = this.chooseRecoveryMove();
+                }
+                break;
+
+            case FISH_FOR_PARALYSIS:
+                if (opponent.getCurrentPokemon().getNonVolatileStatus() == Status.HEALTHY) {
+
+                }
+
+
         }
         return moveChosen;
     }
 
-
+    protected void setCurrentBehaviour(PlayerBehaviour behaviour) {
+        Messages.logCurrentBehaviour(this, behaviour);
+        this.currentBehaviour = behaviour;
+    }
 
     @Override
     public void setBehaviours() {
@@ -85,7 +107,9 @@ public class GSCPlayer extends Player {
         // Firstly, disable mindlessly attacking with the strongest move
         justUseFirstAttack = false;
 
-        // attribute each attack to a behaviour type
+        final HashSet<PlayerBehaviour.BehaviourGroup> behaviourGroups = new HashSet<>();
+
+        // attribute each attack to a behaviour type & collect each behaviour group
         for (GSCMove move : this.getCurrentPokemon().getMoves()) {
 
             switch (move) {
@@ -106,38 +130,36 @@ public class GSCPlayer extends Player {
                 case ROLLOUT:
                 case SEISMIC_TOSS:
                 case SURF:
-                    this.behaviours.add(JUST_ATTACK);
+                    behaviourGroups.add(ATTACK);
                     break;
 
                 case MILK_DRINK:
                 case RECOVER:
                 case REST:
                 case SOFTBOILED:
-                    this.behaviours.add(RECOVER_SAFELY);
-                    this.behaviours.add(RECOVER_RISKILY);
+                case SELFDESTRUCT:
+                case EXPLOSION:
+                case DESTINY_BOND:
+                    behaviourGroups.add(KO_RESPONSE);
                     break;
 
                 case CURSE:
                 case GROWTH:
                 case MEDITATE:
                 case SHARPEN:
-                    this.behaviours.add(SET_UP_SIX_TIMES);
-                    this.behaviours.add(SET_UP_FIVE_TIMES);
-                    this.behaviours.add(SET_UP_FOUR_TIMES);
-                    this.behaviours.add(SET_UP_THRICE);
-                    this.behaviours.add(SET_UP_TWICE);
-                    this.behaviours.add(SET_UP_ONCE);
+                    behaviourGroups.add(SET_UP);
                     break;
 
                 case ACID_ARMOR:
                 case AMNESIA:
                 case AGILITY:
                 case BARRIER:
-                case BELLY_DRUM:
                 case SWORDS_DANCE:
-                    this.behaviours.add(SET_UP_THRICE);
-                    this.behaviours.add(SET_UP_TWICE);
-                    this.behaviours.add(SET_UP_ONCE);
+                    behaviourGroups.add(SET_UP_SHARP);
+                    break;
+
+                case BELLY_DRUM:
+                    behaviourGroups.add(BELLY);
                     break;
 
                 case HYPNOSIS:
@@ -146,69 +168,63 @@ public class GSCPlayer extends Player {
                 case SLEEP_POWDER:
                 case STUN_SPORE:
                 case THUNDER_WAVE:
-                case TOXIC:
-                    this.behaviours.add(STATUS_OPPONENT_NON_VOLATILE);
+                    behaviourGroups.add(STATUS_OPPONENT_NON_VOLATILE);
                     break;
 
                 case ATTRACT:
                 case CONFUSE_RAY:
                 case SWAGGER:
-                    this.behaviours.add(STATUS_OPPONENT_VOLATILE);
+                    behaviourGroups.add(VOLATILES);
                     break;
 
                 case BODY_SLAM:
                 case THUNDER:
                 case THUNDERBOLT:
                 case ZAP_CANNON:
-                    this.behaviours.add(JUST_ATTACK);
-                    this.behaviours.add(FISH_FOR_PARALYSIS);
-                    break;
-
-                case BLIZZARD:
-                case ICE_BEAM:
-                case ICE_PUNCH:
-                    this.behaviours.add(JUST_ATTACK);
-                    this.behaviours.add(FISH_FOR_FREEZE);
-                    break;
 
                 case FIRE_BLAST:
                 case FIRE_PUNCH:
                 case FLAMETHROWER:
                 case SACRED_FIRE:
-                    this.behaviours.add(JUST_ATTACK);
-                    this.behaviours.add(FISH_FOR_BURN);
-                    break;
+
+                case BLIZZARD:
+                case ICE_BEAM:
+                case ICE_PUNCH:
 
                 case SLUDGE_BOMB:
-                    this.behaviours.add(JUST_ATTACK);
-                    this.behaviours.add(FISH_FOR_POISON);
+                    behaviourGroups.add(ATTACK);
+                    behaviourGroups.add(STATUS_FISH);
                     break;
 
                 case CRUNCH:
                 case PSYCHIC:
-                    this.behaviours.add(JUST_ATTACK);
-                    this.behaviours.add(FISH_FOR_SPDEF_DROP);
+                    behaviourGroups.add(ATTACK);
+                    behaviourGroups.add(STAT_RAISE_DROP_FISH);
                     break;
 
                 case CROSS_CHOP:
-                    this.behaviours.add(JUST_ATTACK);
-                    this.behaviours.add(FISH_FOR_CRIT);
+                    behaviourGroups.add(ATTACK);
+                    behaviourGroups.add(FISH_CRIT);
                     break;
 
                 case THIEF:
-                    this.behaviours.add(JUST_ATTACK);
-                    this.behaviours.add(STEAL_ITEM);
+                    behaviourGroups.add(ATTACK);
+                    behaviourGroups.add(STEAL);
                     break;
 
                 case HYPER_BEAM:
-                    this.behaviours.add(GO_FOR_BIG_KO);
+                    behaviourGroups.add(GO_FOR_HYPER_BEAM);
+                    behaviourGroups.add(KO_RESPONSE);
                     break;
 
                 default:
                     Messages.logNoGSCMoveBehaviourFound(getCurrentPokemon(), move);
                     break;
             }
-
+        }
+        // add all discovered behaviours to Player for utilisation
+        for (PlayerBehaviour.BehaviourGroup group : behaviourGroups) {
+            activeBehaviours.addAll(Arrays.asList(group.getBehaviours()));
         }
     }
 
@@ -226,10 +242,19 @@ public class GSCPlayer extends Player {
         int strongestDamage = 0;
         int emptyMove = 0;
 
+        // cycle through moveslots
         for (int i = 0; i < 4; i++) {
 
             if (this.getCurrentPokemon().getMovePp(i) < 1)   {
                 emptyMove++;
+                continue;
+            }
+
+            if (this.getCurrentPokemon().getMoves()[i].effect() == MoveEffect.SELFDESTRUCT) {
+                if (strongestAttack == EMPTY) {
+                    // keep strongestDamage as 0 so that a non-suicidal move can still be selected
+                    strongestAttack = this.getCurrentPokemon().getMoves()[i];
+                }
                 continue;
             }
 

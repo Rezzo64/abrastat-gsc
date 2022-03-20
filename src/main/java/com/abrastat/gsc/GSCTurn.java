@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static com.abrastat.general.Game.checkPokemonAreNotFainted;
 import static com.abrastat.general.Status.*;
 import static com.abrastat.gsc.GSCDamageCalc.calcDamage;
-import static com.abrastat.gsc.GSCStatusEffects.applyStatusEffects;
+import static com.abrastat.gsc.GSCStatusMovesEffects.applyStatusEffects;
 
 public class GSCTurn {
 

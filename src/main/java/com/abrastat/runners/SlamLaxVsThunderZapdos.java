@@ -19,7 +19,6 @@ public class SlamLaxVsThunderZapdos {
                 .item(Item.LEFTOVERS)
                 .build();
 
-
         new GSCGameRunner(snorlax, zapdos, 100000);
 
         Messages.gameOver();

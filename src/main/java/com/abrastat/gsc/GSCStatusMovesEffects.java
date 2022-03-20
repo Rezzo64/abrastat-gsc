@@ -12,7 +12,7 @@ import static com.abrastat.general.Status.*;
 
 import static com.abrastat.gsc.GSCDamageCalc.calcHiddenPowerDamage;
 
-public enum GSCStatusEffects {
+public enum GSCStatusMovesEffects {
 
     INSTANCE;
 
@@ -46,7 +46,7 @@ public enum GSCStatusEffects {
                     throw new IllegalArgumentException("Sleep Talk called, but not found in " +
                             attackingPokemon + "'s moveset.");
                 }
-                int randomMove = ThreadLocalRandom.current().nextInt(0, 4);
+                int randomMove = ThreadLocalRandom.current().nextInt(0, 3);
                 Messages.logAttack(attackingPokemon, attackingPokemon.getMoves()[randomMove]);
                 GSCTurn.doAttack(attackingPokemon,
                         defendingPokemon,
@@ -56,11 +56,11 @@ public enum GSCStatusEffects {
 
             case CURSE:
                 if (attackingPokemon.getTypes()[0] == Type.GHOST || attackingPokemon.getTypes()[1] == Type.GHOST) {
-
+                    // Do Ghost Curse stuff
                 } else {
-                    attackingPokemon.dropStat(Stat.SPEED, 1);
-                    attackingPokemon.raiseStat(Stat.ATTACK, 1);
-                    attackingPokemon.raiseStat(Stat.DEFENSE, 1);
+                    attackingPokemon.dropStat(Stat.SPEED);
+                    attackingPokemon.raiseStat(Stat.ATTACK);
+                    attackingPokemon.raiseStat(Stat.DEFENSE);
                 }
                 break;
         }

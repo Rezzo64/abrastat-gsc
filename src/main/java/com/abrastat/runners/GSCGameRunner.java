@@ -21,32 +21,11 @@ public class GSCGameRunner {
 
     public GSCGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo, int simulationCount) {
         gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
-        this.simulate(simulationCount);
-    }
-
-    public GSCGameRunner(
-            String pkPl1, GSCMove @NotNull [] pkPl1Moves, Item pkPl1Item,
-            String pkPl2, GSCMove @NotNull [] pkPl2Moves, Item pkPl2Item,
-            int simulationCount
-            ) {
-
-        player1.setName("Youngster Joey");
-        player2.setName("Bug Catcher Don");
-
-        this.player1.addPokemon(new GSCPokemon.Builder(pkPl1)
-                .moves(pkPl1Moves[0], pkPl1Moves[1], pkPl1Moves[2], pkPl2Moves[3])
-                .item(pkPl1Item)
-                .build()
-        );
-
-        this.player2.addPokemon(new GSCPokemon.Builder(pkPl2)
-                .moves(pkPl2Moves[0], pkPl2Moves[1], pkPl2Moves[2], pkPl2Moves[3])
-                .item(pkPl2Item)
-                .build()
-        );
-
-        this.setPermanentItems();
-        this.simulate(simulationCount);
+        for (PlayerBehaviour p1Behaviours : player1.getActiveBehaviours()) {
+            for (PlayerBehaviour p2Behaviours : player2.getActiveBehaviours()) {
+                this.simulate(simulationCount, p1Behaviours, p2Behaviours);
+            }
+        }
     }
 
     public GSCGameRunner(int simulationCount) {
@@ -64,7 +43,7 @@ public class GSCGameRunner {
                 .build());
 
         this.setPermanentItems();
-        this.simulate(simulationCount);
+        this.simulate(simulationCount, PlayerBehaviour.JUST_ATTACK, PlayerBehaviour.JUST_ATTACK);
 
     }
 
@@ -99,13 +78,15 @@ public class GSCGameRunner {
         }
 
     }
-    private void simulate(int simulationCount) {
+    private void simulate(int simulationCount,
+                          PlayerBehaviour p1Behaviours,
+                          PlayerBehaviour p2Behaviours) {
 
         int i;
 
         for (i = 0; i < simulationCount; i++) {
 
-            switch (new GSCGame(player1, player2).getWinner()) {
+            switch (new GSCGame(player1, p1Behaviours, player2, p2Behaviours).getWinner()) {
                 case 0:
                     this.nobodyWins();
                     break;
