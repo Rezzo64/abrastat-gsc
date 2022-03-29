@@ -94,6 +94,7 @@ public class GSCPlayer extends Player {
     protected void setCurrentBehaviour(PlayerBehaviour behaviour) {
         Messages.logCurrentBehaviour(this, behaviour);
         this.currentBehaviour = behaviour;
+        this.getCurrentPokemon().setActiveBehaviour(behaviour);
     }
 
     @Override

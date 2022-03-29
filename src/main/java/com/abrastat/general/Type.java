@@ -24,6 +24,11 @@ public enum Type {
 //      Not convinced I'll ever need this...
 //      Set "None" as secondary typing if Mon has only one type
 
+    @Override
+    public String toString() {
+        return this.name();
+    }
+
     public void setTypes(Type type1, Type type2)    {
         this.setType(type1);
         this.setType(type2);

@@ -42,7 +42,7 @@ public class GSCPokemon extends Pokemon {
 
         this.initHPStat();
         this.initOtherStats();
-        this.setCurrentHP(this.getStatHP());
+        this.setCurrentHP(builder.startingHp == 0 ? this.getStatHP() : builder.startingHp);
 
     }
 
@@ -52,6 +52,7 @@ public class GSCPokemon extends Pokemon {
         private final String speciesName;
         private GSCMove[] moves = new GSCMove[4];
         private Type hiddenPowerType = DARK;
+        private int startingHp = 0;
 
         public Builder(String speciesName)    {
             super();
@@ -84,6 +85,11 @@ public class GSCPokemon extends Pokemon {
 
         public Builder hiddenPowerType(@NotNull Type type)   {
             this.hiddenPowerType = type;
+            return this;
+        }
+
+        public Builder startingHp(@NotNull int hp) {
+            this.startingHp = hp;
             return this;
         }
 
@@ -304,6 +310,11 @@ public class GSCPokemon extends Pokemon {
         else                            {
             Messages.ppFailedToDeduct(this, move);
         }
+    }
+
+    @Override
+    public int[] getMovesPp() {
+        return this.movesPp;
     }
 
     @Override

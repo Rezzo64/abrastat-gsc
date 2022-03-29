@@ -1,6 +1,7 @@
 package com.abrastat.general;
 
 import com.abrastat.gsc.GSCPokemon;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,12 @@ public abstract class Pokemon extends Species {
     private HashSet<Status> volatileStatus = new HashSet<>();
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
-    private int currentHP;
-    private Type hiddenPowerType;
 
-    // all counters below to be handled incrementally (for consistency)
+    private int startingHP, currentHP;
+    private Type hiddenPowerType;
+    private PlayerBehaviour activeBehaviour;
+
+    // all counters be low to be handled incrementally (for consistency)
     private int sleepCounter = 0;
     private int toxicCounter = 0;
     private int confuseCounter = 0;
@@ -53,11 +56,23 @@ public abstract class Pokemon extends Species {
         this.encoreCounter++;
     }
 
-    enum Gender {
+    public enum Gender {
 
-        MALE, FEMALE, NONE
+        MALE, FEMALE, NONE;
         // TODO: 19/08/2021 read & create getters + setters to read JSON
 
+        @Override
+        public @NotNull String toString() {
+            switch (this) {
+                case NONE:
+                    return "N";
+                case MALE:
+                    return "M";
+                case FEMALE:
+                    return "F";
+            }
+            return "N";
+        }
     }
 
     public Pokemon(String species, @NotNull Builder builder)   {
@@ -356,6 +371,8 @@ public abstract class Pokemon extends Species {
 
     public abstract void decrementMovePp(@NotNull Move move);
 
+    public abstract int[] getMovesPp();
+
     public int getAtkMod() {
         return atkMod;
     }
@@ -382,6 +399,14 @@ public abstract class Pokemon extends Species {
 
     public int getEvaMod() {
         return evaMod;
+    }
+
+    public int getStartingHP() {
+        return startingHP;
+    }
+
+    protected void setStartingHP(int hp) {
+        this.startingHP = hp;
     }
 
     public void raiseStat(@NotNull Stat stat)    {
@@ -551,6 +576,14 @@ public abstract class Pokemon extends Species {
         this.volatileStatus.clear();
     }
 
+    public PlayerBehaviour getActiveBehaviour() {
+        return activeBehaviour;
+    }
+
+    public void setActiveBehaviour(PlayerBehaviour activeBehaviour) {
+        this.activeBehaviour = activeBehaviour;
+    }
+
     public int getLastDamageTaken()    {
         return this.lastDamageTaken;
     }
@@ -665,7 +698,7 @@ public abstract class Pokemon extends Species {
     }
 
     public void resetStatHp() {
-        this.currentHP = this.statHP;
+        this.currentHP = this.startingHP;
     }
 
     public abstract void resetAllPp();
