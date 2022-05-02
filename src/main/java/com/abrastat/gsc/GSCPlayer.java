@@ -16,8 +16,9 @@ public class GSCPlayer extends Player {
     private final int hasSleepTalk;
     private PlayerBehaviour currentBehaviour;
 
-    public GSCPlayer(Pokemon pokemon)  {
+    public GSCPlayer(String playerName, Pokemon pokemon)  {
         super();
+        this.setName(playerName);
         addPokemon(pokemon);
         hasSleepTalk = this.getCurrentPokemon().hasMove(SLEEP_TALK);
         this.setBehaviours();
@@ -100,7 +101,7 @@ public class GSCPlayer extends Player {
     @Override
     public void setBehaviours() {
 
-        if (getCurrentPokemon().getMoves().length == 1) {
+        if (this.getCurrentPokemon().countEmptyMoves() == 3) {
             justUseFirstAttack = true;
             return;
         }

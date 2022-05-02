@@ -3,6 +3,7 @@ package com.abrastat.general;
 import java.util.HashSet;
 
 import static com.abrastat.general.PlayerBehaviour.BehaviourGroup;
+import static com.abrastat.general.PlayerBehaviour.JUST_ATTACK;
 
 public abstract class Player {
 
@@ -37,6 +38,9 @@ public abstract class Player {
     public abstract Pokemon getCurrentPokemon();
 
     public HashSet<PlayerBehaviour> getActiveBehaviours()    {
+        if (justUseFirstAttack) {
+            this.activeBehaviours.add(JUST_ATTACK);
+        }
         return this.activeBehaviours;
     }
 

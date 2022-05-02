@@ -10,6 +10,7 @@ public class GSCGameRunner {
 
     private GSCPlayer player1;
     private GSCPlayer player2;
+    private GameResult gameResult;
 
     private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
@@ -48,10 +49,8 @@ public class GSCGameRunner {
     }
 
     private void gameRunnerHelper(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)   {
-        player1 = new GSCPlayer(pokemonPlayerOne);
-        player2 = new GSCPlayer(pokemonPlayerTwo);
-        player1.setName("Youngster Joey");
-        player2.setName("Bug Catcher Don");
+        player1 = new GSCPlayer("Youngster Joey", pokemonPlayerOne);
+        player2 = new GSCPlayer("Bug Catcher Don", pokemonPlayerTwo);
         this.player1.addPokemon(pokemonPlayerOne);
         this.player2.addPokemon(pokemonPlayerTwo);
         this.setPermanentItems();
@@ -137,6 +136,10 @@ public class GSCGameRunner {
 
     public @NotNull String currentResults() {
         return "Player 1: " + displayP1Wins() + ", Player 2: " + displayP2Wins() + ", Draws: " + displayDraws();
+    }
+
+    public GameResult getResult() {
+
     }
 
 }

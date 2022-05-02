@@ -42,6 +42,7 @@ public class GSCPokemon extends Pokemon {
 
         this.initHPStat();
         this.initOtherStats();
+        this.setStartingHP(builder.startingHp == 0 ? this.getStatHP() : builder.startingHp);
         this.setCurrentHP(builder.startingHp == 0 ? this.getStatHP() : builder.startingHp);
 
     }
@@ -320,6 +321,16 @@ public class GSCPokemon extends Pokemon {
     @Override
     public GSCMove[] getMoves() {
         return this.moves;
+    }
+
+    public int countEmptyMoves() {
+        int emptyMoveCount = 0;
+        for (GSCMove move : this.moves) {
+            if (move == GSCMove.EMPTY) {
+                emptyMoveCount++;
+            }
+        }
+        return emptyMoveCount;
     }
 
     public int hasMove(GSCMove move)    {

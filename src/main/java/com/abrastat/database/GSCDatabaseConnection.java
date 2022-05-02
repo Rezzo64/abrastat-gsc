@@ -11,16 +11,16 @@ import java.sql.*;
 
 public class GSCDatabaseConnection {
 
-    private final String url = "jdbc:postgresql://localhost/abrastat";
+    private final String url = "jdbc:postgresql://localhost/";
     private final String user = "postgres";
     private final String password = "root";
     Connection connection = null;
 
-    public GSCDatabaseConnection() {
+    public GSCDatabaseConnection(String dbName) {
 
         try {
             connection = DriverManager.getConnection(
-                    url,
+                    url + dbName,
                     user,
                     password);
 
@@ -28,11 +28,11 @@ public class GSCDatabaseConnection {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Abrastat database successfully opened...");
+        System.out.println(dbName + " database successfully opened...");
     }
 
-    public Connection connect() throws SQLException {
-        return DriverManager.getConnection(url, user, password);
+    public Connection connect(String dbName) throws SQLException {
+        return DriverManager.getConnection(url + dbName, user, password);
     }
 
     public void addPokemon (@NotNull GSCPokemon pokemon) {
@@ -65,9 +65,13 @@ public class GSCDatabaseConnection {
         }
     }
 
-//    public void addResult(GameResult result) {
-//        String SQL = "INSERT INTO results " +
-//                "SET pokemon1 "
-//    }
+    public void addResult(GameResult result) {
+        String SQL = "INSERT INTO results (" +
+                "SET pokemon1 "
+    }
+
+    public void newDatabase(String dbName) {
+
+    }
 
 }
