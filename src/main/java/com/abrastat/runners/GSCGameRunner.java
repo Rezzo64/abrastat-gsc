@@ -12,8 +12,13 @@ public class GSCGameRunner {
     private GSCPlayer player2;
     private GameResult gameResult;
 
-    private int playerOneWinnerCount = 0, playerTwoWinnerCount = 0, drawCount = 0;
+    private int p1WinnerCount = 0, p2WinnerCount = 0, drawCount = 0, aggregateTurnCount = 0,
+            p1AggregateHP, p2AggregateHP, p1StruggleCount, p2StruggleCount, p1BoomCount, p2BoomCount;
+
+    private int[] p1AggregatePPs, p2AggregatePPs;
+
     private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
+
     private int simulationCount = 1000;
 
     public GSCGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)  {
@@ -21,6 +26,7 @@ public class GSCGameRunner {
     }
 
     public GSCGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo, int simulationCount) {
+        this.simulationCount = simulationCount;
         gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
         for (PlayerBehaviour p1Behaviours : player1.getActiveBehaviours()) {
             for (PlayerBehaviour p2Behaviours : player2.getActiveBehaviours()) {
@@ -30,7 +36,7 @@ public class GSCGameRunner {
     }
 
     public GSCGameRunner(int simulationCount) {
-
+        this.simulationCount = simulationCount;
         this.player1.setName("Youngster Joey");
         this.player2.setName("Bug Catcher Don");
 
@@ -85,7 +91,9 @@ public class GSCGameRunner {
 
         for (i = 0; i < simulationCount; i++) {
 
-            switch (new GSCGame(player1, p1Behaviours, player2, p2Behaviours).getWinner()) {
+            GSCGame game = new GSCGame(player1, p1Behaviours, player2, p2Behaviours);
+
+            switch (game.getWinner()) {
                 case 0:
                     this.nobodyWins();
                     break;
@@ -96,6 +104,15 @@ public class GSCGameRunner {
                     playerTwoWins();
                     break;
             }
+
+            this.aggregateTurnCount += game.getTurnNumber(); // sum all final turn counts for averaging later on
+            this.p1AggregateHP += game.getPokemonPlayerOneHP();
+            this.p2AggregateHP += game.getPokemonPlayerTwoHP();
+            this.p1StruggleCount += game.isStrugglePlayerOne() ? 1 : 0;
+            this.p2StruggleCount += game.isStrugglePlayerTwo() ? 1 : 0;
+            this.p1BoomCount += game.isBoomedPlayerOne() ? 1 : 0;
+            this.p2BoomCount += game.isBoomedPlayerTwo() ? 1 : 0;
+
             System.out.println(currentResults());
             System.out.println(resultsPercentages(i) + System.lineSeparator());
             refreshTeams();
@@ -109,13 +126,16 @@ public class GSCGameRunner {
                 + "%");
     }
 
+    public void incrementTurnCount() {
+        this.aggregateTurnCount++;
+    }
 
     public void playerOneWins()  {
-        this.playerOneWinnerCount++;
+        this.p1WinnerCount++;
     }
 
     public void playerTwoWins() {
-        this.playerTwoWinnerCount++;
+        this.p2WinnerCount++;
     }
 
     public void nobodyWins()    {
@@ -123,11 +143,11 @@ public class GSCGameRunner {
     }
 
     private int displayP1Wins()   {
-        return playerOneWinnerCount;
+        return p1WinnerCount;
     }
 
     private int displayP2Wins()  {
-        return playerTwoWinnerCount;
+        return p2WinnerCount;
     }
 
     private int displayDraws()   {
@@ -139,7 +159,22 @@ public class GSCGameRunner {
     }
 
     public GameResult getResult() {
-
+        return new GameResult(
+                player1.getCurrentPokemon(),
+                player2.getCurrentPokemon(),
+                p1WinnerCount,
+                p2WinnerCount,
+                drawCount,
+                (aggregateTurnCount / simulationCount),
+                p1AggregateHP,
+                p1AggregatePPs,
+                p2AggregateHP,
+                p2AggregatePPs,
+                p1StruggleCount,
+                p2StruggleCount,
+                p1BoomCount,
+                p2BoomCount
+        );
     }
 
 }

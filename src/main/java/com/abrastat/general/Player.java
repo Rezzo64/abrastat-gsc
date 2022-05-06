@@ -12,7 +12,6 @@ public abstract class Player {
     protected boolean justUseFirstAttack = true;
     protected HashSet<PlayerBehaviour> activeBehaviours = new HashSet<>();
 
-
     public Player() {
 
     }

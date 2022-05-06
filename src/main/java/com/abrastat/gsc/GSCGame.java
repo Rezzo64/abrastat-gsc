@@ -20,6 +20,7 @@ public class GSCGame implements Game {
     private int p1LightScreenCounter = 0, p2LightScreenCounter = 0;
     private int p1SafeguardCounter = 0, p2SafeguardCounter = 0;
     private GSCMove lastMoveUsed;
+    private GSCPokemon lastAttacker;
 
     public GSCGame(@NotNull GSCPlayer player1,
                    PlayerBehaviour p1Behaviour,
@@ -60,11 +61,25 @@ public class GSCGame implements Game {
         // IF speed priority !=0 move selected (Quick Attack, Protect, Roar)
 
         if (playerOneIsFaster()) { // true = player1, false = player2
+
             new GSCTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne);
+            setLastMoveUsed(movePlayerOne);
+            setLastAttacker(pokemonPlayerOne);
+
             new GSCTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo);
+            setLastMoveUsed(movePlayerTwo);
+            setLastAttacker(pokemonPlayerTwo);
+
         } else {
+
             new GSCTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo);
+            setLastMoveUsed(movePlayerTwo);
+            setLastAttacker(pokemonPlayerTwo);
+
             new GSCTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne);
+            setLastMoveUsed(movePlayerOne);
+            setLastAttacker(pokemonPlayerOne);
+
         }
 
         // IF battle effects like Perish Song, Light Screen, Safeguard
@@ -119,6 +134,70 @@ public class GSCGame implements Game {
 
     public int getWinner()   {
         return this.winner;
+    }
+
+    public int getTurnNumber() {
+        return this.turnNumber;
+    }
+
+    public int getPokemonPlayerOneHP() {
+        return pokemonPlayerOne.getCurrentHP();
+    }
+
+    public int getPokemonPlayerTwoHP() {
+        return pokemonPlayerTwo.getCurrentHP();
+    }
+
+    public int[] getPokemonPlayerOnePP() {
+        return new int[]{
+                pokemonPlayerOne.getMoveOnePp(),
+                pokemonPlayerOne.getMoveTwoPp(),
+                pokemonPlayerOne.getMoveThreePp(),
+                pokemonPlayerOne.getMoveFourPp(),
+        };
+    }
+
+    public int[] getPokemonPlayerTwoPP() {
+        return new int[]{
+                pokemonPlayerTwo.getMoveOnePp(),
+                pokemonPlayerTwo.getMoveTwoPp(),
+                pokemonPlayerTwo.getMoveThreePp(),
+                pokemonPlayerTwo.getMoveFourPp(),
+        };
+    }
+
+    public boolean isStrugglePlayerOne() {
+        return (
+                pokemonPlayerOne.getMoveOnePp() == 0 &&
+                pokemonPlayerOne.getMoveTwoPp() == 0 &&
+                pokemonPlayerOne.getMoveThreePp() == 0 &&
+                pokemonPlayerOne.getMoveFourPp() == 0
+        );
+    }
+
+    public boolean isStrugglePlayerTwo() {
+        return (
+                pokemonPlayerTwo.getMoveOnePp() == 0 &&
+                pokemonPlayerTwo.getMoveTwoPp() == 0 &&
+                pokemonPlayerTwo.getMoveThreePp() == 0 &&
+                pokemonPlayerTwo.getMoveFourPp() == 0
+        );
+    }
+
+    public boolean isBoomedPlayerOne() {
+        if (lastAttacker.equals(pokemonPlayerOne)) {
+            return (lastMoveUsed == GSCMove.EXPLOSION || lastMoveUsed == GSCMove.SELFDESTRUCT);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isBoomedPlayerTwo() {
+        if (lastAttacker.equals(pokemonPlayerTwo)) {
+            return (lastMoveUsed == GSCMove.EXPLOSION || lastMoveUsed == GSCMove.SELFDESTRUCT);
+        } else {
+            return false;
+        }
     }
 
     private void setWinner() {
@@ -176,5 +255,13 @@ public class GSCGame implements Game {
     @Override
     public void setLastMoveUsed(GSCMove move) {
         this.lastMoveUsed = move;
+    }
+
+    public GSCPokemon getLastAttacker() {
+        return this.lastAttacker;
+    }
+
+    public void setLastAttacker(GSCPokemon pokemon) {
+        this.lastAttacker = pokemon;
     }
 }
