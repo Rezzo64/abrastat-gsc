@@ -26,6 +26,7 @@ public abstract class Pokemon extends Species {
     private HashSet<Status> volatileStatus = new HashSet<>();
     private int statHP, statAtk, statDef, statSpA, statSpD, statSpe;
     private int atkMod = 0, defMod = 0, spAMod = 0, spDMod = 0, speMod = 0, accMod = 0, evaMod = 0;
+    private int id; // used for retrieving db instance
 
     private int startingHP, currentHP;
     private Type hiddenPowerType;
@@ -58,7 +59,7 @@ public abstract class Pokemon extends Species {
 
     public enum Gender {
 
-        MALE, FEMALE, NONE;
+        MALE, FEMALE, BOTH, NONE;
         // TODO: 19/08/2021 read & create getters + setters to read JSON
 
         @Override
@@ -70,6 +71,8 @@ public abstract class Pokemon extends Species {
                     return "M";
                 case FEMALE:
                     return "F";
+                case BOTH:
+                    return "B";
             }
             return "N";
         }
@@ -702,6 +705,14 @@ public abstract class Pokemon extends Species {
     }
 
     public abstract void resetAllPp();
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public String toString()    {

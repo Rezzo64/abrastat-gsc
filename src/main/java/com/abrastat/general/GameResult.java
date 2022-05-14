@@ -42,59 +42,59 @@ public class GameResult {
         this.boomP2 = boomP2;
     }
 
-    public Pokemon getPokemon1() {
+    public Pokemon pokemon1() {
         return pokemon1;
     }
 
-    public Pokemon getPokemon2() {
+    public Pokemon pokemon2() {
         return pokemon2;
     }
 
-    public int getWinsP1() {
+    public int winsP1() {
         return winsP1;
     }
 
-    public int getWinsP2() {
+    public int winsP2() {
         return winsP2;
     }
 
-    public int getDraws() {
+    public int draws() {
         return draws;
     }
 
-    public int getAvgTurns() {
+    public int avgTurns() {
         return avgTurns;
     }
 
-    public int getAvgHpP1() {
+    public int avgHpP1() {
         return avgHpP1;
     }
 
-    public int getAvgHpP2() {
+    public int avgHpP2() {
         return avgHpP2;
     }
 
-    public int getStruggleP1() {
+    public int struggleP1() {
         return struggleP1;
     }
 
-    public int getStruggleP2() {
+    public int struggleP2() {
         return struggleP2;
     }
 
-    public int getBoomP1() {
+    public int boomP1() {
         return boomP1;
     }
 
-    public int getBoomP2() {
+    public int boomP2() {
         return boomP2;
     }
 
-    public int[] getAvgPpP1() {
+    public int[] avgPpP1() {
         return avgPpP1;
     }
 
-    public int[] getAvgPpP2() {
+    public int[] avgPpP2() {
         return avgPpP2;
     }
 }
