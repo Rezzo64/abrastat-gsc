@@ -32,7 +32,7 @@ public abstract class Pokemon extends Species {
     private Type hiddenPowerType;
     private PlayerBehaviour activeBehaviour;
 
-    // all counters be low to be handled incrementally (for consistency)
+    // all counters below to be handled incrementally (for consistency)
     private int sleepCounter = 0;
     private int toxicCounter = 0;
     private int confuseCounter = 0;
@@ -65,16 +65,16 @@ public abstract class Pokemon extends Species {
         @Override
         public @NotNull String toString() {
             switch (this) {
-                case NONE:
-                    return "N";
                 case MALE:
                     return "M";
                 case FEMALE:
                     return "F";
                 case BOTH:
                     return "B";
+                case NONE:
+                default:
+                    return "N";
             }
-            return "N";
         }
     }
 
@@ -97,7 +97,7 @@ public abstract class Pokemon extends Species {
         this.evSpe = builder.evSpe;
         this.level = builder.level;
         this.heldItem = builder.heldItem;
-        this.gender = builder.gender;
+        this.gender = Gender.NONE; // TODO: currently unused because no gender ratio values in json
         this.ability = builder.ability;
 
     }
@@ -123,6 +123,7 @@ public abstract class Pokemon extends Species {
         public abstract Builder<T> moves(T move1, T move2);
         public abstract Builder<T> moves(T move1, T move2, T move3);
         public abstract Builder<T> moves(T move1, T move2, T move3, T move4);
+        public abstract Builder<T> hiddenPowerType(Type type);
 
         public Builder<T> ivs(int ivHP, int ivAtk, int ivDef, int ivSpA, int ivSpD, int ivSpe)    {
             this.ivHP = ivHP;

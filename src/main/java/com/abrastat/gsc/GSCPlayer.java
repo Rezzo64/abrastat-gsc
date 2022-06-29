@@ -132,6 +132,7 @@ public class GSCPlayer extends Player {
                 case ROLLOUT:
                 case SEISMIC_TOSS:
                 case SURF:
+                case STRUGGLE:
                     behaviourGroups.add(ATTACK);
                     break;
 

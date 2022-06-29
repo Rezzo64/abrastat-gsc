@@ -1,6 +1,7 @@
 package com.abrastat.runners;
 
 import com.abrastat.database.GSCDatabaseConnection;
+import com.abrastat.general.GameResult;
 import com.abrastat.general.Pokemon;
 import com.abrastat.gsc.GSCMove;
 import com.abrastat.gsc.GSCPokemon;
@@ -13,7 +14,7 @@ import static com.abrastat.gsc.GSCMove.STRUGGLE;
 public class StruggleWars {
     private static final String[] relevantOuPokemon = {
         "snorlax", "zapdos", "cloyster", "raikou", "gengar", "tyranitar", "skarmory",
-        "nidoking,", "golem", "exeggutor", "starmie", "machamp", "forretress", "vaporeon",
+        "nidoking", "golem", "exeggutor", "starmie", "machamp", "forretress", "vaporeon",
         "jynx", "steelix", "marowak", "suicune", "umbreon", "rhydon", "misdreavus",
         "heracross", "miltank", "blissey", "tentacruel", "espeon", "alakazam", "jolteon",
         "charizard", "moltres", "smeargle", "dragonite", "quagsire", "houndoom", "porygon2",
@@ -64,10 +65,11 @@ public class StruggleWars {
                         .item(speciesPlayerTwo.equals("marowak") ? THICK_CLUB : LEFTOVERS)
                         .build();
 
-                
+                GameResult result = new GSCGameRunner(pokemonPlayerOne, pokemonPlayerTwo, 1).getResult();
 
                 gscDatabaseConnection.addPokemon(pokemonPlayerOne);
                 gscDatabaseConnection.addPokemon(pokemonPlayerTwo);
+                gscDatabaseConnection.addResult(result);
 
             }
         }

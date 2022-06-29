@@ -6,6 +6,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.Scanner;
 
 public class GSCDatabaseConnection {
 
@@ -23,12 +24,19 @@ public class GSCDatabaseConnection {
                     url + dbName,
                     user,
                     password);
+            this.applySchema(dbName);
 
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         System.out.println(dbName + " database successfully opened...");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("This session will clear any previous data in database " + dbName +
+                ". Continue?");
+        if ((scanner.nextLine() == "Y" || scanner.nextLine() == "y")) {
+            System.exit(0);
+        }
     }
 
     public Connection connect(String dbName) throws SQLException {
@@ -76,9 +84,9 @@ public class GSCDatabaseConnection {
         }
     }
 
-    public void addResult(GameResult result) {
+    public void addResult(@NotNull GameResult result) {
         String SQL = "INSERT INTO results (" +
-                "pokemon1_id, pokemon1, pokemon2_id, pokemon2, winsp1, winsp2, draws, avgturns," +
+                "pokemon1_id, pokemon1, pokemon2_id, pokemon2, wins_p1, wins_p2, draws, avgturns," +
                 "avghp_p1, avgpp_p1, avghp_p2, avgpp_p2, struggle_p1, struggle_p2, boom_p1, boom_p2) \n" +
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
@@ -107,7 +115,7 @@ public class GSCDatabaseConnection {
         }
     }
 
-    public void newDatabase(String dbName) {
+    public void applySchema(String dbName) {
 
         String create = "DO LANGUAGE plpgsql\n" +
                 "$body$\n" +
