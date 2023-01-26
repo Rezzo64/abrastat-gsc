@@ -20,7 +20,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Body Slam 'is attack' test")
     void bodySlamIsAttackTest() {
-        assertTrue(BODY_SLAM.isAttack());
+        assertTrue(BODY_SLAM.isAttack);
     }
 
     @Test
@@ -62,7 +62,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Body Slam unused target property test")
     void bodySlamUnusedTargetPropertyTest()    {
-        assertTrue(BODY_SLAM.isAttack());
+        assertTrue(BODY_SLAM.isAttack);
     }
 
     @Test
@@ -74,7 +74,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Charm 'is attack' test")
     void charmIsAttackTest() {
-        assertFalse(CHARM.isAttack());
+        assertFalse(CHARM.isAttack);
     }
 
     @Test
@@ -110,13 +110,13 @@ class GSCMoveTest {
     @Test
     @DisplayName("Rest 'is attack' test")
     void restIsAttackTest() {
-        assertFalse(REST.isAttack());
+        assertFalse(REST.isAttack);
     }
 
     @Test
     @DisplayName("Rest target test")
     void restTargetTest()   {
-        assertFalse(REST.isAttack());
+        assertFalse(REST.isAttack);
     }
 
     @Test
@@ -134,7 +134,7 @@ class GSCMoveTest {
     @Test
     @DisplayName("Drill Peck 'is attack' test")
     void drillPeckIsAttackTest()    {
-        assertTrue(DRILL_PECK.isAttack());
+        assertTrue(DRILL_PECK.isAttack);
     }
 
     @Test

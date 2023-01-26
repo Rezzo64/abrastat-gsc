@@ -1,8 +1,7 @@
 package com.abrastat.gsc;
 
-import com.abrastat.general.Game;
 import static com.abrastat.general.Type.*;
-import static com.abrastat.gsc.GSCTypeEffectiveness.CalcEffectiveness;
+import static com.abrastat.gsc.GSCTypeEffectiveness.calcEffectiveness;
 
 import com.abrastat.general.Type;
 import org.junit.jupiter.api.DisplayName;
@@ -23,14 +22,14 @@ class GSCTypeEffectivenessTest  {
     @Test
     @DisplayName("damage successful test (carrying empty secondary typing)")
     void damageTest() {
-        assertNotNull(CalcEffectiveness(NORMAL, ELECTRIC, NONE));
+        assertNotNull(calcEffectiveness(NORMAL, ELECTRIC, NONE));
     }
 
     @ParameterizedTest
     @MethodSource("provideTypesForNormalDamageTest")
     @DisplayName("1* Damage Test")
     void normalDamageTest(Type attackingType, Type defendingType1, Type defendingType2) {
-        assertEquals(1.0, CalcEffectiveness(attackingType, defendingType1, defendingType2));
+        assertEquals(1.0, calcEffectiveness(attackingType, defendingType1, defendingType2));
     }
 
     private static Stream<Arguments> provideTypesForNormalDamageTest()  {
@@ -48,7 +47,7 @@ class GSCTypeEffectivenessTest  {
     @MethodSource("provideTypesForSETest")
     @DisplayName("2* Damage Test")
     void superEffectiveTest(Type attackingType, Type defendingType1, Type defendingType2) {
-        assertEquals(2.0, CalcEffectiveness(attackingType, defendingType1, defendingType2));
+        assertEquals(2.0, calcEffectiveness(attackingType, defendingType1, defendingType2));
     }
 
     private static Stream<Arguments> provideTypesForSETest()  {
@@ -63,14 +62,14 @@ class GSCTypeEffectivenessTest  {
     @Test
     @DisplayName("4* Damage Test")
     void quadEffectiveTest()   {
-        assertEquals(4.0, CalcEffectiveness(FIGHTING, STEEL, DARK));
+        assertEquals(4.0, calcEffectiveness(FIGHTING, STEEL, DARK));
     }
 
     @ParameterizedTest
     @MethodSource("provideTypesForNVETest")
     @DisplayName("0.5* Damage Test")
     void notVeryEffectiveTest(Type attackingType, Type defendingType1, Type defendingType2) {
-        assertEquals(0.5, CalcEffectiveness(attackingType, defendingType1, defendingType2));
+        assertEquals(0.5, calcEffectiveness(attackingType, defendingType1, defendingType2));
     }
 
     private static Stream<Arguments> provideTypesForNVETest()  {
@@ -85,14 +84,14 @@ class GSCTypeEffectivenessTest  {
     @Test
     @DisplayName("0.25* Damage Test")
     void quarterEffectiveTest() {
-        assertEquals(0.25, CalcEffectiveness(PSYCHIC, PSYCHIC, STEEL));
+        assertEquals(0.25, calcEffectiveness(PSYCHIC, PSYCHIC, STEEL));
     }
 
     @ParameterizedTest
     @MethodSource("provideTypesForZeroDmgTest")
     @DisplayName("Attack Immunity Test")
     void doesNotAffectTest(Type attackingType, Type defendingType1, Type defendingType2) {
-        assertEquals(0.0, CalcEffectiveness(attackingType, defendingType1, defendingType2));
+        assertEquals(0.0, calcEffectiveness(attackingType, defendingType1, defendingType2));
     }
 
     private static Stream<Arguments> provideTypesForZeroDmgTest()  {
