@@ -44,7 +44,7 @@ class GSCSpeciesTest {
     @DisplayName("Bulbasaur Typing Test")
     void bulbasaurTypingTest()  {
         assertAll("both types should exist, never null",
-                () -> assertEquals(GRASS, bulbasaur.getTypes()[0]),
-                () -> assertEquals(POISON, bulbasaur.getTypes()[1]));
+                () -> assertEquals(GRASS, bulbasaur.types[0]),
+                () -> assertEquals(POISON, bulbasaur.types[1]));
     }
 }

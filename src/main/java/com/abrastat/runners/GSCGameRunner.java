@@ -63,8 +63,8 @@ public class GSCGameRunner {
     }
 
     private void setPermanentItems() {
-        playerOnePermanentItem = player1.getCurrentPokemon().getHeldItem();
-        playerTwoPermanentItem = player2.getCurrentPokemon().getHeldItem();
+        playerOnePermanentItem = player1.getCurrentPokemon().heldItem;
+        playerTwoPermanentItem = player2.getCurrentPokemon().heldItem;
     }
 
     private void refreshTeams() {
@@ -75,11 +75,11 @@ public class GSCGameRunner {
         player2.getCurrentPokemon().resetAllPp();
         player2.getCurrentPokemon().removeNonVolatileStatus();
 
-        if (player1.getCurrentPokemon().getHeldItem() == null)  {
-            player1.getCurrentPokemon().setHeldItem(playerOnePermanentItem);
+        if (player1.getCurrentPokemon().heldItem == null)  {
+            player1.getCurrentPokemon().heldItem = playerOnePermanentItem;
         }
-        if (player2.getCurrentPokemon().getHeldItem() == null)  {
-            player2.getCurrentPokemon().setHeldItem(playerTwoPermanentItem);
+        if (player2.getCurrentPokemon().heldItem == null)  {
+            player2.getCurrentPokemon().heldItem = playerTwoPermanentItem;
         }
 
     }
