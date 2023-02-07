@@ -1,11 +1,11 @@
 package com.abrastat.general
 
 interface Move {
-    fun name(): String
+//    val moveName: String
     var isAttack: Boolean
-    fun type(): Type
-    fun maxPp(): Int
-    fun accuracy(): Int
-    fun basePower(): Int
-    fun effect(): MoveEffect
+    val type: Type
+    val maxPp: Int
+    val accuracy: Int
+    val basePower: Int
+    val effect: MoveEffect
 }

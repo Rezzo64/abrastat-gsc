@@ -69,7 +69,7 @@ enum class GSCDamageCalc {
                 defendingPokemon: GSCPokemon,
                 attack: GSCMove): Int {
             val level = attackingPokemon.level
-            val basePower = attack.basePower()
+            val basePower = attack.basePower
             val heldItem = attackingPokemon.heldItem
             var attackStat: Int = if (attack.isPhysical) attackingPokemon.statAtk else attackingPokemon.statSpA
             var defenseStat: Int = if (attack.isPhysical) defendingPokemon.statDef else defendingPokemon.statSpD
@@ -79,7 +79,7 @@ enum class GSCDamageCalc {
             }
             // comparing item's boosting type against selected attack's type
             val doesItemBoostDamage: Boolean = if (damageBoostingItems[heldItem] != null) {
-                damageBoostingItems[heldItem] == attack.type()
+                damageBoostingItems[heldItem] == attack.type
             } else {
                 false
             }
@@ -87,11 +87,11 @@ enum class GSCDamageCalc {
             // Modifiers for effects from Growl, Screech, Focus Energy, etc.
             var attackModifier: Int
             var defenseModifier: Int
-            var typeEffectiveness = calcEffectiveness(attack.type(),
+            var typeEffectiveness = calcEffectiveness(attack.type,
                     defendingPokemon.types[0],
                     defendingPokemon.types[1])
             var damage = damageFormula(level, attackStat, basePower, defenseStat, critModifier(), doesItemBoostDamage, typeEffectiveness)
-            if (sameTypeAttackBonus(attackingPokemon, attack.type()!!)) {
+            if (sameTypeAttackBonus(attackingPokemon, attack.type!!)) {
                 damage = floor(damage * 1.5).toInt()
             }
             if (typeEffectiveness != 1.0) {
@@ -115,7 +115,7 @@ enum class GSCDamageCalc {
                 attack: GSCMove,
                 isCrit: Boolean): Int {
             val level = attackingPokemon.level
-            val basePower = attack.basePower()
+            val basePower = attack.basePower
             val critValue = if (isCrit) 1 else 255 // any crit mod value < 16 forces critical hit
             val heldItem = attackingPokemon.heldItem
             var attackStat: Int = if (attack.isPhysical) attackingPokemon.statAtk else attackingPokemon.statSpA
@@ -126,7 +126,7 @@ enum class GSCDamageCalc {
             }
             // comparing item's boosting type against selected attack's type
             val doesItemBoostDamage: Boolean = if (damageBoostingItems[heldItem] != null) {
-                damageBoostingItems[heldItem] == attack.type()
+                damageBoostingItems[heldItem] == attack.type
             } else {
                 false
             }
@@ -134,11 +134,11 @@ enum class GSCDamageCalc {
             // Modifiers for effects from Growl, Screech, Focus Energy, etc.
             var attackModifier: Int
             var defenseModifier: Int
-            var typeEffectiveness = calcEffectiveness(attack.type(),
+            var typeEffectiveness = calcEffectiveness(attack.type,
                     defendingPokemon.types[0],
                     defendingPokemon.types[1])
             var damage = damageFormula(level, attackStat, basePower, defenseStat, critValue, doesItemBoostDamage, typeEffectiveness)
-            if (sameTypeAttackBonus(attackingPokemon, attack.type())) {
+            if (sameTypeAttackBonus(attackingPokemon, attack.type)) {
                 damage = floor(damage * 1.5).toInt()
             }
             if (typeEffectiveness != 1.0) {

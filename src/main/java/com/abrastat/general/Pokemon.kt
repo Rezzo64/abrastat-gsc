@@ -49,7 +49,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     var heldItem: Item
     var nonVolatileStatus = Status.HEALTHY
         private set
-    val volatileStatus = HashSet<Status>()
+    var volatileStatus: HashSet<Status> = hashSetOf()
     var statHP = 0
         private set
     var statAtk = 0
@@ -62,41 +62,28 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         private set
     var statSpe = 0
         private set
-    @JvmField
     var atkMod = 0
-    @JvmField
     var defMod = 0
-    @JvmField
     var spAMod = 0
-    @JvmField
     var spDMod = 0
-    @JvmField
     var speMod = 0
-    @JvmField
     var accMod = 0
-    @JvmField
     var evaMod = 0
-    @JvmField
     var id = 0 // used for retrieving db instance
     var startingHP = 0
         protected set
     var currentHP = 0
         protected set
     abstract val hiddenPowerType: Type
-    abstract var activeBehaviour: PlayerBehaviour
+    var activeBehaviour: PlayerBehaviour = PlayerBehaviour.JUST_ATTACK
 
     // all counters below to be handled incrementally (for consistency)
     var sleepCounter = 0
-        private set
     var toxicCounter = 0
-        private set
     var confuseCounter = 0
-        private set
     var disableCounter = 0
-        private set
-    private var encoreCounter = 0
+    var encoreCounter = 0
     var perishCounter = 0
-        private set
 
     fun applyHeal(healAmount: Int) {
         if (currentHP + healAmount >= statHP) {
@@ -125,7 +112,6 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
                 FEMALE -> "F"
                 BOTH -> "B"
                 NONE -> "N"
-                else -> "N"
             }
         }
     }
@@ -166,7 +152,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         var evSpe = 0 // default min
         var level = 100 // default max
         val ability: Ability? = null
-        lateinit var heldItem: Item
+        var heldItem: Item = Item.NONE
         private val gender: Gender? = null
         fun nickname(name: String): Builder<T> {
             nickname = name

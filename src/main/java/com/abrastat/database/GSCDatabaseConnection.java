@@ -56,15 +56,15 @@ public class GSCDatabaseConnection {
             ps.setString(5, pokemon.heldItem.toString());
             ps.setInt(6, pokemon.getLevel());
             ps.setString(7, pokemon.getNonVolatileStatus().toString());
-            ps.setArray(8, connection.createArrayOf("VARCHAR", pokemon.getVolatileStatus()));
+            // ps.setArray(8, connection.createArrayOf("VARCHAR", pokemon.getVolatileStatus())); INTELLIJ BUG
             ps.setInt(9, pokemon.getStartingHP());
-            ps.setArray(10, connection.createArrayOf("VARCHAR", pokemon.moves));
-            ps.setArray(11, connection.createArrayOf("INTEGER", ArrayUtils.toObject(pokemon.movesPp)));
-            ps.setString(12, pokemon.activeBehaviour.toString());
+            ps.setArray(10, connection.createArrayOf("VARCHAR", pokemon.getMoves()));
+            ps.setArray(11, connection.createArrayOf("INTEGER", ArrayUtils.toObject(pokemon.getMovesPp())));
+            ps.setString(12, pokemon.getActiveBehaviour().toString());
             ps.setString(13, pokemon.gscHiddenPowerType.toString());
             int[] stats = new int[]{pokemon.getStatHP(), pokemon.getStatAtk(), pokemon.getStatDef(), pokemon.getStatSpA(), pokemon.getStatSpD(), pokemon.getStatSpe()};
             ps.setArray(14, connection.createArrayOf("INTEGER", ArrayUtils.toObject(stats)));
-            int[] statMods = new int[]{pokemon.atkMod, pokemon.defMod, pokemon.spAMod, pokemon.spDMod, pokemon.speMod, pokemon.accMod, pokemon.evaMod};
+            int[] statMods = new int[]{pokemon.getAtkMod(), pokemon.getDefMod(), pokemon.getSpAMod(), pokemon.getSpDMod(), pokemon.getSpeMod(), pokemon.getAccMod(), pokemon.getEvaMod()};
             ps.setArray(15, connection.createArrayOf("INTEGER", ArrayUtils.toObject(statMods)));
 
             ps.executeUpdate();
@@ -74,7 +74,7 @@ public class GSCDatabaseConnection {
             if (lastMonId.next()) {
                 int pokemonId = lastMonId.getInt(1);
                 lastMonId.close();
-                pokemon.id = pokemonId;
+                pokemon.setId(pokemonId);
             } else {
                 throw new SQLException();
             }
@@ -91,9 +91,9 @@ public class GSCDatabaseConnection {
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
         try (PreparedStatement ps = connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, result.pokemon1().id);
+            ps.setInt(1, result.pokemon1().getId());
             ps.setString(2, result.pokemon1().getSpecies());
-            ps.setInt(3, result.pokemon2().id);
+            ps.setInt(3, result.pokemon2().getId());
             ps.setString(4, result.pokemon2().getSpecies());
             ps.setInt(5, result.winsP1());
             ps.setInt(6, result.winsP2());

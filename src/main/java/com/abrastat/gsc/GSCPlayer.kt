@@ -164,7 +164,7 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 emptyMove++
                 continue
             }
-            if (currentPokemon!!.moves[i].effect() === MoveEffect.SELFDESTRUCT) {
+            if (currentPokemon!!.moves[i].effect === MoveEffect.SELFDESTRUCT) {
                 if (strongestAttack == GSCMove.EMPTY) {
                     // keep strongestDamage as 0 so that a non-suicidal move can still be selected
                     strongestAttack = currentPokemon!!.moves[i]
@@ -184,7 +184,7 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 // TODO this only checks max damage roll. Implement something to assess individual damage rolls
                 if (currentDamage == opponent!!.currentHP
                         &&
-                        currentPokemon!!.moves[i].accuracy() > strongestAttack.accuracy()) {
+                        currentPokemon!!.moves[i].accuracy > strongestAttack.accuracy) {
                     strongestAttack = currentPokemon!!.moves[i]
                 }
             } else {

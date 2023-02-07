@@ -7,7 +7,7 @@ import kotlin.math.floor
 import kotlin.math.sqrt
 
 class GSCPokemon private constructor(speciesName: String, builder: Builder) : Pokemon(speciesName, builder) {
-    override val moves: Array<GSCMove> = arrayOf()
+    override val moves: Array<GSCMove> = Array(4) { GSCMove.EMPTY }
     override val movesPp = IntArray(4)
     @JvmField
     val gscHiddenPowerType: Type
@@ -20,10 +20,10 @@ class GSCPokemon private constructor(speciesName: String, builder: Builder) : Po
         moves[1] = builder.moves[1]
         moves[2] = builder.moves[2]
         moves[3] = builder.moves[3]
-        movesPp[0] = moves[0]!!.maxPp()
-        movesPp[1] = moves[1]!!.maxPp()
-        movesPp[2] = moves[2]!!.maxPp()
-        movesPp[3] = moves[3]!!.maxPp()
+        movesPp[0] = moves[0]!!.maxPp
+        movesPp[1] = moves[1]!!.maxPp
+        movesPp[2] = moves[2]!!.maxPp
+        movesPp[3] = moves[3]!!.maxPp
         if (hasMove(GSCMove.SLEEP_TALK) > -1) { // put Sleep Talk as the last attack for efficiency
             moves[hasMove(GSCMove.SLEEP_TALK)] = moves[3]
             moves[3] = GSCMove.SLEEP_TALK
@@ -44,7 +44,7 @@ class GSCPokemon private constructor(speciesName: String, builder: Builder) : Po
 
     class Builder(private val speciesName: String) : Pokemon.Builder<GSCMove>() {
         private var pokemon: GSCPokemon? = null
-        val moves = arrayOf<GSCMove>()
+        val moves = Array(4) { GSCMove.EMPTY }
         var hiddenPowerType = Type.DARK
         var startingHp = 0
         override fun moves(move1: GSCMove): Builder {
@@ -292,10 +292,10 @@ class GSCPokemon private constructor(speciesName: String, builder: Builder) : Po
     }
 
     override fun resetAllPp() {
-        movesPp[0] = moves[0].maxPp()
-        movesPp[1] = moves[1].maxPp()
-        movesPp[2] = moves[2].maxPp()
-        movesPp[3] = moves[3].maxPp()
+        movesPp[0] = moves[0].maxPp
+        movesPp[1] = moves[1].maxPp
+        movesPp[2] = moves[2].maxPp
+        movesPp[3] = moves[3].maxPp
     }
 
     fun getAttackDamageMaxRoll(opponent: GSCPokemon?, move: GSCMove): Int {
@@ -332,9 +332,6 @@ class GSCPokemon private constructor(speciesName: String, builder: Builder) : Po
 //        }
     override val hiddenPowerType: Type
         get() = TODO("Not yet implemented")
-    override var activeBehaviour: PlayerBehaviour
-        get() = TODO("Not yet implemented")
-        set(value) {}
 
     companion object {
         private fun initOtherStatsFormula(baseStat: Int, ivStat: Int, evStat: Int, level: Int): Int {

@@ -5,7 +5,12 @@ import com.abrastat.general.MoveEffect
 import com.abrastat.general.Type
 
 enum class GSCMove
-    constructor (val type: Type, val pp: Int, val accuracy: Int, val basePower: Int, val moveEffect: MoveEffect, override var isAttack: Boolean)
+    constructor (override val type: Type,
+                 override val maxPp: Int,
+                 override val accuracy: Int,
+                 override val basePower: Int,
+                 override val effect: MoveEffect,
+                 override var isAttack: Boolean)
     : Move {
     ABSORB(Type.GRASS, 32, 255, 20, MoveEffect.ABSORB),
     ACID(Type.POISON, 48, 255, 40, MoveEffect.ACIDSPDEFDROP),
@@ -239,29 +244,25 @@ enum class GSCMove
         // Status constructor for moves that DON'T check accuracy
         constructor(type: Type, pp: Int, moveEffect: MoveEffect) : this(type, pp, 0, 0, moveEffect, false)
 
-        override fun name(): String {
-            TODO("Not yet implemented")
-        }
+        // override val moveName: String = name
 
-        override fun type(): Type {
-            return type
-        }
+//        override val type: Type = type
 
-        override fun maxPp(): Int {
-            return maxPp()
-        }
+//        override fun maxPp(): Int {
+//            return maxPp()
+//        }
 
-        override fun accuracy(): Int {
-            return accuracy
-        }
+//        override fun accuracy(): Int {
+//            return accuracy
+//        }
 
-        override fun basePower(): Int {
-            return basePower
-        }
+//        override fun basePower(): Int {
+//            return basePower
+//        }
 
-        override fun effect(): MoveEffect {
-            return moveEffect
-        }
+//        override fun effect(): MoveEffect {
+//            return moveEffect
+//        }
 
         val isPhysical: Boolean
             get() = isPhysical(type)

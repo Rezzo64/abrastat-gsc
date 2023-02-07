@@ -22,7 +22,7 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
             checkStatusEffects(attackingPokemon)
             if (canAttack(attackingPokemon, move)) {
                 logAttack(attackingPokemon, move)
-                if (didAttackMiss(move.accuracy())) {
+                if (didAttackMiss(move.accuracy)) {
                     logMissedAttack(attackingPokemon)
                 } else {
                     doAttack(attackingPokemon, defendingPokemon, move)
@@ -46,25 +46,25 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
             for (status in attackingPokemon.volatileStatus) {
                 when (status) {
                     Status.ATTRACT -> roll = ThreadLocalRandom.current().nextInt(256)
-                    // roll move fail chance
+                    // TODO roll move fail chance
 
                     Status.CONFUSION, Status.FATIGUE -> {
                         roll = ThreadLocalRandom.current().nextInt(256)
                         attackingPokemon.incrementConfuseCounter()
                     }
-                    // increment counter, roll hurt self chance, check for end chance
+                    // TODO increment counter, roll hurt self chance, check for end chance
 
                     Status.ENCORE -> {
                         roll = ThreadLocalRandom.current().nextInt(256)
                         attackingPokemon.incrementEncoreCounter()
                     }
-                    // increment counter, override attack to instead be previously used attack, check for end chance
+                    // TODO increment counter, override attack to instead be previously used attack, check for end chance
 
                     Status.LOCKON -> roll = ThreadLocalRandom.current().nextInt(256)
-                    // remove accuracy checks (for this turn only), remove LOCKON status
+                    // TODO remove accuracy checks (for this turn only), remove LOCKON status
 
                     Status.DISABLE -> roll = ThreadLocalRandom.current().nextInt(256)
-                    // increment counter, block some attack from being selected, check for end chance
+                    // TODO increment counter, block some attack from being selected, check for end chance
 
                     else -> {
                         //TODO other effects
@@ -117,7 +117,7 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
                 calcAndApplyDamage(attackingPokemon, defendingPokemon, move)
                 rollSecondaryEffects(attackingPokemon, defendingPokemon, move) // for stuff like Counter as well as debugging
             } else {
-                GSCStatusMovesEffects.applyStatusEffects(attackingPokemon, defendingPokemon, move.effect())
+                GSCStatusMovesEffects.applyStatusEffects(attackingPokemon, defendingPokemon, move.effect)
             }
         }
 
@@ -129,13 +129,13 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
         }
 
         private fun rollSecondaryEffects(self: GSCPokemon, opponent: GSCPokemon, move: Move) {
-            if (move.effect().target() === MoveEffect.Target.NONE) {
+            if (move.effect.target() === MoveEffect.Target.NONE) {
                 return
             }
 
             // Guaranteed effects go here!
-            if (move.effect().chance() == 0) {
-                when (move.effect()) {
+            if (move.effect.chance() == 0) {
+                when (move.effect) {
                     MoveEffect.RECOIL25, MoveEffect.STRUGGLE -> {
                         val recoil = opponent.lastDamageTaken / 4
                         self.applyDamage(recoil)
@@ -149,8 +149,8 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
             val roll = ThreadLocalRandom.current().nextInt(256)
 
             // Chance probability attacks go here!
-            if (roll < move.effect().chance()) {
-                when (move.effect()) {
+            if (roll < move.effect.chance()) {
+                when (move.effect) {
                     MoveEffect.THUNDER, MoveEffect.PRZ100, MoveEffect.PRZ30, MoveEffect.PRZ10, MoveEffect.PRZ -> {
                         if (opponent.nonVolatileStatus !== Status.HEALTHY) {
                             return
@@ -173,10 +173,10 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
                         }
                         opponent.applyNonVolatileStatus(Status.BURN)
                         logNewStatus(opponent, Status.BURN)
-                        notImplementedYet(move.effect())
+                        notImplementedYet(move.effect)
                     }
 
-                    else -> notImplementedYet(move.effect())
+                    else -> notImplementedYet(move.effect)
                 }
             }
         }
