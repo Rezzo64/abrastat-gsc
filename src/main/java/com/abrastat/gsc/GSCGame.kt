@@ -8,6 +8,7 @@ import com.abrastat.general.Messages.Companion.displayCurrentHP
 import com.abrastat.general.Messages.Companion.leftoversHeal
 import com.abrastat.general.Messages.Companion.logFainted
 import com.abrastat.general.Messages.Companion.statusChanged
+import com.abrastat.rby.RBYMove
 import java.util.concurrent.ThreadLocalRandom
 
 class GSCGame(player1: GSCPlayer,
@@ -197,5 +198,9 @@ class GSCGame(player1: GSCPlayer,
 
     override fun setLastMoveUsed(move: GSCMove?) {
         lastMoveUsed = move
+    }
+
+    override fun setLastMoveUsedRBY(move: RBYMove?) {
+        var lastMoveUsed = move
     }
 }

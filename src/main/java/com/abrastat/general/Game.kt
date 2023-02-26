@@ -15,6 +15,7 @@ interface Game {
         fun isPokemonFainted(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon): Boolean {
             return attackingPokemon.currentHP == 0 || defendingPokemon.currentHP == 0
         }
+        @JvmStatic
         fun isPokemonFaintedRBY(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon): Boolean {
             return attackingPokemon.currentHP == 0 || defendingPokemon.currentHP == 0
         }
