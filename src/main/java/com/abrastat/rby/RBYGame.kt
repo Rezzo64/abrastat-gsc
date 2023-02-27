@@ -2,15 +2,12 @@ package com.abrastat.rby
 
 import com.abrastat.general.*
 import com.abrastat.general.Game.Companion.isPokemonFainted
-import com.abrastat.general.Game.Companion.isPokemonFaintedRBY
 import com.abrastat.general.Messages.Companion.announceTeam
 import com.abrastat.general.Messages.Companion.announceTurn
 import com.abrastat.general.Messages.Companion.displayCurrentHP
-import com.abrastat.general.Messages.Companion.displayCurrentHPRBY
 import com.abrastat.general.Messages.Companion.leftoversHeal
 import com.abrastat.general.Messages.Companion.logFainted
 import com.abrastat.general.Messages.Companion.statusChanged
-import com.abrastat.gsc.GSCMove
 import java.util.concurrent.ThreadLocalRandom
 
 class RBYGame(player1: RBYPlayer,
@@ -52,8 +49,8 @@ class RBYGame(player1: RBYPlayer,
     fun initTurn(movePlayerOne: RBYMove, movePlayerTwo: RBYMove) {
         turnNumber++
         announceTurn(turnNumber)
-        displayCurrentHPRBY(pokemonPlayerOne!!)
-        displayCurrentHPRBY(pokemonPlayerTwo!!)
+        displayCurrentHP(pokemonPlayerOne!!)
+        displayCurrentHP(pokemonPlayerTwo!!)
 
         // prevents Counter or Mirror Coat from carrying over
         pokemonPlayerOne.lastDamageTaken = 0
@@ -65,17 +62,17 @@ class RBYGame(player1: RBYPlayer,
         // IF speed priority !=0 move selected (Quick Attack, Protect, Roar)
         if (playerOneIsFaster()) { // true = player1, false = player2
             RBYTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
-            setLastMoveUsedRBY(movePlayerOne)
+            setLastMoveUsed(movePlayerOne)
             lastAttacker = pokemonPlayerOne
             RBYTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
-            setLastMoveUsedRBY(movePlayerTwo)
+            setLastMoveUsed(movePlayerTwo)
             lastAttacker = pokemonPlayerTwo
         } else {
             RBYTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
-            setLastMoveUsedRBY(movePlayerTwo)
+            setLastMoveUsed(movePlayerTwo)
             lastAttacker = pokemonPlayerTwo
             RBYTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
-            setLastMoveUsedRBY(movePlayerOne)
+            setLastMoveUsed(movePlayerOne)
             lastAttacker = pokemonPlayerOne
         }
 
@@ -118,7 +115,7 @@ class RBYGame(player1: RBYPlayer,
             logFainted(pokemonPlayerTwo)
         }
         setWinner()
-        return isPokemonFaintedRBY(pokemonPlayerOne, pokemonPlayerTwo)
+        return isPokemonFainted(pokemonPlayerOne, pokemonPlayerTwo)
     }
 
     val pokemonPlayerOneHP: Int
@@ -170,7 +167,7 @@ class RBYGame(player1: RBYPlayer,
         // the game mechanics.
 
         // flat integer division replicates in-game behaviour.
-        if (isPokemonFaintedRBY(pokemonPlayerOne!!, pokemonPlayerTwo!!)) {
+        if (isPokemonFainted(pokemonPlayerOne!!, pokemonPlayerTwo!!)) {
             return
         }
         if (pokemonPlayerOne.heldItem === Item.LEFTOVERS && pokemonPlayerTwo.heldItem === Item.LEFTOVERS) {
@@ -197,12 +194,9 @@ class RBYGame(player1: RBYPlayer,
     override fun getLastMoveUsed(): Move? {
         return lastMoveUsed
     }
-
-    override fun setLastMoveUsedRBY(move: RBYMove?) {
-        lastMoveUsed = move
-    }
-
-    override fun setLastMoveUsed(move: GSCMove?) {
-        var lastMovedUsed = move
+    override fun setLastMoveUsed(move: Move?) {
+        if (move is RBYMove) {
+            lastMoveUsed = move
+        }
     }
 }

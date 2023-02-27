@@ -1,7 +1,6 @@
 package com.abrastat.rby
 
 import com.abrastat.general.Game.Companion.isPokemonFainted
-import com.abrastat.general.Game.Companion.isPokemonFaintedRBY
 import com.abrastat.general.Messages.Companion.cantAttack
 import com.abrastat.general.Messages.Companion.logAttack
 import com.abrastat.general.Messages.Companion.logDamageTaken
@@ -19,7 +18,7 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
     init {
 
         // check neither Pokemon is fainted
-        if (!isPokemonFaintedRBY(attackingPokemon, defendingPokemon)) {
+        if (!isPokemonFainted(attackingPokemon, defendingPokemon)) {
             checkStatusEffects(attackingPokemon)
             if (canAttack(attackingPokemon, move)) {
                 logAttack(attackingPokemon, move)

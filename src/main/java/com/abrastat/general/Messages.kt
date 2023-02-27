@@ -1,10 +1,5 @@
 package com.abrastat.general
 
-import com.abrastat.gsc.GSCMove
-import com.abrastat.gsc.GSCPokemon
-import com.abrastat.rby.RBYMove
-import com.abrastat.rby.RBYPokemon
-
 enum class Messages {
     INSTANCE;
 
@@ -217,14 +212,7 @@ enum class Messages {
         }
 
         @JvmStatic
-        fun displayCurrentHP(pokemon: GSCPokemon) {
-            messageBuffer = pokemon.species +
-                    " current HP: " + pokemon.currentHP +
-                    " / " + pokemon.statHP
-            handleMessage()
-        }
-        @JvmStatic
-        fun displayCurrentHPRBY(pokemon: RBYPokemon) {
+        fun displayCurrentHP(pokemon: Pokemon) {
             messageBuffer = pokemon.species +
                     " current HP: " + pokemon.currentHP +
                     " / " + pokemon.statHP
@@ -246,12 +234,7 @@ enum class Messages {
         }
 
         @JvmStatic
-        fun logNoGSCMoveBehaviourFound(pokemon: Pokemon, move: GSCMove) {
-            messageBuffer = pokemon.toString() + "'s move " + move + "has no defined behaviour, this move will not be used in battle."
-            handleMessage()
-        }
-        @JvmStatic
-        fun logNoRBYMoveBehaviourFound(pokemon: Pokemon, move: RBYMove) {
+        fun logNoMoveBehaviourFound(pokemon: Pokemon, move: Move) {
             messageBuffer = pokemon.toString() + "'s move " + move + "has no defined behaviour, this move will not be used in battle."
             handleMessage()
         }

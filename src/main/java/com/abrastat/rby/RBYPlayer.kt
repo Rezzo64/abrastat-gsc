@@ -2,7 +2,7 @@ package com.abrastat.rby
 
 import com.abrastat.general.*
 import com.abrastat.general.Messages.Companion.logCurrentBehaviour
-import com.abrastat.general.Messages.Companion.logNoRBYMoveBehaviourFound
+import com.abrastat.general.Messages.Companion.logNoMoveBehaviourFound
 import com.abrastat.general.Messages.Companion.logNoRecoveryMoveFound
 import com.abrastat.general.Messages.Companion.notImplementedYet
 import com.abrastat.general.PlayerBehaviour.BehaviourGroup
@@ -137,7 +137,7 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                     behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
                 }
 
-                else -> logNoRBYMoveBehaviourFound(currentPokemon!!, move!!)
+                else -> logNoMoveBehaviourFound(currentPokemon!!, move!!)
             }
         }
         // add all discovered behaviours to Player for utilisation

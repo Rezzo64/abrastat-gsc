@@ -196,11 +196,9 @@ class GSCGame(player1: GSCPlayer,
         return lastMoveUsed
     }
 
-    override fun setLastMoveUsed(move: GSCMove?) {
-        lastMoveUsed = move
-    }
-
-    override fun setLastMoveUsedRBY(move: RBYMove?) {
-        var lastMoveUsed = move
+    override fun setLastMoveUsed(move: Move?) {
+        if (move is GSCMove) {
+            lastMoveUsed = move
+        }
     }
 }

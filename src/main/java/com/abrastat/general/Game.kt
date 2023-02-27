@@ -1,22 +1,15 @@
 package com.abrastat.general
 
-import com.abrastat.gsc.GSCMove
 import com.abrastat.gsc.GSCPokemon
-import com.abrastat.rby.RBYMove
 import com.abrastat.rby.RBYPokemon
 
 interface Game {
     fun getLastMoveUsed(): Move?
-    fun setLastMoveUsed(move: GSCMove?)
-    fun setLastMoveUsedRBY(move: RBYMove?)
+    fun setLastMoveUsed(move: Move?)
 
     companion object {
         @JvmStatic
-        fun isPokemonFainted(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon): Boolean {
-            return attackingPokemon.currentHP == 0 || defendingPokemon.currentHP == 0
-        }
-        @JvmStatic
-        fun isPokemonFaintedRBY(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon): Boolean {
+        fun isPokemonFainted(attackingPokemon: Pokemon, defendingPokemon: Pokemon): Boolean {
             return attackingPokemon.currentHP == 0 || defendingPokemon.currentHP == 0
         }
     }
