@@ -131,7 +131,7 @@ after crit calculation.
 
 ---
 
-Status: TODO
+Status: DONE, except HyperBeam
 
 Moves to be changed
 * Explosion: power is 170
