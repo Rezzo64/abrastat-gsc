@@ -11,7 +11,7 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     PSN(Target.OPPONENT, 0),
     ABSORB(Target.OPPONENT, 0),
     BRN10(Target.OPPONENT, 25),
-    BRN30(Target.OPPONENT, 75),
+    BRN30(Target.OPPONENT, 76),
     FRZ10(Target.OPPONENT, 25),
     SELFDESTRUCT(Target.SELF, 0),
     DREAMEATER(Target.BOTH, 0),

@@ -9,9 +9,6 @@ import kotlin.math.sqrt
 class RBYPokemon private constructor(speciesName: String, builder: Builder) : Pokemon(speciesName, builder) {
     override val moves: Array<RBYMove> = Array(4) { RBYMove.EMPTY }
     override val movesPp = IntArray(4)
-    @JvmField
-    val gscHiddenPowerType: Type
-    val gscHiddenPowerBasePower: Int
 
     init {
         initIVs()
@@ -28,11 +25,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
             moves[hasMove(RBYMove.SLEEP_TALK)] = moves[3]
             moves[3] = RBYMove.SLEEP_TALK
         }
-        if (builder.hiddenPowerType !== Type.DARK) {
-            overrideIVs(builder.hiddenPowerType)
-        }
-        gscHiddenPowerType = builder.hiddenPowerType
-        gscHiddenPowerBasePower = calcHiddenPowerBaseDamage()
 
         // TODO implement 'if' statement to override level due to user definition
         // TODO implement 'if' statement to override Stat Experience due to user definition
@@ -45,7 +37,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
     class Builder(private val speciesName: String) : Pokemon.Builder<RBYMove>() {
         private var pokemon: RBYPokemon? = null
         val moves = Array(4) { RBYMove.EMPTY }
-        var hiddenPowerType = Type.DARK
         var startingHp = 0
         override fun moves(move1: RBYMove): Builder {
             return this.moves(move1, RBYMove.EMPTY, RBYMove.EMPTY, RBYMove.EMPTY)
@@ -68,7 +59,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         }
 
         override fun hiddenPowerType(type: Type): Builder {
-            hiddenPowerType = type
             return this
         }
 
@@ -105,65 +95,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         evSpA = maxStatExp
         evSpD = maxStatExp
         evSpe = maxStatExp
-    }
-
-    private fun overrideIVs(hiddenPowerType: Type) {
-        when (hiddenPowerType) {
-            Type.NONE, Type.FAIRY, Type.NORMAL -> throw UnsupportedOperationException("Attempting to create invalid Hidden Power type $hiddenPowerType.")
-            Type.DARK -> {}
-            Type.FIRE -> {
-                ivAtk = 14
-                ivDef = 12
-            }
-
-            Type.WATER -> {
-                ivAtk = 14
-                ivDef = 13
-            }
-
-            Type.ELECTRIC -> ivAtk = 14
-            Type.GRASS -> {
-                ivAtk = 14
-                ivDef = 14
-            }
-
-            Type.ICE -> ivDef = 13
-            Type.FIGHTING -> {
-                ivAtk = 12
-                ivDef = 12
-            }
-
-            Type.POISON -> {
-                ivAtk = 12
-                ivDef = 14
-            }
-
-            Type.GROUND -> ivAtk = 12
-            Type.FLYING -> {
-                ivAtk = 12
-                ivDef = 13
-            }
-
-            Type.PSYCHIC -> ivDef = 12
-            Type.BUG -> {
-                ivAtk = 13
-                ivDef = 13
-            }
-
-            Type.ROCK -> {
-                ivAtk = 13
-                ivDef = 12
-            }
-
-            Type.GHOST -> {
-                ivAtk = 13
-                ivDef = 14
-            }
-
-            Type.DRAGON -> ivDef = 14
-            Type.STEEL -> ivAtk = 13
-        }
-        calculateDvHP()
     }
 
     override fun initHPStat() {
@@ -264,15 +195,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         return -1 // return negative number to denote that the move isn't in the moveset
     }
 
-    private fun calcHiddenPowerBaseDamage(): Int {
-        val atkMod = if (ivAtk <= 7) 8 else 0
-        val defMod = if (ivDef <= 7) 4 else 0
-        val spcMod = if (ivSpA <= 7) 2 else 0
-        val speMod = if (ivSpe <= 7) 1 else 0
-        val spcMod2 = ivSpA.coerceAtMost(3)
-        return (5 * (atkMod + defMod + spcMod + speMod) + spcMod2) / 2 + 31
-    }
-
     override fun resetAllCounters() {
         resetSleepCounter()
         resetToxicCounter()
@@ -330,8 +252,7 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
 //        public set(ivSpD) {
 //            throw UnsupportedOperationException("Trying to manually set Special Defense DV (only) on a GSC Pokemon.")
 //        }
-    override val hiddenPowerType: Type
-        get() = TODO("Not yet implemented")
+    override val hiddenPowerType: Type = Type.NONE
 
     companion object {
         private fun initOtherStatsFormula(baseStat: Int, ivStat: Int, evStat: Int, level: Int): Int {

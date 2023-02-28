@@ -90,7 +90,7 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
         // attribute each attack to a behaviour type & collect each behaviour group
         for (move in currentPokemon!!.moves) {
             when (move) {
-                RBYMove.BEAT_UP, RBYMove.DOUBLE_EDGE, RBYMove.DRILL_PECK, RBYMove.EARTHQUAKE, RBYMove.FLAIL, RBYMove.GIGA_DRAIN, RBYMove.HIDDEN_POWER, RBYMove.HYDRO_PUMP, RBYMove.MEGAHORN, RBYMove.NIGHT_SHADE, RBYMove.RETURN, RBYMove.REVERSAL, RBYMove.ROLLOUT, RBYMove.SEISMIC_TOSS, RBYMove.SURF, RBYMove.STRUGGLE
+                RBYMove.BEAT_UP, RBYMove.DOUBLE_EDGE, RBYMove.DRILL_PECK, RBYMove.EARTHQUAKE, RBYMove.FLAIL, RBYMove.GIGA_DRAIN, RBYMove.HYDRO_PUMP, RBYMove.MEGAHORN, RBYMove.NIGHT_SHADE, RBYMove.RETURN, RBYMove.REVERSAL, RBYMove.ROLLOUT, RBYMove.SEISMIC_TOSS, RBYMove.SURF, RBYMove.STRUGGLE
                 -> behaviourGroups.add(BehaviourGroup.ATTACK)
 
                 RBYMove.MILK_DRINK, RBYMove.RECOVER, RBYMove.REST, RBYMove.SOFTBOILED, RBYMove.SELFDESTRUCT, RBYMove.EXPLOSION, RBYMove.DESTINY_BOND
@@ -111,7 +111,7 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 RBYMove.ATTRACT, RBYMove.CONFUSE_RAY, RBYMove.SWAGGER
                 -> behaviourGroups.add(BehaviourGroup.VOLATILES)
 
-                RBYMove.BODY_SLAM, RBYMove.THUNDER, RBYMove.THUNDERBOLT, RBYMove.ZAP_CANNON, RBYMove.FIRE_BLAST, RBYMove.FIRE_PUNCH, RBYMove.FLAMETHROWER, RBYMove.SACRED_FIRE, RBYMove.BLIZZARD, RBYMove.ICE_BEAM, RBYMove.ICE_PUNCH, RBYMove.SLUDGE_BOMB
+                RBYMove.BODY_SLAM, RBYMove.THUNDERBOLT, RBYMove.ZAP_CANNON, RBYMove.FIRE_BLAST, RBYMove.FIRE_PUNCH, RBYMove.FLAMETHROWER, RBYMove.SACRED_FIRE, RBYMove.BLIZZARD, RBYMove.ICE_BEAM, RBYMove.ICE_PUNCH, RBYMove.SLUDGE_BOMB
                 -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STATUS_FISH)

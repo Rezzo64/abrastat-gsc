@@ -44,7 +44,7 @@ public class RBYGameRunner {
                 .item(LEFTOVERS)
                 .build());
         player2.addPokemon(new RBYPokemon.Builder("zapdos")
-                .moves(RBYMove.THUNDER)
+                .moves(RBYMove.THUNDERBOLT)
                 .item(LEFTOVERS)
                 .build());
 

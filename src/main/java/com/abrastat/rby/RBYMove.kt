@@ -110,7 +110,7 @@ enum class RBYMove
     //    HEADBUTT,
     //    HEAL_BELL,
     //    HI_JUMP_KICK,
-    HIDDEN_POWER(Type.NORMAL, 24, 255, MoveEffect.HIDDENPOWER),
+    //    HIDDEN_POWER,
     //    HORN_ATTACK,
     //    HORN_DRILL,
     HYDRO_PUMP(Type.WATER, 8, 204, 120),

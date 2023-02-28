@@ -14,7 +14,7 @@ public class RBYSlamLaxVsThunderZapdos {
                 .build();
 
         Pokemon zapdos = new RBYPokemon.Builder("zapdos")
-                .moves(RBYMove.THUNDER)
+                .moves(RBYMove.THUNDERBOLT)
                 .item(Item.LEFTOVERS)
                 .build();
 

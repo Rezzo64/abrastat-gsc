@@ -152,47 +152,6 @@ enum class RBYDamageCalc {
             return damage
         }
 
-        @JvmStatic
-        fun calcHiddenPowerDamage(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon): Int {
-            val level = attackingPokemon.level
-            val basePower = attackingPokemon.gscHiddenPowerBasePower
-            val heldItem = attackingPokemon.heldItem
-            var attackStat: Int = if (RBYMove.isPhysical(attackingPokemon.gscHiddenPowerType)) attackingPokemon.statAtk else attackingPokemon.statSpA
-            var defenseStat: Int = if (RBYMove.isPhysical(attackingPokemon.gscHiddenPowerType)) defendingPokemon.statDef else defendingPokemon.statSpD
-            if (attackStat > 255 || defenseStat > 255) {
-                attackStat /= 4
-                defenseStat /= 4
-            }
-            // comparing item's boosting type against selected attack's type
-            val doesItemBoostDamage: Boolean = if (damageBoostingItems[heldItem] != null) {
-                damageBoostingItems[heldItem] == attackingPokemon.gscHiddenPowerType
-            } else {
-                false
-            }
-
-            // Modifiers for effects from Growl, Screech, Focus Energy, etc.
-            var attackModifier: Int
-            var defenseModifier: Int
-            var typeEffectiveness = calcEffectiveness(attackingPokemon.gscHiddenPowerType,
-                    defendingPokemon.types[0],
-                    defendingPokemon.types[1])
-            var damage = damageFormula(level, attackStat, basePower, defenseStat, critModifier(), doesItemBoostDamage, typeEffectiveness)
-            if (sameTypeAttackBonus(attackingPokemon, attackingPokemon.gscHiddenPowerType)) {
-                damage = floor(damage * 1.5).toInt()
-            }
-            if (typeEffectiveness != 1.0) {
-
-                // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
-                // dirty fix and not optimised, come back and change if performance needs it
-                typeEffectiveness *= 10.0
-                logTypeEffectiveness(typeEffectiveness.toInt())
-            }
-            damage *= damageRoll()
-            damage = floor((damage / 255).toDouble()).toInt()
-            damage = damage.coerceAtMost(defendingPokemon.currentHP)
-            return damage
-        }
-
         private fun damageFormula(
                 level: Int,
                 attackStat: Int,

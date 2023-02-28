@@ -9,7 +9,6 @@ import com.abrastat.general.MoveEffect
 import com.abrastat.general.Stat
 import com.abrastat.general.Status
 import com.abrastat.general.Type
-import com.abrastat.rby.RBYDamageCalc.Companion.calcHiddenPowerDamage
 import com.abrastat.rby.RBYTurn.Companion.doAttack
 import java.util.concurrent.ThreadLocalRandom
 
@@ -22,13 +21,6 @@ enum class RBYStatusMovesEffects {
                 defendingPokemon: RBYPokemon,
                 effect: MoveEffect) {
             when (effect) {
-                MoveEffect.HIDDENPOWER -> {
-                    val damage = calcHiddenPowerDamage(attackingPokemon, defendingPokemon)
-                    defendingPokemon.applyDamage(damage)
-                    defendingPokemon.lastDamageTaken = damage
-                    logDamageTaken(defendingPokemon, damage)
-                }
-
                 MoveEffect.REST -> if (attackingPokemon.currentHP < attackingPokemon.statHP) {
                     logRest(attackingPokemon)
                     attackingPokemon.applyHeal(attackingPokemon.statHP)
