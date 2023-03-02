@@ -4,7 +4,7 @@ import com.abrastat.general.*;
 import com.abrastat.rby.*;
 import org.jetbrains.annotations.NotNull;
 
-import static com.abrastat.general.Item.*;
+//import static com.abrastat.general.Item.*;
 
 public class RBYGameRunner {
     private RBYPlayer player1;
@@ -13,11 +13,7 @@ public class RBYGameRunner {
 
     private int p1WinnerCount = 0, p2WinnerCount = 0, drawCount = 0, aggregateTurnCount = 0,
             p1AggregateHP, p2AggregateHP, p1StruggleCount, p2StruggleCount, p1BoomCount, p2BoomCount;
-
     private int[] p1AggregatePPs, p2AggregatePPs;
-
-    private Item playerOnePermanentItem, playerTwoPermanentItem; // returns the item in the case of Thief or Knock Off
-
     private int simulationCount = 1000;
 
     public RBYGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)  {
@@ -41,14 +37,11 @@ public class RBYGameRunner {
 
         player1.addPokemon(new RBYPokemon.Builder("snorlax")
                 .moves(RBYMove.BODY_SLAM)
-                .item(LEFTOVERS)
                 .build());
         player2.addPokemon(new RBYPokemon.Builder("zapdos")
                 .moves(RBYMove.THUNDERBOLT)
-                .item(LEFTOVERS)
                 .build());
 
-        this.setPermanentItems();
         this.simulate(simulationCount, PlayerBehaviour.JUST_ATTACK, PlayerBehaviour.JUST_ATTACK);
     } // RBYGameRunner
 
@@ -57,12 +50,6 @@ public class RBYGameRunner {
         player2 = new RBYPlayer("Bug Catcher Don", pokemonPlayerTwo);
         this.player1.addPokemon(pokemonPlayerOne);
         this.player2.addPokemon(pokemonPlayerTwo);
-        this.setPermanentItems();
-    }
-
-    private void setPermanentItems() {
-        playerOnePermanentItem = player1.getCurrentPokemon().heldItem;
-        playerTwoPermanentItem = player2.getCurrentPokemon().heldItem;
     }
 
     private void refreshTeams() {
@@ -72,14 +59,7 @@ public class RBYGameRunner {
         player2.getCurrentPokemon().resetStatHp();
         player2.getCurrentPokemon().resetAllPp();
         player2.getCurrentPokemon().removeNonVolatileStatus();
-
-        if (player1.getCurrentPokemon().heldItem == null)  {
-            player1.getCurrentPokemon().heldItem = playerOnePermanentItem;
-        }
-        if (player2.getCurrentPokemon().heldItem == null)  {
-            player2.getCurrentPokemon().heldItem = playerTwoPermanentItem;
-        }
-    } // refreshTeams
+    }
 
     private void simulate(int simulationCount,
                           PlayerBehaviour p1Behaviours,

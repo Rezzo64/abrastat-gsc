@@ -1,50 +1,18 @@
 package com.abrastat.rby
 
-import com.abrastat.general.Item
 import com.abrastat.general.Messages.Companion.logCriticalHit
 import com.abrastat.general.Messages.Companion.logTypeEffectiveness
 import com.abrastat.general.Pokemon
 import com.abrastat.general.Type
 import com.abrastat.rby.RBYTypeEffectiveness.calcEffectiveness
-import java.util.Map
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
 
 enum class RBYDamageCalc {
     INSTANCE;
-
-    companion object { // TODO convert this to Kotlin map
-        private val damageBoostingItems = Map.ofEntries(
-                Map.entry(Item.BLACKGLASSES, Type.DARK),
-                Map.entry(Item.BLACK_BELT, Type.FIGHTING),
-                Map.entry(Item.CHARCOAL, Type.FIRE),
-                Map.entry(Item.DRAGON_SCALE, Type.DRAGON),
-                Map.entry(Item.HARD_STONE, Type.ROCK),
-                Map.entry(Item.MAGNET, Type.ELECTRIC),
-                Map.entry(Item.MIRACLE_SEED, Type.GRASS),
-                Map.entry(Item.MYSTIC_WATER, Type.WATER),
-                Map.entry(Item.NEVERMELTICE, Type.ICE),
-                Map.entry(Item.PINK_BOW, Type.NORMAL),
-                Map.entry(Item.POISON_BARB, Type.POISON),
-                Map.entry(Item.POLKADOT_BOW, Type.NORMAL),
-                Map.entry(Item.SHARP_BEAK, Type.FLYING),
-                Map.entry(Item.SILVERPOWDER, Type.BUG),
-                Map.entry(Item.SOFT_SAND, Type.GROUND),
-                Map.entry(Item.SPELL_TAG, Type.GHOST),
-                Map.entry(Item.TWISTEDSPOON, Type.PSYCHIC),
-                Map.entry(Item.METAL_COAT, Type.STEEL)
-        )
-
+    companion object {
         private fun sameTypeAttackBonus(pokemon: Pokemon, type: Type): Boolean {
             return pokemon.types[0] == type || pokemon.types[1] == type
-        }
-
-        private fun calcItemBoost(itemBoostsDamage: Boolean): Double {
-            return if (itemBoostsDamage) {
-                1.1
-            } else {
-                1.0
-            }
         }
 
         private fun critModifier(): Int {
@@ -70,18 +38,11 @@ enum class RBYDamageCalc {
                 attack: RBYMove): Int {
             val level = attackingPokemon.level
             val basePower = attack.basePower
-            val heldItem = attackingPokemon.heldItem
             var attackStat: Int = if (attack.isPhysical) attackingPokemon.statAtk else attackingPokemon.statSpA
             var defenseStat: Int = if (attack.isPhysical) defendingPokemon.statDef else defendingPokemon.statSpD
             if (attackStat > 255 || defenseStat > 255) {
                 attackStat /= 4
                 defenseStat /= 4
-            }
-            // comparing item's boosting type against selected attack's type
-            val doesItemBoostDamage: Boolean = if (damageBoostingItems[heldItem] != null) {
-                damageBoostingItems[heldItem] == attack.type
-            } else {
-                false
             }
 
             // Modifiers for effects from Growl, Screech, Focus Energy, etc.
@@ -90,7 +51,7 @@ enum class RBYDamageCalc {
             var typeEffectiveness = calcEffectiveness(attack.type,
                     defendingPokemon.types[0],
                     defendingPokemon.types[1])
-            var damage = damageFormula(level, attackStat, basePower, defenseStat, critModifier(), doesItemBoostDamage, typeEffectiveness)
+            var damage = damageFormula(level, attackStat, basePower, defenseStat, critModifier(), typeEffectiveness)
             if (sameTypeAttackBonus(attackingPokemon, attack.type!!)) {
                 damage = floor(damage * 1.5).toInt()
             }
@@ -117,18 +78,11 @@ enum class RBYDamageCalc {
             val level = attackingPokemon.level
             val basePower = attack.basePower
             val critValue = if (isCrit) 1 else 255 // any crit mod value < 16 forces critical hit
-            val heldItem = attackingPokemon.heldItem
             var attackStat: Int = if (attack.isPhysical) attackingPokemon.statAtk else attackingPokemon.statSpA
             var defenseStat: Int = if (attack.isPhysical) defendingPokemon.statDef else defendingPokemon.statSpD
             if (attackStat > 255 || defenseStat > 255) {
                 attackStat /= 4
                 defenseStat /= 4
-            }
-            // comparing item's boosting type against selected attack's type
-            val doesItemBoostDamage: Boolean = if (damageBoostingItems[heldItem] != null) {
-                damageBoostingItems[heldItem] == attack.type
-            } else {
-                false
             }
 
             // Modifiers for effects from Growl, Screech, Focus Energy, etc.
@@ -137,7 +91,7 @@ enum class RBYDamageCalc {
             var typeEffectiveness = calcEffectiveness(attack.type,
                     defendingPokemon.types[0],
                     defendingPokemon.types[1])
-            var damage = damageFormula(level, attackStat, basePower, defenseStat, critValue, doesItemBoostDamage, typeEffectiveness)
+            var damage = damageFormula(level, attackStat, basePower, defenseStat, critValue, typeEffectiveness)
             if (sameTypeAttackBonus(attackingPokemon, attack.type)) {
                 damage = floor(damage * 1.5).toInt()
             }
@@ -158,9 +112,8 @@ enum class RBYDamageCalc {
                 basePower: Int,
                 defenseStat: Int,
                 critModifier: Int,
-                doesItemBoostDamage: Boolean,
                 typeEffectiveness: Double): Int {
-            return ((floor(floor((floor((level * 2 / 5).toDouble()) + 2) * 1.coerceAtLeast(attackStat) * basePower / 1.coerceAtLeast(defenseStat)) / 50) * critModifier * calcItemBoost(doesItemBoostDamage) + 2) * typeEffectiveness).toInt()
+            return ((floor(floor((floor((level * 2 / 5).toDouble()) + 2) * 1.coerceAtLeast(attackStat) * basePower / 1.coerceAtLeast(defenseStat)) / 50) * critModifier + 2) * typeEffectiveness).toInt()
         }
     }
 }

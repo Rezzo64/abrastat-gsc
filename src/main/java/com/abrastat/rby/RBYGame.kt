@@ -77,7 +77,6 @@ class RBYGame(player1: RBYPlayer,
         }
 
         // IF battle effects like Perish Song, Light Screen, Safeguard
-        applyLeftovers(playerOneIsFaster())
         // thaw chance
         if (pokemonPlayerOne.nonVolatileStatus === Status.FREEZE) {
             rollFreezeThaw(pokemonPlayerOne)
@@ -158,36 +157,6 @@ class RBYGame(player1: RBYPlayer,
             2
         } else {
             1
-        }
-    }
-
-    private fun applyLeftovers(playerOneIsFaster: Boolean) {
-
-        // this is the cleanest way I can think of implementing this while respecting
-        // the game mechanics.
-
-        // flat integer division replicates in-game behaviour.
-        if (isPokemonFainted(pokemonPlayerOne!!, pokemonPlayerTwo!!)) {
-            return
-        }
-        if (pokemonPlayerOne.heldItem === Item.LEFTOVERS && pokemonPlayerTwo.heldItem === Item.LEFTOVERS) {
-            if (playerOneIsFaster) {
-                pokemonPlayerOne.applyHeal(pokemonPlayerOne.statHP / 16)
-                leftoversHeal(pokemonPlayerOne)
-                pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.statHP / 16)
-                leftoversHeal(pokemonPlayerTwo)
-            } else {
-                pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.statHP / 16)
-                leftoversHeal(pokemonPlayerTwo)
-                pokemonPlayerOne.applyHeal(pokemonPlayerOne.statHP / 16)
-                leftoversHeal(pokemonPlayerOne)
-            }
-        } else if (pokemonPlayerOne.heldItem === Item.LEFTOVERS) {
-            pokemonPlayerOne.applyHeal(pokemonPlayerOne.statHP / 16)
-            leftoversHeal(pokemonPlayerOne)
-        } else if (pokemonPlayerTwo.heldItem === Item.LEFTOVERS) {
-            pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.statHP / 16)
-            leftoversHeal(pokemonPlayerTwo)
         }
     }
 
