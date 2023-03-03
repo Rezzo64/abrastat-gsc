@@ -65,10 +65,7 @@ public class RBYGameRunner {
                           PlayerBehaviour p1Behaviours,
                           PlayerBehaviour p2Behaviours) {
 
-        int i;
-
-        for (i = 0; i < simulationCount; i++) {
-
+        for (int i = 0; i < simulationCount; i++) {
             RBYGame game = new RBYGame(player1, p1Behaviours, player2, p2Behaviours);
 
             switch (game.getWinner()) {

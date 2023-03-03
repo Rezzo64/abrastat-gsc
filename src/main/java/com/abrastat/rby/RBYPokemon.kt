@@ -58,6 +58,20 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
             return this
         }
 
+        fun moves(moves: Array<RBYMove>): Builder {
+            var i = 0
+            for (move in moves) {
+                this.moves[i] = move
+                i++
+            }
+            if (i < 4) {
+                for (j in i..3) {
+                    this.moves[j] = RBYMove.EMPTY
+                }
+            }
+            return this
+        }
+
         override fun hiddenPowerType(type: Type): Builder {
             return this
         }

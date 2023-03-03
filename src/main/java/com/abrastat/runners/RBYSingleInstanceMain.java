@@ -1,7 +1,6 @@
 package com.abrastat.runners;
 
 import com.abrastat.general.Messages;
-import com.abrastat.general.Move;
 import com.abrastat.general.Pokemon;
 import com.abrastat.rby.RBYMove;
 import com.abrastat.rby.RBYPokemon;
