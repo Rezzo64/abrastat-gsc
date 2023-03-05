@@ -15,8 +15,8 @@ object RBYTypeEffectiveness {
 
     init {
         TYPECHART = HashBasedTable.create()
-        for (i in 0..17) {
-            for (j in 0..17) {
+        for (i in 0..18) {
+            for (j in 0..18) {
                 (TYPECHART as HashBasedTable<Type, Type, Double>).put(
                         Type.values()[i],
                         Type.values()[j],  // deduce attacking type vs
@@ -65,11 +65,7 @@ object RBYTypeEffectiveness {
             Type.DRAGON -> dragonEffectiveness(defendingType)
             Type.DARK -> darkEffectiveness(defendingType)
             Type.STEEL -> steelEffectiveness(defendingType)
-            Type.FAIRY -> {
-                println("using Fairy type attack in an old gen! " +
-                        "is this an error?")
-                return 1.0
-            }
+            Type.FAIRY -> fairyEffectiveness(defendingType)
         }
         return result
     }
@@ -212,6 +208,14 @@ object RBYTypeEffectiveness {
         return when (defendingType) {
             Type.ICE, Type.ROCK -> 2.0
             Type.FIRE, Type.WATER, Type.ELECTRIC, Type.STEEL -> 0.5
+            else -> 1.0
+        }
+    }
+
+    private fun fairyEffectiveness(defendingType: Type): Double {
+        return when (defendingType) {
+            Type.FIGHTING, Type.DRAGON, Type.DARK -> 2.0
+            Type.FIRE, Type.POISON, Type.STEEL -> 0.5
             else -> 1.0
         }
     }

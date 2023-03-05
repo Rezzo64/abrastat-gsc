@@ -443,7 +443,11 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
 
     abstract fun removeNonVolatileStatusDebuff()
     fun setSleepCounter(minSleep: Int, maxSleep: Int) {
-        sleepCounter = ThreadLocalRandom.current().nextInt(minSleep, maxSleep)
+        sleepCounter = if (maxSleep > minSleep) {
+            ThreadLocalRandom.current().nextInt(minSleep, maxSleep)
+        } else {
+            minSleep
+        }
     }
 
     fun resetStatHp() {

@@ -20,14 +20,17 @@ public class RBYGameRunner {
         gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
     }
 
-    public RBYGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo, int simulationCount) {
+    public RBYGameRunner(Pokemon pokemonPlayerOne,
+                                    Pokemon pokemonPlayerTwo,
+                                    int simulationCount) {
         this.simulationCount = simulationCount;
         gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
-        for (PlayerBehaviour p1Behaviours : player1.getActiveBehaviours()) {
-            for (PlayerBehaviour p2Behaviours : player2.getActiveBehaviours()) {
-                this.simulate(simulationCount, p1Behaviours, p2Behaviours);
-            }
-        }
+//        for (PlayerBehaviour p1Behaviours : player1.getActiveBehaviours()) {
+//            for (PlayerBehaviour p2Behaviours : player2.getActiveBehaviours()) {
+//                this.simulate(simulationCount, p1Behaviours, p2Behaviours);
+//            }
+//        }
+        this.simulate(simulationCount, PlayerBehaviour.JUST_ATTACK, PlayerBehaviour.JUST_ATTACK);
     }
 
     public RBYGameRunner(int simulationCount) {
@@ -80,6 +83,12 @@ public class RBYGameRunner {
                     break;
             }
 
+            // infinite loops because moves not implemented
+            if (aggregateTurnCount > 30) {
+                this.nobodyWins();
+                break;
+            }
+
             this.aggregateTurnCount += game.getTurnNumber(); // sum all final turn counts for averaging later on
             this.p1AggregateHP += game.getPokemonPlayerOneHP();
             this.p2AggregateHP += game.getPokemonPlayerTwoHP();
@@ -117,15 +126,15 @@ public class RBYGameRunner {
         drawCount++;
     }
 
-    private int displayP1Wins()   {
+    public int displayP1Wins()   {
         return p1WinnerCount;
     }
 
-    private int displayP2Wins()  {
+    public int displayP2Wins()  {
         return p2WinnerCount;
     }
 
-    private int displayDraws()   {
+    public int displayDraws()   {
         return drawCount;
     }
 
