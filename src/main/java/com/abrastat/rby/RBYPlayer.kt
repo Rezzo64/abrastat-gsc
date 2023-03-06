@@ -1,4 +1,4 @@
-package com.abrastat.gsc
+package com.abrastat.rby
 
 import com.abrastat.general.*
 import com.abrastat.general.Messages.Companion.logCurrentBehaviour
@@ -8,27 +8,27 @@ import com.abrastat.general.Messages.Companion.notImplementedYet
 import com.abrastat.general.PlayerBehaviour.BehaviourGroup
 import java.util.*
 
-class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
+class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
     private val hasSleepTalk: Int
     private var currentBehaviour: PlayerBehaviour? = null
 
     init {
         name = playerName
         addPokemon(pokemon)
-        hasSleepTalk = currentPokemon!!.hasMove(GSCMove.SLEEP_TALK)
+        hasSleepTalk = currentPokemon!!.hasMove(RBYMove.SLEEP_TALK)
         setBehaviours()
     }
 
-    override val currentPokemon: GSCPokemon?
-        get() = getPokemon(0) as GSCPokemon?
+    override val currentPokemon: RBYPokemon?
+        get() = getPokemon(0) as RBYPokemon?
 
-    fun chooseMove(opponent: GSCPlayer): GSCMove {
-        var chosenMove = GSCMove.EMPTY
+    fun chooseMove(opponent: RBYPlayer): RBYMove {
+        var chosenMove = RBYMove.EMPTY
         if (justUseFirstAttack) { // ignores other moves, use with caution
             return if (currentPokemon!!.getMovePp(0) > 0) {
                 currentPokemon!!.moves[0]
             } else {
-                GSCMove.STRUGGLE
+                RBYMove.STRUGGLE
             }
         }
         chosenMove = chooseMoveHelper(opponent)
@@ -36,15 +36,15 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
     }
 
     // each behaviour should exist as its own entity depending on the simulation state
-    fun chooseMoveHelper(opponent: GSCPlayer): GSCMove {
+    fun chooseMoveHelper(opponent: RBYPlayer): RBYMove {
 
         // just choose the first move as default in case it's not clear what should be done
         var moveChosen = currentPokemon!!.moves[0]
         if (hasSleepTalk > -1 && notAboutToWake()) {
 
             // check if any Sleep Talk PP remains
-            if (currentPokemon!!.getMovePp(currentPokemon!!.hasMove(GSCMove.SLEEP_TALK)) > 0) {
-                return GSCMove.SLEEP_TALK
+            if (currentPokemon!!.getMovePp(currentPokemon!!.hasMove(RBYMove.SLEEP_TALK)) > 0) {
+                return RBYMove.SLEEP_TALK
             }
         }
         when (currentBehaviour) {
@@ -90,49 +90,49 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
         // attribute each attack to a behaviour type & collect each behaviour group
         for (move in currentPokemon!!.moves) {
             when (move) {
-                GSCMove.BEAT_UP, GSCMove.DOUBLE_EDGE, GSCMove.DRILL_PECK, GSCMove.EARTHQUAKE, GSCMove.FLAIL, GSCMove.GIGA_DRAIN, GSCMove.HIDDEN_POWER, GSCMove.HYDRO_PUMP, GSCMove.MEGAHORN, GSCMove.NIGHT_SHADE, GSCMove.RETURN, GSCMove.REVERSAL, GSCMove.ROLLOUT, GSCMove.SEISMIC_TOSS, GSCMove.SURF, GSCMove.STRUGGLE
+                RBYMove.BEAT_UP, RBYMove.DOUBLE_EDGE, RBYMove.DRILL_PECK, RBYMove.EARTHQUAKE, RBYMove.FLAIL, RBYMove.GIGA_DRAIN, RBYMove.HYDRO_PUMP, RBYMove.MEGAHORN, RBYMove.NIGHT_SHADE, RBYMove.RETURN, RBYMove.REVERSAL, RBYMove.ROLLOUT, RBYMove.SEISMIC_TOSS, RBYMove.SURF, RBYMove.STRUGGLE
                 -> behaviourGroups.add(BehaviourGroup.ATTACK)
 
-                GSCMove.MILK_DRINK, GSCMove.RECOVER, GSCMove.REST, GSCMove.SOFTBOILED, GSCMove.SELFDESTRUCT, GSCMove.EXPLOSION, GSCMove.DESTINY_BOND
+                RBYMove.MILK_DRINK, RBYMove.RECOVER, RBYMove.REST, RBYMove.SOFTBOILED, RBYMove.SELFDESTRUCT, RBYMove.EXPLOSION, RBYMove.DESTINY_BOND
                 -> behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
 
-                GSCMove.CURSE, GSCMove.GROWTH, GSCMove.MEDITATE, GSCMove.SHARPEN
+                RBYMove.CURSE, RBYMove.GROWTH, RBYMove.MEDITATE, RBYMove.SHARPEN
                 -> behaviourGroups.add(BehaviourGroup.SET_UP)
 
-                GSCMove.ACID_ARMOR, GSCMove.AMNESIA, GSCMove.AGILITY, GSCMove.BARRIER, GSCMove.SWORDS_DANCE
+                RBYMove.ACID_ARMOR, RBYMove.AMNESIA, RBYMove.AGILITY, RBYMove.BARRIER, RBYMove.SWORDS_DANCE
                 -> behaviourGroups.add(BehaviourGroup.SET_UP_SHARP)
 
-                GSCMove.BELLY_DRUM
+                RBYMove.BELLY_DRUM
                 -> behaviourGroups.add(BehaviourGroup.BELLY)
 
-                GSCMove.HYPNOSIS, GSCMove.LOVELY_KISS, GSCMove.SING, GSCMove.SLEEP_POWDER, GSCMove.STUN_SPORE, GSCMove.THUNDER_WAVE
+                RBYMove.HYPNOSIS, RBYMove.LOVELY_KISS, RBYMove.SING, RBYMove.SLEEP_POWDER, RBYMove.STUN_SPORE, RBYMove.THUNDER_WAVE
                 -> behaviourGroups.add(BehaviourGroup.STATUS_OPPONENT_NON_VOLATILE)
 
-                GSCMove.ATTRACT, GSCMove.CONFUSE_RAY, GSCMove.SWAGGER
+                RBYMove.ATTRACT, RBYMove.CONFUSE_RAY, RBYMove.SWAGGER
                 -> behaviourGroups.add(BehaviourGroup.VOLATILES)
 
-                GSCMove.BODY_SLAM, GSCMove.THUNDER, GSCMove.THUNDERBOLT, GSCMove.ZAP_CANNON, GSCMove.FIRE_BLAST, GSCMove.FIRE_PUNCH, GSCMove.FLAMETHROWER, GSCMove.SACRED_FIRE, GSCMove.BLIZZARD, GSCMove.ICE_BEAM, GSCMove.ICE_PUNCH, GSCMove.SLUDGE_BOMB
+                RBYMove.BODY_SLAM, RBYMove.THUNDERBOLT, RBYMove.ZAP_CANNON, RBYMove.FIRE_BLAST, RBYMove.FIRE_PUNCH, RBYMove.FLAMETHROWER, RBYMove.SACRED_FIRE, RBYMove.BLIZZARD, RBYMove.ICE_BEAM, RBYMove.ICE_PUNCH, RBYMove.SLUDGE_BOMB
                 -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STATUS_FISH)
                 }
 
-                GSCMove.CRUNCH, GSCMove.PSYCHIC -> {
+                RBYMove.CRUNCH, RBYMove.PSYCHIC -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STAT_RAISE_DROP_FISH)
                 }
 
-                GSCMove.CROSS_CHOP -> {
+                RBYMove.CROSS_CHOP -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.FISH_CRIT)
                 }
 
-                GSCMove.THIEF -> {
+                RBYMove.THIEF -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STEAL)
                 }
 
-                GSCMove.HYPER_BEAM -> {
+                RBYMove.HYPER_BEAM -> {
                     behaviourGroups.add(BehaviourGroup.GO_FOR_HYPER_BEAM)
                     behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
                 }
@@ -152,8 +152,8 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
         } else false
     }
 
-    fun getStrongestAttack(opponent: GSCPokemon?): GSCMove {
-        var strongestAttack = GSCMove.EMPTY
+    fun getStrongestAttack(opponent: RBYPokemon?): RBYMove {
+        var strongestAttack = RBYMove.EMPTY
         var currentDamage = -1
         var strongestDamage = 0
         var emptyMove = 0
@@ -165,7 +165,7 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 continue
             }
             if (currentPokemon!!.moves[i].effect === MoveEffect.SELFDESTRUCT) {
-                if (strongestAttack == GSCMove.EMPTY) {
+                if (strongestAttack == RBYMove.EMPTY) {
                     // keep strongestDamage as 0 so that a non-suicidal move can still be selected
                     strongestAttack = currentPokemon!!.moves[i]
                 }
@@ -191,25 +191,25 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 strongestAttack = currentPokemon!!.moves[i]
             }
         }
-        return if (emptyMove == 4) GSCMove.STRUGGLE else strongestAttack // only and always struggle when all moves are out of pp
+        return if (emptyMove == 4) RBYMove.STRUGGLE else strongestAttack // only and always struggle when all moves are out of pp
     }
 
-    private fun chooseRecoveryMove(): GSCMove {
-        return if (currentPokemon!!.hasMove(GSCMove.REST) > -1) {
-            GSCMove.REST
-        } else if (currentPokemon!!.hasMove(GSCMove.RECOVER) > -1) {
-            GSCMove.RECOVER
-        } else if (currentPokemon!!.hasMove(GSCMove.SOFTBOILED) > -1) {
-            GSCMove.SOFTBOILED
-        } else if (currentPokemon!!.hasMove(GSCMove.MILK_DRINK) > -1) {
-            GSCMove.MILK_DRINK
+    private fun chooseRecoveryMove(): RBYMove {
+        return if (currentPokemon!!.hasMove(RBYMove.REST) > -1) {
+            RBYMove.REST
+        } else if (currentPokemon!!.hasMove(RBYMove.RECOVER) > -1) {
+            RBYMove.RECOVER
+        } else if (currentPokemon!!.hasMove(RBYMove.SOFTBOILED) > -1) {
+            RBYMove.SOFTBOILED
+        } else if (currentPokemon!!.hasMove(RBYMove.MILK_DRINK) > -1) {
+            RBYMove.MILK_DRINK
         } else {
             logNoRecoveryMoveFound(currentPokemon!!)
             currentPokemon!!.moves[0]
         }
     }
 
-    private fun opponentMayKO(opponent: GSCPlayer): Boolean {
+    private fun opponentMayKO(opponent: RBYPlayer): Boolean {
         val damage = opponent.currentPokemon!!.getAttackDamageMaxRoll(
                 currentPokemon,
                 opponent.getStrongestAttack(currentPokemon))
@@ -218,7 +218,7 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
         return if (currentPokemon!!.statSpe < opponent.currentPokemon!!.statSpe) damage >= 2 * currentPokemon!!.currentHP else damage >= currentPokemon!!.currentHP
     }
 
-    private fun opponentCritMayKO(opponent: GSCPlayer): Boolean {
+    private fun opponentCritMayKO(opponent: RBYPlayer): Boolean {
         val damage = opponent.currentPokemon!!.getAttackDamageCritMaxRoll(
                 currentPokemon,
                 opponent.getStrongestAttack(currentPokemon))

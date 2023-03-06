@@ -163,6 +163,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         abstract fun moves(move1: T, move2: T): Builder<T>
         abstract fun moves(move1: T, move2: T, move3: T): Builder<T>
         abstract fun moves(move1: T, move2: T, move3: T, move4: T): Builder<T>
+//        abstract fun moves(moves: Array<T>): Builder<T>
         abstract fun hiddenPowerType(type: Type): Builder<T>
         fun ivs(ivHP: Int, ivAtk: Int, ivDef: Int, ivSpA: Int, ivSpD: Int, ivSpe: Int): Builder<T> {
             this.ivHP = ivHP
@@ -442,7 +443,11 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
 
     abstract fun removeNonVolatileStatusDebuff()
     fun setSleepCounter(minSleep: Int, maxSleep: Int) {
-        sleepCounter = ThreadLocalRandom.current().nextInt(minSleep, maxSleep)
+        sleepCounter = if (maxSleep > minSleep) {
+            ThreadLocalRandom.current().nextInt(minSleep, maxSleep)
+        } else {
+            minSleep
+        }
     }
 
     fun resetStatHp() {

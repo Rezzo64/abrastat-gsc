@@ -1,4 +1,4 @@
-package com.abrastat.gsc
+package com.abrastat.rby
 
 import com.abrastat.general.*
 import com.abrastat.general.Game.Companion.isPokemonFainted
@@ -8,17 +8,16 @@ import com.abrastat.general.Messages.Companion.displayCurrentHP
 import com.abrastat.general.Messages.Companion.leftoversHeal
 import com.abrastat.general.Messages.Companion.logFainted
 import com.abrastat.general.Messages.Companion.statusChanged
-import com.abrastat.rby.RBYMove
 import java.util.concurrent.ThreadLocalRandom
 
-class GSCGame(player1: GSCPlayer,
+class RBYGame(player1: RBYPlayer,
               p1Behaviour: PlayerBehaviour,
-              player2: GSCPlayer,
+              player2: RBYPlayer,
               p2Behaviour: PlayerBehaviour) : Game {
     var turnNumber = 0
         private set
-    private val pokemonPlayerOne: GSCPokemon?
-    private val pokemonPlayerTwo: GSCPokemon?
+    private val pokemonPlayerOne: RBYPokemon?
+    private val pokemonPlayerTwo: RBYPokemon?
     var winner = 0 // 0 = draw, 1 = p1, 2 = p2
         private set
     private val p1ReflectCounter = 0
@@ -27,8 +26,8 @@ class GSCGame(player1: GSCPlayer,
     private val p2LightScreenCounter = 0
     private val p1SafeguardCounter = 0
     private val p2SafeguardCounter = 0
-    private var lastMoveUsed: GSCMove? = null
-    private var lastAttacker: GSCPokemon? = null
+    private var lastMoveUsed: RBYMove? = null
+    private var lastAttacker: RBYPokemon? = null
 
     init {
         pokemonPlayerOne = player1.currentPokemon
@@ -47,7 +46,7 @@ class GSCGame(player1: GSCPlayer,
         }
     }
 
-    fun initTurn(movePlayerOne: GSCMove, movePlayerTwo: GSCMove) {
+    fun initTurn(movePlayerOne: RBYMove, movePlayerTwo: RBYMove) {
         turnNumber++
         announceTurn(turnNumber)
         displayCurrentHP(pokemonPlayerOne!!)
@@ -62,23 +61,22 @@ class GSCGame(player1: GSCPlayer,
 
         // IF speed priority !=0 move selected (Quick Attack, Protect, Roar)
         if (playerOneIsFaster()) { // true = player1, false = player2
-            GSCTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
+            RBYTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
             setLastMoveUsed(movePlayerOne)
             lastAttacker = pokemonPlayerOne
-            GSCTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
+            RBYTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
             setLastMoveUsed(movePlayerTwo)
             lastAttacker = pokemonPlayerTwo
         } else {
-            GSCTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
+            RBYTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
             setLastMoveUsed(movePlayerTwo)
             lastAttacker = pokemonPlayerTwo
-            GSCTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
+            RBYTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
             setLastMoveUsed(movePlayerOne)
             lastAttacker = pokemonPlayerOne
         }
 
         // IF battle effects like Perish Song, Light Screen, Safeguard
-        applyLeftovers(playerOneIsFaster())
         // thaw chance
         if (pokemonPlayerOne.nonVolatileStatus === Status.FREEZE) {
             rollFreezeThaw(pokemonPlayerOne)
@@ -88,7 +86,7 @@ class GSCGame(player1: GSCPlayer,
         }
     }
 
-    private fun rollFreezeThaw(pokemon: GSCPokemon?) {
+    private fun rollFreezeThaw(pokemon: RBYPokemon?) {
         val roll = ThreadLocalRandom.current().nextInt(256)
         if (roll < 25) {
             pokemon!!.removeNonVolatileStatus()
@@ -141,13 +139,13 @@ class GSCGame(player1: GSCPlayer,
         get() = pokemonPlayerTwo!!.moveOnePp == 0 && pokemonPlayerTwo.moveTwoPp == 0 && pokemonPlayerTwo.moveThreePp == 0 && pokemonPlayerTwo.moveFourPp == 0
     val isBoomedPlayerOne: Boolean
         get() = if (lastAttacker == pokemonPlayerOne) {
-            lastMoveUsed == GSCMove.EXPLOSION || lastMoveUsed == GSCMove.SELFDESTRUCT
+            lastMoveUsed == RBYMove.EXPLOSION || lastMoveUsed == RBYMove.SELFDESTRUCT
         } else {
             false
         }
     val isBoomedPlayerTwo: Boolean
         get() = if (lastAttacker == pokemonPlayerTwo) {
-            lastMoveUsed == GSCMove.EXPLOSION || lastMoveUsed == GSCMove.SELFDESTRUCT
+            lastMoveUsed == RBYMove.EXPLOSION || lastMoveUsed == RBYMove.SELFDESTRUCT
         } else {
             false
         }
@@ -162,42 +160,11 @@ class GSCGame(player1: GSCPlayer,
         }
     }
 
-    private fun applyLeftovers(playerOneIsFaster: Boolean) {
-
-        // this is the cleanest way I can think of implementing this while respecting
-        // the game mechanics.
-
-        // flat integer division replicates in-game behaviour.
-        if (isPokemonFainted(pokemonPlayerOne!!, pokemonPlayerTwo!!)) {
-            return
-        }
-        if (pokemonPlayerOne.heldItem === Item.LEFTOVERS && pokemonPlayerTwo.heldItem === Item.LEFTOVERS) {
-            if (playerOneIsFaster) {
-                pokemonPlayerOne.applyHeal(pokemonPlayerOne.statHP / 16)
-                leftoversHeal(pokemonPlayerOne)
-                pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.statHP / 16)
-                leftoversHeal(pokemonPlayerTwo)
-            } else {
-                pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.statHP / 16)
-                leftoversHeal(pokemonPlayerTwo)
-                pokemonPlayerOne.applyHeal(pokemonPlayerOne.statHP / 16)
-                leftoversHeal(pokemonPlayerOne)
-            }
-        } else if (pokemonPlayerOne.heldItem === Item.LEFTOVERS) {
-            pokemonPlayerOne.applyHeal(pokemonPlayerOne.statHP / 16)
-            leftoversHeal(pokemonPlayerOne)
-        } else if (pokemonPlayerTwo.heldItem === Item.LEFTOVERS) {
-            pokemonPlayerTwo.applyHeal(pokemonPlayerTwo.statHP / 16)
-            leftoversHeal(pokemonPlayerTwo)
-        }
-    }
-
     override fun getLastMoveUsed(): Move? {
         return lastMoveUsed
     }
-
     override fun setLastMoveUsed(move: Move?) {
-        if (move is GSCMove) {
+        if (move is RBYMove) {
             lastMoveUsed = move
         }
     }
