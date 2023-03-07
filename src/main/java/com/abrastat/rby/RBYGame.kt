@@ -81,7 +81,7 @@ class RBYGame(player1: RBYPlayer,
 
     private fun playerOneIsFaster(): Boolean {
 
-        // TODO Quick Attack, Mach Punch, Roar etc. priority moves logic checking
+        // TODO Quick Attack priority move logic checking
         return if (pokemonPlayerOne!!.statSpe == pokemonPlayerTwo!!.statSpe) ThreadLocalRandom.current().nextBoolean() // random player to go first this turn
         else pokemonPlayerOne.statSpe ==
                 pokemonPlayerOne.statSpe.coerceAtLeast(pokemonPlayerTwo.statSpe)
