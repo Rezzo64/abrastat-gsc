@@ -20,12 +20,6 @@ class RBYGame(player1: RBYPlayer,
     private val pokemonPlayerTwo: RBYPokemon?
     var winner = 0 // 0 = draw, 1 = p1, 2 = p2
         private set
-    private val p1ReflectCounter = 0
-    private val p2ReflectCounter = 0
-    private val p1LightScreenCounter = 0
-    private val p2LightScreenCounter = 0
-    private val p1SafeguardCounter = 0
-    private val p2SafeguardCounter = 0
     private var lastMoveUsed: RBYMove? = null
     private var lastAttacker: RBYPokemon? = null
 
