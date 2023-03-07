@@ -169,4 +169,6 @@ internal class RBYMoveTest {
     fun drillPeckSecondaryChanceTest() {
         Assertions.assertEquals(0, RBYMove.DRILL_PECK.effect.chance())
     }
+
+    //test
 }
