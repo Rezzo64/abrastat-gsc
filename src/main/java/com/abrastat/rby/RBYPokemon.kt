@@ -213,16 +213,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         resetPerishCounter()
     }
 
-    override fun removeNonVolatileStatusDebuff() {
-        run {
-            when (this.nonVolatileStatus) {
-                Status.PARALYSIS -> this.initStatSpe(initOtherStatsFormula(this.baseSpeed, this.ivSpe, this.evSpe, this.level))
-                Status.BURN -> this.initStatAtk(initOtherStatsFormula(this.baseAttack, this.ivAtk, this.evAtk, this.level))
-                else -> {}
-            }
-        }
-    }
-
     override fun resetAllPp() {
         movesPp[0] = moves[0].maxPp
         movesPp[1] = moves[1].maxPp
