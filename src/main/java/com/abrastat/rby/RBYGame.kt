@@ -69,15 +69,6 @@ class RBYGame(player1: RBYPlayer,
             setLastMoveUsed(movePlayerOne)
             lastAttacker = pokemonPlayerOne
         }
-
-        // IF battle effects like Perish Song, Light Screen, Safeguard
-        // thaw chance
-        if (pokemonPlayerOne.nonVolatileStatus === Status.FREEZE) {
-            rollFreezeThaw(pokemonPlayerOne)
-        }
-        if (pokemonPlayerTwo.nonVolatileStatus === Status.FREEZE) {
-            rollFreezeThaw(pokemonPlayerTwo)
-        }
     }
 
     private fun rollFreezeThaw(pokemon: RBYPokemon?) {
