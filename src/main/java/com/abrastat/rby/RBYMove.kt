@@ -100,7 +100,7 @@ enum class RBYMove
 
     GIGA_DRAIN(Type.GRASS, 8, 255, 60, MoveEffect.ABSORB),
     //    GLARE,
-    //    GROWL,
+    GROWL(Type.NORMAL, 32, 255, MoveEffect.OPP_ATTACKDROP1),
     GROWTH(Type.NORMAL, 61, MoveEffect.SELF_SPATKRAISE1),
     //    GUILLOTINE,
     //    GUST,
