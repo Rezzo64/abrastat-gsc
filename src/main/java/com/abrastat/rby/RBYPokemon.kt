@@ -213,6 +213,10 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         resetPerishCounter()
     }
 
+    override fun removeNonVolatileStatusDebuff() {
+        // do nothing - RBY has a glitch where nothing happens when an nv status is removed
+    }
+
     override fun resetAllPp() {
         movesPp[0] = moves[0].maxPp
         movesPp[1] = moves[1].maxPp
