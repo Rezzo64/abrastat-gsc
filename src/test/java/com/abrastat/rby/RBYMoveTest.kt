@@ -170,5 +170,5 @@ internal class RBYMoveTest {
         Assertions.assertEquals(0, RBYMove.DRILL_PECK.effect.chance())
     }
 
-    //test
+    //test 2
 }
