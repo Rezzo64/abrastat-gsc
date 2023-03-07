@@ -45,23 +45,12 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
 
             for (status in attackingPokemon.volatileStatus) {
                 when (status) {
-                    Status.ATTRACT -> roll = ThreadLocalRandom.current().nextInt(256)
-                    // TODO roll move fail chance
 
                     Status.CONFUSION, Status.FATIGUE -> {
                         roll = ThreadLocalRandom.current().nextInt(256)
                         attackingPokemon.incrementConfuseCounter()
                     }
                     // TODO increment counter, roll hurt self chance, check for end chance
-
-                    Status.ENCORE -> {
-                        roll = ThreadLocalRandom.current().nextInt(256)
-                        attackingPokemon.incrementEncoreCounter()
-                    }
-                    // TODO increment counter, override attack to instead be previously used attack, check for end chance
-
-                    Status.LOCKON -> roll = ThreadLocalRandom.current().nextInt(256)
-                    // TODO remove accuracy checks (for this turn only), remove LOCKON status
 
                     Status.DISABLE -> roll = ThreadLocalRandom.current().nextInt(256)
                     // TODO increment counter, block some attack from being selected, check for end chance
@@ -80,17 +69,16 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
             }
             val roll = ThreadLocalRandom.current().nextInt(256) // handles RNG factor
             return when (attackingPokemon.nonVolatileStatus) {
-                Status.SLEEP -> if (attackingPokemon.sleepCounter > 0) {
+                Status.SLEEP -> if (attackingPokemon.sleepCounter > 1) {
                     cantAttack(attackingPokemon, Status.SLEEP)
                     attackingPokemon.decrementSleepCounter()
-                    move == RBYMove.SLEEP_TALK
+                    false
                 } else {
                     statusChanged(attackingPokemon, Status.SLEEP)
-                    true
+                    false // Can't attack on waking turn in gen 1
                 }
 
                 Status.FREEZE -> {
-                    // if (move != GSCMove.FLAME_WHEEL)
                     cantAttack(attackingPokemon, Status.FREEZE)
                     false
                 }
