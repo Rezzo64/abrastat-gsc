@@ -21,10 +21,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         movesPp[1] = moves[1]!!.maxPp
         movesPp[2] = moves[2]!!.maxPp
         movesPp[3] = moves[3]!!.maxPp
-        if (hasMove(RBYMove.SLEEP_TALK) > -1) { // put Sleep Talk as the last attack for efficiency
-            moves[hasMove(RBYMove.SLEEP_TALK)] = moves[3]
-            moves[3] = RBYMove.SLEEP_TALK
-        }
 
         // TODO implement 'if' statement to override level due to user definition
         // TODO implement 'if' statement to override Stat Experience due to user definition
