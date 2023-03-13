@@ -21,10 +21,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         movesPp[1] = moves[1]!!.maxPp
         movesPp[2] = moves[2]!!.maxPp
         movesPp[3] = moves[3]!!.maxPp
-        if (hasMove(RBYMove.SLEEP_TALK) > -1) { // put Sleep Talk as the last attack for efficiency
-            moves[hasMove(RBYMove.SLEEP_TALK)] = moves[3]
-            moves[3] = RBYMove.SLEEP_TALK
-        }
 
         // TODO implement 'if' statement to override level due to user definition
         // TODO implement 'if' statement to override Stat Experience due to user definition
@@ -218,13 +214,7 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
     }
 
     override fun removeNonVolatileStatusDebuff() {
-        run {
-            when (this.nonVolatileStatus) {
-                Status.PARALYSIS -> this.initStatSpe(initOtherStatsFormula(this.baseSpeed, this.ivSpe, this.evSpe, this.level))
-                Status.BURN -> this.initStatAtk(initOtherStatsFormula(this.baseAttack, this.ivAtk, this.evAtk, this.level))
-                else -> {}
-            }
-        }
+        // do nothing - RBY has a glitch where nothing happens when an nv status is removed
     }
 
     override fun resetAllPp() {

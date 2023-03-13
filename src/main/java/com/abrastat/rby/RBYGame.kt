@@ -20,12 +20,6 @@ class RBYGame(player1: RBYPlayer,
     private val pokemonPlayerTwo: RBYPokemon?
     var winner = 0 // 0 = draw, 1 = p1, 2 = p2
         private set
-    private val p1ReflectCounter = 0
-    private val p2ReflectCounter = 0
-    private val p1LightScreenCounter = 0
-    private val p2LightScreenCounter = 0
-    private val p1SafeguardCounter = 0
-    private val p2SafeguardCounter = 0
     private var lastMoveUsed: RBYMove? = null
     private var lastAttacker: RBYPokemon? = null
 
@@ -75,15 +69,6 @@ class RBYGame(player1: RBYPlayer,
             setLastMoveUsed(movePlayerOne)
             lastAttacker = pokemonPlayerOne
         }
-
-        // IF battle effects like Perish Song, Light Screen, Safeguard
-        // thaw chance
-        if (pokemonPlayerOne.nonVolatileStatus === Status.FREEZE) {
-            rollFreezeThaw(pokemonPlayerOne)
-        }
-        if (pokemonPlayerTwo.nonVolatileStatus === Status.FREEZE) {
-            rollFreezeThaw(pokemonPlayerTwo)
-        }
     }
 
     private fun rollFreezeThaw(pokemon: RBYPokemon?) {
@@ -96,7 +81,7 @@ class RBYGame(player1: RBYPlayer,
 
     private fun playerOneIsFaster(): Boolean {
 
-        // TODO Quick Attack, Mach Punch, Roar etc. priority moves logic checking
+        // TODO Quick Attack priority move logic checking
         return if (pokemonPlayerOne!!.statSpe == pokemonPlayerTwo!!.statSpe) ThreadLocalRandom.current().nextBoolean() // random player to go first this turn
         else pokemonPlayerOne.statSpe ==
                 pokemonPlayerOne.statSpe.coerceAtLeast(pokemonPlayerTwo.statSpe)
