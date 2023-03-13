@@ -5,7 +5,6 @@ import com.abrastat.general.Game.Companion.isPokemonFainted
 import com.abrastat.general.Messages.Companion.announceTeam
 import com.abrastat.general.Messages.Companion.announceTurn
 import com.abrastat.general.Messages.Companion.displayCurrentHP
-import com.abrastat.general.Messages.Companion.leftoversHeal
 import com.abrastat.general.Messages.Companion.logFainted
 import com.abrastat.general.Messages.Companion.statusChanged
 import java.util.concurrent.ThreadLocalRandom
@@ -34,6 +33,9 @@ class RBYGame(player1: RBYPlayer,
         // Messages.announceSwitch(player1, pokemonPlayerOne);
         // Messages.announceSwitch(player2, pokemonPlayerTwo);
         while (!someoneFainted()) {
+            // test for infinite loops
+            if (turnNumber > 1000) break
+
             val movePlayerOne = player1.chooseMove(player2)
             val movePlayerTwo = player2.chooseMove(player1)
             initTurn(movePlayerOne, movePlayerTwo)
@@ -137,6 +139,9 @@ class RBYGame(player1: RBYPlayer,
 
     private fun setWinner() {
         winner = if (pokemonPlayerOne!!.nonVolatileStatus === Status.FAINT && pokemonPlayerTwo!!.nonVolatileStatus === Status.FAINT) {
+            0
+        } else if (pokemonPlayerOne!!.nonVolatileStatus !== Status.FAINT && pokemonPlayerTwo!!.nonVolatileStatus !== Status.FAINT) {
+            // test for infinite loop
             0
         } else if (pokemonPlayerOne!!.nonVolatileStatus === Status.FAINT) {
             2

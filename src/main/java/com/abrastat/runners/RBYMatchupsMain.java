@@ -9,73 +9,90 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
+
 public class RBYMatchupsMain {
+    // this program takes in a text file format
     public static void main(String[] args) {
         int simulationCount = 1;
-        String pokemonPath = "./src/main/resources/rby/matchup-pokemon.txt";
-        String matchupPath = "./src/main/resources/rby/matchup.txt";
-        ArrayList<String> pokemonList = scan(pokemonPath);
-        ArrayList<String> matchupList = scan(matchupPath);
 
-        // 80 is num of lines in r-m-p.txt: unique pokemon in alphabetical order
-        // 12960 is num of lines in r-m.txt: unique matchups, moveset of each pokemon, newline
-        // probably shouldn't be hard coded, but didn't want to read file twice
-        int numPokemon = 81;
-        int numMatchups = 3240 * 4;
+        // read data
+        String pokemonPath;
+        ArrayList<String> pokemonList;
+        if ((args == null) || (args.length == 0)) {
+            pokemonPath = "./src/main/resources/rby/matchup/pokemon.txt";
+//            pokemonPath = "./src/main/resources/rby/matchup/pokemon2.txt";   // custom matchups
+        } else {
+            pokemonPath = args[0];
+        }
+        try {
+            pokemonList = scan(pokemonPath);
+        } catch (Exception e) {
+            throw new InputMismatchException(
+                    "Argument must be a path to a text file"
+            );
+        }
+
+        // create pokemon
+        int numPokemon = (int) Math.ceil((double) pokemonList.size() / 3);
+        if (numPokemon <= 1) {
+            throw new InputMismatchException(
+                    "Number of Pokemon must be greater than 1"
+            );
+        }
+        Pokemon[] pokemons = new Pokemon[numPokemon];
+        String[] names = new String[numPokemon];
+
+        int p = 0;
+        for (int i = 0; i < pokemonList.size(); i += 3) {
+            String name = pokemonList.get(i);
+            RBYMove[] moves = stringToMoves(pokemonList.get(i+1).split(" "));
+            Pokemon pokemon = buildPokemon(name, moves);
+
+            pokemons[p] = pokemon;
+            names[p] = name;
+            p++;
+        }
+
+        // initialize matchups
         int[][][] matchups = new int[numPokemon][numPokemon][3];
         for (int x = 0; x < numPokemon; x++)        // pokemon1
             for (int y = 0; y < numPokemon; y++)    // pokemon2
                 for (int z = 0; z < 3; z++)         // wins, losses, draws
-                    matchups[x][y][z] = 0;
+                    matchups[x][y][z] = 0;          // diagonal of 0s
 
-        for (int i = 0; i < numMatchups; i += 4) {
-            // parse the data
-            String[] matchup = matchupList.get(i).split(" ");
-            RBYMove[] moves1 = stringToMoves(matchupList.get(i+1).split(" "));
-            RBYMove[] moves2 = stringToMoves(matchupList.get(i+2).split(" "));
+        for (int i = 0; i < numPokemon - 1; i++) {
+            for (int j = i + 1; j < numPokemon; j++) {
+                RBYGameRunner runner = new RBYGameRunner(pokemons[i], pokemons[j], simulationCount);
 
-            // create the pokemon and fight
-            Pokemon pokemonPlayerOne = buildPokemon(matchup[0], moves1);
-            Pokemon pokemonPlayerTwo = buildPokemon(matchup[1], moves2);
-            RBYGameRunner runner = new RBYGameRunner(pokemonPlayerOne, pokemonPlayerTwo, simulationCount);
-
-            // record the results
-            int index1 = pokemonList.indexOf(matchup[0]);
-            int index2 = pokemonList.indexOf(matchup[1]);
-            matchups[index1][index2][0] = runner.displayP1Wins();
-            matchups[index1][index2][1] = runner.displayP2Wins();
-            matchups[index1][index2][2] = runner.displayDraws();
-            matchups[index2][index1][0] = runner.displayP2Wins();
-            matchups[index2][index1][1] = runner.displayP1Wins();
-            matchups[index2][index1][2] = runner.displayDraws();
+                // record results
+                matchups[i][j][0] = runner.displayP1Wins();
+                matchups[i][j][1] = runner.displayP2Wins();
+                matchups[i][j][2] = runner.displayDraws();
+                matchups[j][i][0] = runner.displayP2Wins();
+                matchups[j][i][1] = runner.displayP1Wins();
+                matchups[j][i][2] = runner.displayDraws();
+            }
         }
 
         // json might be better to make a 1d array, 3240 x 3
         // else turn 3d array to 2d csv, 81 x 81 x 3
         // first column pokemon 1
         // first row pokemon 2
-        writeCsv(pokemonList, matchups);
+        writeCsv(names, matchups);
 
         Messages.gameOver();
         System.exit(0);
     }
 
-    private static ArrayList<String> scan(String path) {
+    private static ArrayList<String> scan(String path) throws FileNotFoundException {
         ArrayList<String> list = new ArrayList<>();
-        try {
-            File file = new File(path);
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                list.add(scanner.nextLine().strip());
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+        File file = new File(path);
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNextLine()) {
+            list.add(scanner.nextLine().strip());
         }
+        scanner.close();
         return list;
     }
 
@@ -97,11 +114,11 @@ public class RBYMatchupsMain {
                 .build();
     }
 
-    private static void writeCsv(ArrayList<String> pokemons, int[][][] matchups) {
+    private static void writeCsv(String[] pokemons, int[][][] matchups) {
         // lossesCSV is transpose of winsCsv
-        File winLossCsv = new File("./src/main/resources/rby/matchup-win-loss.csv");
-        File winsCsv = new File("./src/main/resources/rby/matchup-wins.csv");
-        File drawsCsv = new File("./src/main/resources/rby/matchup-draws.csv");
+        File winLossCsv = new File("./src/main/resources/rby/matchup/win-loss.csv");
+        File winsCsv = new File("./src/main/resources/rby/matchup/wins.csv");
+        File drawsCsv = new File("./src/main/resources/rby/matchup/draws.csv");
         try (
             FileWriter fileWriter1 = new FileWriter(winLossCsv);
             FileWriter fileWriter2 = new FileWriter(winsCsv);
@@ -124,7 +141,7 @@ public class RBYMatchupsMain {
                 lines.add(line3);
 
                 // p isn't effectively final
-                String pokemon = pokemons.get(p);
+                String pokemon = pokemons[p];
                 lines.forEach(line -> {
                     line.append(pokemon);
                     line.append(',');
@@ -150,13 +167,13 @@ public class RBYMatchupsMain {
         }
     }
 
-    private static StringBuilder writeHeader(ArrayList<String> pokemons) {
+    private static StringBuilder writeHeader(String[] pokemons) {
         StringBuilder header = new StringBuilder();
         header.append("Pokemons");
         header.append(',');
         for (String pokemon: pokemons) {
             header.append(pokemon);
-            if (!pokemon.equals(pokemons.get(pokemons.size() - 1))) {
+            if (!Objects.equals(pokemon, pokemons[pokemons.length - 1])) {
                 header.append(',');
             }
         }
