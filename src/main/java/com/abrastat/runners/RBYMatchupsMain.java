@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
 public class RBYMatchupsMain {
@@ -47,16 +48,16 @@ public class RBYMatchupsMain {
             matchups[index1][index2][0] = runner.displayP1Wins();
             matchups[index1][index2][1] = runner.displayP2Wins();
             matchups[index1][index2][2] = runner.displayDraws();
+            matchups[index2][index1][0] = runner.displayP2Wins();
+            matchups[index2][index1][1] = runner.displayP1Wins();
+            matchups[index2][index1][2] = runner.displayDraws();
         }
 
         // json might be better to make a 1d array, 3240 x 3
         // else turn 3d array to 2d csv, 81 x 81 x 3
-        File winsCsv = new File("./src/main/resources/rby/matchup-wins.csv");
-        File lossesCsv = new File("./src/main/resources/rby/matchup-losses.csv");
-        File drawsCsv = new File("./src/main/resources/rby/matchup-draws.csv");
-        writeCsv(pokemonList, winsCsv, matchups, 0);
-        writeCsv(pokemonList, lossesCsv, matchups, 1);
-        writeCsv(pokemonList, drawsCsv, matchups, 2);
+        // first column pokemon 1
+        // first row pokemon 2
+        writeCsv(pokemonList, matchups);
 
         Messages.gameOver();
         System.exit(0);
@@ -96,32 +97,66 @@ public class RBYMatchupsMain {
                 .build();
     }
 
-    private static void writeCsv(ArrayList<String> pokemons, File csvFile, int[][][] matchups, int mode) {
-        StringBuilder header = writeHeader(pokemons);
-        try (FileWriter fileWriter = new FileWriter(csvFile)) {
-            fileWriter.write(header.toString());
+    private static void writeCsv(ArrayList<String> pokemons, int[][][] matchups) {
+        // lossesCSV is transpose of winsCsv
+        File winLossCsv = new File("./src/main/resources/rby/matchup-win-loss.csv");
+        File winsCsv = new File("./src/main/resources/rby/matchup-wins.csv");
+        File drawsCsv = new File("./src/main/resources/rby/matchup-draws.csv");
+        try (
+            FileWriter fileWriter1 = new FileWriter(winLossCsv);
+            FileWriter fileWriter2 = new FileWriter(winsCsv);
+            FileWriter fileWriter3 = new FileWriter(drawsCsv)
+        ) {
+            // add header
+            StringBuilder header = writeHeader(pokemons);
+            fileWriter1.write(header.toString());
+            fileWriter2.write(header.toString());
+            fileWriter3.write(header.toString());
+
+            int p = 0;
             for (int[][] data : matchups) {
-                StringBuilder line = new StringBuilder();
+                List<StringBuilder> lines = new ArrayList<>();
+                StringBuilder line1 = new StringBuilder();
+                StringBuilder line2 = new StringBuilder();
+                StringBuilder line3 = new StringBuilder();
+                lines.add(line1);
+                lines.add(line2);
+                lines.add(line3);
+
+                // p isn't effectively final
+                String pokemon = pokemons.get(p);
+                lines.forEach(line -> {
+                    line.append(pokemon);
+                    line.append(',');
+                });
+
                 for (int i = 0; i < data.length; i++) {
-                    // would like to have column before this with pokemon
-                    line.append(data[i][mode]);
+                    line1.append(data[i][0] - data[i][1]);
+                    line2.append(data[i][0]);
+                    line3.append(data[i][2]);
                     if (i != data.length - 1) {
-                        line.append(',');
+                        lines.forEach(line -> line.append(','));
                     }
                 }
-                line.append("\n");
-                fileWriter.write(line.toString());
+
+                lines.forEach(line -> line.append("\n"));
+                fileWriter1.write(line1.toString());
+                fileWriter2.write(line2.toString());
+                fileWriter3.write(line3.toString());
+                p++;
             }
-        } catch (IOException e) {
+        } catch(IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private static StringBuilder writeHeader(ArrayList<String> pokemons) {
         StringBuilder header = new StringBuilder();
+        header.append("Pokemons");
+        header.append(',');
         for (String pokemon: pokemons) {
             header.append(pokemon);
-            if (pokemon != pokemons.get(pokemons.size() - 1)) {
+            if (!pokemon.equals(pokemons.get(pokemons.size() - 1))) {
                 header.append(',');
             }
         }
@@ -129,3 +164,4 @@ public class RBYMatchupsMain {
         return header;
     }
 }
+
