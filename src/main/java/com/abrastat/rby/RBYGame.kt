@@ -5,7 +5,6 @@ import com.abrastat.general.Game.Companion.isPokemonFainted
 import com.abrastat.general.Messages.Companion.announceTeam
 import com.abrastat.general.Messages.Companion.announceTurn
 import com.abrastat.general.Messages.Companion.displayCurrentHP
-import com.abrastat.general.Messages.Companion.leftoversHeal
 import com.abrastat.general.Messages.Companion.logFainted
 import com.abrastat.general.Messages.Companion.statusChanged
 import java.util.concurrent.ThreadLocalRandom
@@ -20,12 +19,6 @@ class RBYGame(player1: RBYPlayer,
     private val pokemonPlayerTwo: RBYPokemon?
     var winner = 0 // 0 = draw, 1 = p1, 2 = p2
         private set
-    private val p1ReflectCounter = 0
-    private val p2ReflectCounter = 0
-    private val p1LightScreenCounter = 0
-    private val p2LightScreenCounter = 0
-    private val p1SafeguardCounter = 0
-    private val p2SafeguardCounter = 0
     private var lastMoveUsed: RBYMove? = null
     private var lastAttacker: RBYPokemon? = null
 
@@ -40,6 +33,9 @@ class RBYGame(player1: RBYPlayer,
         // Messages.announceSwitch(player1, pokemonPlayerOne);
         // Messages.announceSwitch(player2, pokemonPlayerTwo);
         while (!someoneFainted()) {
+            // test for infinite loops
+            if (turnNumber > 1000) break
+
             val movePlayerOne = player1.chooseMove(player2)
             val movePlayerTwo = player2.chooseMove(player1)
             initTurn(movePlayerOne, movePlayerTwo)
@@ -75,15 +71,6 @@ class RBYGame(player1: RBYPlayer,
             setLastMoveUsed(movePlayerOne)
             lastAttacker = pokemonPlayerOne
         }
-
-        // IF battle effects like Perish Song, Light Screen, Safeguard
-        // thaw chance
-        if (pokemonPlayerOne.nonVolatileStatus === Status.FREEZE) {
-            rollFreezeThaw(pokemonPlayerOne)
-        }
-        if (pokemonPlayerTwo.nonVolatileStatus === Status.FREEZE) {
-            rollFreezeThaw(pokemonPlayerTwo)
-        }
     }
 
     private fun rollFreezeThaw(pokemon: RBYPokemon?) {
@@ -96,7 +83,7 @@ class RBYGame(player1: RBYPlayer,
 
     private fun playerOneIsFaster(): Boolean {
 
-        // TODO Quick Attack, Mach Punch, Roar etc. priority moves logic checking
+        // TODO Quick Attack priority move logic checking
         return if (pokemonPlayerOne!!.statSpe == pokemonPlayerTwo!!.statSpe) ThreadLocalRandom.current().nextBoolean() // random player to go first this turn
         else pokemonPlayerOne.statSpe ==
                 pokemonPlayerOne.statSpe.coerceAtLeast(pokemonPlayerTwo.statSpe)
@@ -152,6 +139,9 @@ class RBYGame(player1: RBYPlayer,
 
     private fun setWinner() {
         winner = if (pokemonPlayerOne!!.nonVolatileStatus === Status.FAINT && pokemonPlayerTwo!!.nonVolatileStatus === Status.FAINT) {
+            0
+        } else if (pokemonPlayerOne!!.nonVolatileStatus !== Status.FAINT && pokemonPlayerTwo!!.nonVolatileStatus !== Status.FAINT) {
+            // test for infinite loop
             0
         } else if (pokemonPlayerOne!!.nonVolatileStatus === Status.FAINT) {
             2

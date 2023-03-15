@@ -83,12 +83,6 @@ public class RBYGameRunner {
                     break;
             }
 
-            // infinite loops because moves not implemented
-            if (aggregateTurnCount > 30) {
-                this.nobodyWins();
-                break;
-            }
-
             this.aggregateTurnCount += game.getTurnNumber(); // sum all final turn counts for averaging later on
             this.p1AggregateHP += game.getPokemonPlayerOneHP();
             this.p2AggregateHP += game.getPokemonPlayerTwoHP();
