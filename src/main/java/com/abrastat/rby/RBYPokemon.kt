@@ -57,14 +57,14 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         fun moves(moves: Array<RBYMove>): Builder {
             var i = 0
             for (move in moves) {
+                if (i == 4)
+                    break
                 this.moves[i] = move
                 i++
             }
-            if (i < 4) {
-                for (j in i..3) {
+            if (i < 4)
+                for (j in i..3)
                     this.moves[j] = RBYMove.EMPTY
-                }
-            }
             return this
         }
 

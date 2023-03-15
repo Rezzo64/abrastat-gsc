@@ -1,242 +1,263 @@
-Aerodactyl
-DOUBLE_EDGE HYPER_BEAM FIRE_BLAST TOXIC 
+# the text file must be formatted:
+#
+# pokemonSpecies1
+# pokemonMoveSet1
+# pokemonSpecies2
+# pokemonMoveSet2
+# ...
+# pokemonSpeciesN
+# pokemonMoveSetN
+#
+# where species are valid names of pokemon
+# and move sets are names of moves delimited by spaces
+# empty lines and comments beginning with "#" are ignored
+#
+# if a move inherently has a space,
+# it should use an underscore instead
+# (e.g. double edge becomes double_edge)
+#
+# the number of moves is limited to four
+# unknown moves are defaulted to empty
 
-Alakazam
-PSYCHIC SEISMIC_TOSS THUNDER_WAVE RECOVER 
+aerodactyl
+double_edge hyper_beam fire_blast toxic 
 
-Arbok
-GLARE WRAP EARTHQUAKE HYPER_BEAM 
+alakazam
+psychic seismic_toss thunder_wave recover 
 
-Arcanine
-AGILITY BODY_SLAM HYPER_BEAM FIRE_BLAST 
+arbok
+glare wrap earthquake hyper_beam 
 
-Articuno
-BLIZZARD AGILITY DOUBLE_EDGE HYPER_BEAM 
+arcanine
+agility body_slam hyper_beam fire_blast 
 
-Beedrill
-TWINEEDLE HYPER_BEAM SWORDS_DANCE AGILITY 
+articuno
+blizzard agility double_edge hyper_beam 
 
-Blastoise
-SURF BLIZZARD EARTHQUAKE REST 
+beedrill
+twineedle hyper_beam swords_dance agility 
 
-Butterfree
-SLEEP_POWDER STUN_SPORE PSYCHIC PSYWAVE 
+blastoise
+surf blizzard earthquake rest 
 
-Chansey
-THUNDERBOLT ICE_BEAM SOFT_BOILED THUNDER_WAVE 
+butterfree
+sleep_powder stun_spore psychic psywave 
 
-Charizard
-FIRE_BLAST EARTHQUAKE SWORDS_DANCE BODY_SLAM 
+chansey
+thunderbolt ice_beam soft_boiled thunder_wave 
 
-Clefable
-BLIZZARD BODY_SLAM HYPER_BEAM THUNDERBOLT 
+charizard
+fire_blast earthquake swords_dance body_slam 
 
-Cloyster
-CLAMP BLIZZARD REST EXPLOSION 
+clefable
+blizzard body_slam hyper_beam thunderbolt 
 
-Dewgong
-SURF BLIZZARD BODY_SLAM MIMC 
+cloyster
+clamp blizzard rest explosion 
 
-Ditto
-TRANSFORM EMPTY EMPTY EMPTY 
+dewgong
+surf blizzard body_slam mimc 
 
-Dodrio
-BODY_SLAM DRILL_PECK HYPER_BEAM AGILITY 
+ditto
+transform empty empty empty 
 
-Dragonite
-AGILITY WRAP HYPER_BEAM SURF 
+dodrio
+body_slam drill_peck hyper_beam agility 
 
-Dugtrio
-EARTHQUAKE SAND_ATTACK SUBSTITUTE 
+dragonite
+agility wrap hyper_beam surf 
 
-Electabuzz
-THUNDERBOLT THUNDER_WAVE PSYCHIC SEISMIC_TOSS 
+dugtrio
+earthquake sand_attack substitute 
 
-Electrode
-THUNDERBOLT THUNDER_WAVE EXPLOSION SCREECH 
+electabuzz
+thunderbolt thunder_wave psychic seismic_toss 
 
-Exeggutor
-SLEEP_POWDER PSYCHIC EXPLOSION DOUBLE_EDGE 
+electrode
+thunderbolt thunder_wave explosion screech 
 
-Farfetchd
-BODY_SLAM PECK SWORDS_DANCE AGILITY 
+exeggutor
+sleep_powder psychic explosion double_edge 
 
-Fearow
-DOUBLE_EDGE HYPER_BEAM DRILL_PECK MIRROR_MOVE 
+farfetchd
+body_slam peck swords_dance agility 
 
-Flareon
-FIRE_BLAST BODY_SLAM HYPER_BEAM FIRE_SPIN 
+fearow
+double_edge hyper_beam drill_peck mirror_move 
 
-Gengar
-HYPNOSIS NIGHT_SHADE THUNDERBOLT EXPLOSION 
+flareon
+fire_blast body_slam hyper_beam fire_spin 
 
-Golbat
-CONFUSE_RAY DOUBLE_EDGE SCREECH TOXIC 
+gengar
+hypnosis night_shade thunderbolt explosion 
 
-Golduck
-AMNESIA HYDRO_PUMP BLIZZARD REST 
+golbat
+confuse_ray double_edge screech toxic 
 
-Golem
-EARTHQUAKE ROCK_SLIDE EXPLOSION BODY_SLAM 
+golduck
+amnesia hydro_pump blizzard rest 
 
-Gyarados
-HYDRO_PUMP THUNDERBOLT BODY_SLAM HYPER_BEAM 
+golem
+earthquake rock_slide explosion body_slam 
 
-Hitmonchan
-SUBMISSION BODY_SLAM AGILITY COUNTER 
+gyarados
+hydro_pump thunderbolt body_slam hyper_beam 
 
-Hitmonlee
-MEDITATE HIGH_JUMP_KICK BODY_SLAM COUNTER 
+hitmonchan
+submission body_slam agility counter 
 
-Hypno
-HYPNOSIS THUNDER_WAVE PSYCHIC SEISMIC_TOSS 
+hitmonlee
+meditate high_jump_kick body_slam counter 
 
-Jolteon
-THUNDER_WAVE THUNDERBOLT DOUBLE_KICK REST 
+hypno
+hypnosis thunder_wave psychic seismic_toss 
 
-Jynx
-LOVELY_KISS BLIZZARD PSYCHIC REST 
+jolteon
+thunder_wave thunderbolt double_kick rest 
 
-Kabutops
-HYPER_BEAM BLIZZARD SWORDS_DANCE 
+jynx
+lovely_kiss blizzard psychic rest 
 
-Kangaskhan
-BODY_SLAM HYPER_BEAM EARTHQUAKE SURF 
+kabutops
+hyper_beam blizzard swords_dance 
 
-Kingler
-SWORDS_DANCE HYPER_BEAM BODY_SLAM 
+kangaskhan
+body_slam hyper_beam earthquake surf 
 
-Lapras
-BLIZZARD THUNDERBOLT HYPER_BEAM SING 
+kingler
+swords_dance hyper_beam body_slam 
 
-Lickitung
-SWORDS_DANCE BODY_SLAM EARTHQUAKE WRAP 
+lapras
+blizzard thunderbolt hyper_beam sing 
 
-Machamp
-LOW_KICK BODY_SLAM HYPER_BEAM EARTHQUAKE 
+lickitung
+swords_dance body_slam earthquake wrap 
 
-Magmar
-PSYCHIC CONFUSE_RAY FLAMETHROWER SEISMIC_TOSS 
+machamp
+low_kick body_slam hyper_beam earthquake 
 
-Magneton
-THUNDER_WAVE THUNDERBOLT REFLECT THUNDER 
+magmar
+psychic confuse_ray flamethrower seismic_toss 
 
-Marowak
-EARTHQUAKE BODY_SLAM BLIZZARD COUNTER 
+magneton
+thunder_wave thunderbolt reflect thunder 
 
-Mew
-SWORDS_DANCE EARTHQUAKE BODY_SLAM SOFT_BOILED 
+marowak
+earthquake body_slam blizzard counter 
 
-Mewtwo
-AMNESIA PSYCHIC BLIZZARD RECOVER 
+mew
+swords_dance earthquake body_slam soft_boiled 
 
-Moltres
-FIRE_BLAST HYPER_BEAM AGILITY FIRE_SPIN 
+mewtwo
+amnesia psychic blizzard recover 
 
-MrMime
-PSYCHIC THUNDERBOLT THUNDER_WAVE SEISMIC_TOSS 
+moltres
+fire_blast hyper_beam agility fire_spin 
 
-Muk
-EXPLOSION ACID_ARMOR SLUDGE BODY_SLAM 
+mrmime
+psychic thunderbolt thunder_wave seismic_toss 
 
-Nidoking
-THUNDERBOLT BLIZZARD EARTHQUAKE BODY_SLAM 
+muk
+explosion acid_armor sludge body_slam 
 
-Nidoqueen
-EARTHQUAKE BLIZZARD THUNDERBOLT TOXIC 
+nidoking
+thunderbolt blizzard earthquake body_slam 
 
-Ninetales
-FIRE_BLAST FIRE_SPIN BODY_SLAM TOXIC 
+nidoqueen
+earthquake blizzard thunderbolt toxic 
 
-Omastar
-SURF BLIZZARD BODY_SLAM REST 
+ninetales
+fire_blast fire_spin body_slam toxic 
 
-Onix
-EARTHQUAKE BIND ROCK_SLIDE EXPLOSION 
+omastar
+surf blizzard body_slam rest 
 
-Parasect
-SPORE STUN_SPORE SWORDS_DANCE HYPER_BEAM 
+onix
+earthquake bind rock_slide explosion 
 
-Persian
-HYPER_BEAM BUBBLE_BEAM THUNDERBOLT 
+parasect
+spore stun_spore swords_dance hyper_beam 
 
-Pidgeot
-DOUBLE_EDGE HYPER_BEAM MIRROR_MOVE AGILITY 
+persian
+hyper_beam bubble_beam thunderbolt 
 
-Pinsir
-SWORDS_DANCE HYPER_BEAM SUBMISSION 
+pidgeot
+double_edge hyper_beam mirror_move agility 
 
-Poliwrath
-HYPNOSIS AMNESIA SURF SUBMISSION 
+pinsir
+swords_dance hyper_beam submission 
 
-Porygon
-ICE_BEAM THUNDERBOLT THUNDER_WAVE RECOVER 
+poliwrath
+hypnosis amnesia surf submission 
 
-Primeape
-SUBMISSION BODY_SLAM ROCK_SLIDE HYPER_BEAM 
+porygon
+ice_beam thunderbolt thunder_wave recover 
 
-Raichu
-THUNDERBOLT SURF THUNDER_WAVE AGILITY 
+primeape
+submission body_slam rock_slide hyper_beam 
 
-Rapidash
-FIRE_BLAST FIRE_SPIN HYPER_BEAM AGILITY 
+raichu
+thunderbolt surf thunder_wave agility 
 
-Raticate
-SUPER_FANG HYPER_BEAM BODY_SLAM BLIZZARD 
+rapidash
+fire_blast fire_spin hyper_beam agility 
 
-Rhydon
-EARTHQUAKE ROCK_SLIDE BODY_SLAM SUBSTITUTE 
+raticate
+super_fang hyper_beam body_slam blizzard 
 
-Sandslash
-EARTHQUAKE SWORDS_DANCE HYPER_BEAM SUBSTITUTE 
+rhydon
+earthquake rock_slide body_slam substitute 
 
-Scyther
-SWORDS_DANCE HYPER_BEAM AGILITY 
+sandslash
+earthquake swords_dance hyper_beam substitute 
 
-Seadra
-SURF BLIZZARD HYPER_BEAM AGILITY 
+scyther
+swords_dance hyper_beam agility 
 
-Seaking
-DOUBLE_EDGE BLIZZARD HYPER_BEAM AGILITY 
+seadra
+surf blizzard hyper_beam agility 
 
-Slowbro
-AMNESIA SURF THUNDER_WAVE REST 
+seaking
+double_edge blizzard hyper_beam agility 
 
-Snorlax
-BODY_SLAM REFLECT REST ICE_BEAM 
+slowbro
+amnesia surf thunder_wave rest 
 
-Starmie
-RECOVER THUNDER_WAVE BLIZZARD PSYCHIC 
+snorlax
+body_slam reflect rest ice_beam 
 
-Tangela
-SLEEP_POWDER STUN_SPORE BIND BODY_SLAM 
+starmie
+recover thunder_wave blizzard psychic 
 
-Tauros
-BODY_SLAM HYPER_BEAM BLIZZARD EARTHQUAKE 
+tangela
+sleep_powder stun_spore bind body_slam 
 
-Tentacruel
-SURF BLIZZARD WRAP REST 
+tauros
+body_slam hyper_beam blizzard earthquake 
 
-Vaporeon
-SURF BLIZZARD BODY_SLAM REST 
+tentacruel
+surf blizzard wrap rest 
 
-Venomoth
-SLEEP_POWDER STUN_SPORE PSYCHIC MEGA_DRAIN 
+vaporeon
+surf blizzard body_slam rest 
 
-Venusaur
-SLEEP_POWDER SWORDS_DANCE HYPER_BEAM 
+venomoth
+sleep_powder stun_spore psychic mega_drain 
 
-Victreebel
-SLEEP_POWDER WRAP STUN_SPORE 
+venusaur
+sleep_powder swords_dance hyper_beam 
 
-Vileplume
-SLEEP_POWDER STUN_SPORE MEGA_DRAIN BODY_SLAM 
+victreebel
+sleep_powder wrap stun_spore 
 
-Weezing
-FIRE_BLAST SLUDGE THUNDERBOLT EXPLOSION 
+vileplume
+sleep_powder stun_spore mega_drain body_slam 
 
-Wigglytuff
-SING THUNDER_WAVE BODY_SLAM COUNTER 
+weezing
+fire_blast sludge thunderbolt explosion 
 
-Zapdos
-THUNDERBOLT DRILL_PECK THUNDER_WAVE AGILITY
+wigglytuff
+sing thunder_wave body_slam counter 
+
+zapdos
+thunderbolt drill_peck thunder_wave agility
