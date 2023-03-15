@@ -55,7 +55,7 @@ public class RBYMatchupsMain {
             pokemonList = scan(pokemonPath);
         } catch (Exception e) {
             // make sure argument is path to readable file
-            throw new InputMismatchException(
+            throw new IllegalArgumentException(
                     "Argument must be a path to a text file"
             );
         }
@@ -66,13 +66,13 @@ public class RBYMatchupsMain {
             // make sure all pokemon have move sets
             // if an even number of pokemon don't have a move set,
             // this exception will not be thrown
-            throw new InputMismatchException(
+            throw new IllegalArgumentException(
                     "Every Pokemon must have a move set"
             );
         }
         if (numPokemon < 2) {
             // make sure there are at least two sets of pokemon and moves
-            throw new InputMismatchException(
+            throw new IllegalArgumentException(
                     "Number of Pokemon must be at least 2"
             );
         }
@@ -162,12 +162,12 @@ public class RBYMatchupsMain {
             try {
                 m[i] = RBYMove.valueOf(moves[i]);
             } catch (IllegalArgumentException e) {
-                m[i] = RBYMove.EMPTY;   // testing
+//                m[i] = RBYMove.EMPTY;   // testing
                 // make sure the move is spelled correctly
                 // make sure the move is implemented
-//                throw new IllegalArgumentException(
-//                        "Move " + moves[i] + " does not exist or is not implemented"
-//                );
+                throw new IllegalArgumentException(
+                        "Move " + moves[i] + " does not exist or is not implemented"
+                );
             }
         }
         return m;
@@ -185,6 +185,8 @@ public class RBYMatchupsMain {
             // make sure all pokemon have move sets
             // if a move set is shown,
             // an even number of pokemon may not have a move set
+            // if even number of consecutive pokemon do not have move set,
+            // this exception will not be thrown
             throw new NullPointerException(
                     "Pokemon " + species + " does not exist"
             );

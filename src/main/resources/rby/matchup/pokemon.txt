@@ -44,7 +44,7 @@ butterfree
 sleep_powder stun_spore psychic psywave 
 
 chansey
-thunderbolt ice_beam soft_boiled thunder_wave 
+thunderbolt ice_beam softboiled thunder_wave
 
 charizard
 fire_blast earthquake swords_dance body_slam 
@@ -56,10 +56,10 @@ cloyster
 clamp blizzard rest explosion 
 
 dewgong
-surf blizzard body_slam mimc 
+surf blizzard body_slam mimic
 
 ditto
-transform empty empty empty 
+transform
 
 dodrio
 body_slam drill_peck hyper_beam agility 
@@ -146,7 +146,7 @@ marowak
 earthquake body_slam blizzard counter 
 
 mew
-swords_dance earthquake body_slam soft_boiled 
+swords_dance earthquake body_slam softboiled
 
 mewtwo
 amnesia psychic blizzard recover 

@@ -191,6 +191,17 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 strongestAttack = currentPokemon!!.moves[i]
             }
         }
+
+        // if no strongest move,
+        // use any move with pp
+        if (strongestAttack == RBYMove.EMPTY) {
+            for (i in 0..3) {
+                if (currentPokemon!!.getMovePp(i) > 0) {
+                    strongestAttack = currentPokemon!!.moves[i]
+                    break
+                }
+            }
+        }
         return if (emptyMove == 4) RBYMove.STRUGGLE else strongestAttack // only and always struggle when all moves are out of pp
     }
 

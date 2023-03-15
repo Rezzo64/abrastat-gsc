@@ -121,9 +121,9 @@ class RBYGame(player1: RBYPlayer,
                 pokemonPlayerTwo.moveThreePp,
                 pokemonPlayerTwo.moveFourPp)
     val isStrugglePlayerOne: Boolean
-        get() = pokemonPlayerOne!!.moveOnePp == 0 && pokemonPlayerOne.moveTwoPp == 0 && pokemonPlayerOne.moveThreePp == 0 && pokemonPlayerOne.moveFourPp == 0
+        get() = pokemonPlayerOne!!.moveOnePp <= 0 && pokemonPlayerOne.moveTwoPp <= 0 && pokemonPlayerOne.moveThreePp <= 0 && pokemonPlayerOne.moveFourPp <= 0
     val isStrugglePlayerTwo: Boolean
-        get() = pokemonPlayerTwo!!.moveOnePp == 0 && pokemonPlayerTwo.moveTwoPp == 0 && pokemonPlayerTwo.moveThreePp == 0 && pokemonPlayerTwo.moveFourPp == 0
+        get() = pokemonPlayerTwo!!.moveOnePp <= 0 && pokemonPlayerTwo.moveTwoPp <= 0 && pokemonPlayerTwo.moveThreePp <= 0 && pokemonPlayerTwo.moveFourPp <= 0
     val isBoomedPlayerOne: Boolean
         get() = if (lastAttacker == pokemonPlayerOne) {
             lastMoveUsed == RBYMove.EXPLOSION || lastMoveUsed == RBYMove.SELFDESTRUCT
