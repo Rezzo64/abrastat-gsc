@@ -7,7 +7,7 @@ and what has been finished.
 
 ---
 
-Status: TODO
+Status: DONE
 
 A single Special stat that is used in place of both
 Sp. Atk and Sp. Def. Amnesia raises this stat by two

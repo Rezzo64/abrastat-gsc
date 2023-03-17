@@ -25,6 +25,8 @@ abstract class Species protected constructor(speciesName: String) {
         private set
     var baseSpeed = 0
         private set
+    var baseSpecial = 0
+        private set
     var height = 0.0
         private set
     var weight = 0.0
@@ -72,6 +74,12 @@ abstract class Species protected constructor(speciesName: String) {
         baseSpecialAttack = baseStats.getInt("special_attack")
         baseSpecialDefense = baseStats.getInt("special_defense")
         baseSpeed = baseStats.getInt("speed")
+        baseSpecial = if (baseStats.isNull("special")) 0 else
+            when (baseStats.getString("special")) {
+                "special_attack" -> baseSpecialAttack
+                "special_defense" -> baseSpecialDefense
+                else -> 0
+            }
     }
 
     private fun setHeight(jsonHeight: JsonObject) {

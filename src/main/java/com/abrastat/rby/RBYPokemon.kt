@@ -120,6 +120,7 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         initStatSpA(initOtherStatsFormula(baseSpecialAttack, ivSpA, evSpA, level))
         initStatSpD(initOtherStatsFormula(baseSpecialDefense, ivSpD, evSpD, level))
         initStatSpe(initOtherStatsFormula(baseSpeed, ivSpe, evSpe, level))
+        initStatSp(initOtherStatsFormula(baseSpecial, ivSp, evSp, level))
     }
 
     override var moveOnePp: Int

@@ -61,6 +61,7 @@ enum class RBYStatusMovesEffects {
 
                 MoveEffect.OPP_ACCURACYDROP1 -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Sand_Attack_(move)#Generation_I
+                    defendingPokemon.dropStat(Stat.ACCURACY)
                 }
 
                 MoveEffect.OPP_CONFUSION -> {
@@ -69,10 +70,17 @@ enum class RBYStatusMovesEffects {
 
                 MoveEffect.OPP_DEFENSEDROP2 -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Screech_(move)
+                    defendingPokemon.dropStat(Stat.DEFENSE)
+                    defendingPokemon.dropStat(Stat.DEFENSE)
+                }
+
+                MoveEffect.OPP_SPECIALDROP1 -> {
+                    defendingPokemon.dropStat(Stat.SPECIAL)
                 }
 
                 MoveEffect.OPP_SPEEDDROP1 -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Bubble_Beam_(move)#Generation_I
+                    defendingPokemon.dropStat(Stat.SPEED)
                 }
 
                 MoveEffect.PRZ -> {
@@ -112,12 +120,32 @@ enum class RBYStatusMovesEffects {
                     cantRestFullHp(attackingPokemon)
                 }
 
+                MoveEffect.SELF_ATTACKRAISE1 -> {
+                    attackingPokemon.raiseStat(Stat.ATTACK)
+                }
+
                 MoveEffect.SELF_ATTACKRAISE2 -> {
-                    // SWORDS DANCE
+                    attackingPokemon.raiseStat(Stat.ATTACK)
+                    attackingPokemon.raiseStat(Stat.ATTACK)
+                }
+
+                MoveEffect.SELF_DEFENSERAISE2 -> {
+                    attackingPokemon.raiseStat(Stat.DEFENSE)
+                    attackingPokemon.raiseStat(Stat.DEFENSE)
+                }
+
+                MoveEffect.SELF_SPECIALRAISE1 -> {
+                    attackingPokemon.raiseStat(Stat.SPECIAL)
+                }
+
+                MoveEffect.SELF_SPECIALRAISE2 -> {
+                    attackingPokemon.raiseStat(Stat.SPECIAL)
+                    attackingPokemon.raiseStat(Stat.SPECIAL)
                 }
 
                 MoveEffect.SELF_SPEEDRAISE2 -> {
-                    // AGILITY
+                    attackingPokemon.raiseStat(Stat.SPEED)
+                    attackingPokemon.raiseStat(Stat.SPEED)
                 }
 
                 MoveEffect.SLEEP -> {

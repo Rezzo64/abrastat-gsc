@@ -137,7 +137,11 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     CURSE_GHOST(Target.BOTH, 0),
     COUNTER(Target.OPPONENT, 0),
     HIGHJUMPKICK(Target.SELF, 0),
-    SUPERFANG(Target.OPPONENT, 0);
+    SUPERFANG(Target.OPPONENT, 0),
+    SELF_SPECIALRAISE1(Target.SELF, 0),
+    SELF_SPECIALRAISE2(Target.SELF, 0),
+    OPP_SPECIALDROP1(Target.OPPONENT, 0);
+
 
     enum class Target {
         SELF, OPPONENT, BOTH, NONE

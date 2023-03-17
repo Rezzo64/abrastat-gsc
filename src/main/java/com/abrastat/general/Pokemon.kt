@@ -31,6 +31,8 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         protected set
     var ivSpe: Int
         protected set
+    var ivSp: Int
+        protected set
     var evHP: Int = 0
         protected set
     var evAtk: Int = 0
@@ -42,6 +44,8 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     var evSpD: Int = 0
         protected set
     var evSpe: Int = 0
+        protected set
+    var evSp: Int = 0
         protected set
     var level: Int = 0
         protected set
@@ -62,11 +66,14 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         private set
     var statSpe = 0
         private set
+    var statSp = 0
+        private set
     var atkMod = 0
     var defMod = 0
     var spAMod = 0
     var spDMod = 0
     var speMod = 0
+    var spMod = 0
     var accMod = 0
     var evaMod = 0
     var id = 0 // used for retrieving db instance
@@ -124,12 +131,14 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         ivSpA = builder.ivSpA
         ivSpD = builder.ivSpD
         ivSpe = builder.ivSpe
+        ivSp = builder.ivSp
         evHP = builder.evHP
         evAtk = builder.evAtk
         evDef = builder.evDef
         evSpA = builder.evSpA
         evSpD = builder.evSpD
         evSpe = builder.evSpe
+        evSp = builder.evSp
         level = builder.level
         heldItem = builder.heldItem
         gender = Gender.NONE // TODO: currently unused because no gender ratio values in json
@@ -144,12 +153,14 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         var ivSpA = 31
         var ivSpD = 31
         var ivSpe = 31 // default max
+        var ivSp = 31
         var evHP = 0
         var evAtk = 0
         var evDef = 0
         var evSpA = 0
         var evSpD = 0
         var evSpe = 0 // default min
+        var evSp = 0
         var level = 100 // default max
         val ability: Ability? = null
         var heldItem: Item = Item.NONE
@@ -165,23 +176,25 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         abstract fun moves(move1: T, move2: T, move3: T, move4: T): Builder<T>
 //        abstract fun moves(moves: Array<T>): Builder<T>
         abstract fun hiddenPowerType(type: Type): Builder<T>
-        fun ivs(ivHP: Int, ivAtk: Int, ivDef: Int, ivSpA: Int, ivSpD: Int, ivSpe: Int): Builder<T> {
+        fun ivs(ivHP: Int, ivAtk: Int, ivDef: Int, ivSpA: Int, ivSpD: Int, ivSpe: Int, ivSp: Int = 0): Builder<T> {
             this.ivHP = ivHP
             this.ivAtk = ivAtk
             this.ivDef = ivDef
             this.ivSpA = ivSpA
             this.ivSpD = ivSpD
             this.ivSpe = ivSpe
+            this.ivSp = ivSp
             return this
         }
 
-        fun evs(evHP: Int, evAtk: Int, evDef: Int, evSpA: Int, evSpD: Int, evSpe: Int): Builder<T> {
+        fun evs(evHP: Int, evAtk: Int, evDef: Int, evSpA: Int, evSpD: Int, evSpe: Int, evSp: Int = 0): Builder<T> {
             this.evHP = evHP
             this.evAtk = evAtk
             this.evDef = evDef
             this.evSpA = evSpA
             this.evSpD = evSpD
             this.evSpe = evSpe
+            this.evSp = evSp
             return this
         }
 
@@ -251,6 +264,10 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         statSpD = spd
     }
 
+    protected fun initStatSp(sp: Int) {
+        statSp = sp
+    }
+
     protected fun initStatSpe(spe: Int) {
         statSpe = spe
     }
@@ -280,7 +297,8 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
             Stat.DEFENSE -> defMod = checkModUpperLimit(defMod, stat)
             Stat.SPECIALATTACK -> spAMod = checkModUpperLimit(spAMod, stat)
             Stat.SPECIALDEFENSE -> spDMod = checkModUpperLimit(spDMod, stat)
-            Stat.SPEED -> speMod = checkModUpperLimit(spDMod, stat)
+            Stat.SPEED -> speMod = checkModUpperLimit(speMod, stat)
+            Stat.SPECIAL -> spMod = checkModUpperLimit(spMod, stat)
             Stat.ACCURACY -> accMod = checkModUpperLimit(accMod, stat)
             Stat.EVASION -> evaMod = checkModUpperLimit(evaMod, stat)
         }
@@ -292,7 +310,8 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
             Stat.DEFENSE -> defMod = checkModLowerLimit(defMod, stat)
             Stat.SPECIALATTACK -> spAMod = checkModLowerLimit(spAMod, stat)
             Stat.SPECIALDEFENSE -> spDMod = checkModLowerLimit(spDMod, stat)
-            Stat.SPEED -> speMod = checkModLowerLimit(spDMod, stat)
+            Stat.SPEED -> speMod = checkModLowerLimit(speMod, stat)
+            Stat.SPECIAL -> spMod = checkModLowerLimit(spMod, stat)
             Stat.ACCURACY -> accMod = checkModLowerLimit(accMod, stat)
             Stat.EVASION -> evaMod = checkModLowerLimit(evaMod, stat)
         }

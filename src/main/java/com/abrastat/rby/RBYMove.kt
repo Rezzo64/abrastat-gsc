@@ -17,7 +17,7 @@ enum class RBYMove
     ACID_ARMOR(Type.POISON, 61, MoveEffect.SELF_DEFENSERAISE2),
     //    AEROBLAST,
     AGILITY(Type.PSYCHIC, 48, MoveEffect.SELF_SPEEDRAISE2),
-    AMNESIA(Type.PSYCHIC, 32, MoveEffect.SELF_SPDEFRAISE2),
+    AMNESIA(Type.PSYCHIC, 32, MoveEffect.SELF_SPECIALRAISE2),
     //    ANCIENTPOWER,
     ATTRACT(Type.NORMAL, 24, 255, MoveEffect.ATTRACT),
     //    AURORA_BEAM,
@@ -101,7 +101,7 @@ enum class RBYMove
     GIGA_DRAIN(Type.GRASS, 8, 255, 60, MoveEffect.ABSORB),
     GLARE(Type.NORMAL, 30, 191, MoveEffect.PRZ),
     GROWL(Type.NORMAL, 32, 255, MoveEffect.OPP_ATTACKDROP1),
-    GROWTH(Type.NORMAL, 61, MoveEffect.SELF_SPATKRAISE1),
+    GROWTH(Type.NORMAL, 61, MoveEffect.SELF_SPECIALRAISE1),
     //    GUILLOTINE,
     //    GUST,
 
@@ -179,7 +179,7 @@ enum class RBYMove
     PROTECT(Type.NORMAL, 16, MoveEffect.PROTECT),
     //    PSYBEAM,
     //    PSYCHUP,
-    PSYCHIC(Type.PSYCHIC, 16, 255, 90, MoveEffect.PSYCHICSPDEFDROP),
+    PSYCHIC(Type.PSYCHIC, 16, 255, 90, MoveEffect.OPP_SPECIALDROP1),
     PSYWAVE(Type.PSYCHIC, 15, 204, MoveEffect.PSYWAVE),
     //    PURSUIT,
 
@@ -301,7 +301,7 @@ enum class RBYMove
         constructor(type: Type, pp: Int, accuracy: Int, moveEffect: MoveEffect) : this(type, pp, accuracy, 0, moveEffect, false)
 
         // Status constructor for moves that DON'T check accuracy
-        constructor(type: Type, pp: Int, moveEffect: MoveEffect) : this(type, pp, 0, 0, moveEffect, false)
+        constructor(type: Type, pp: Int, moveEffect: MoveEffect) : this(type, pp, 255, 0, moveEffect, false)
 
         // override val moveName: String = name
 
