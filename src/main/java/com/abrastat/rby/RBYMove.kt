@@ -48,7 +48,7 @@ enum class RBYMove
     //    CONVERSION2,
     //    COTTON_SPORE,
     COUNTER(Type.FIGHTING, 20, 255, MoveEffect.COUNTER),
-    //    CRABHAMMER,
+    CRABHAMMER(Type.WATER, 10, 229, 100),   // inc crit
     CROSS_CHOP(Type.FIGHTING, 8, 204, 100, MoveEffect.CRITRATE),
     CRUNCH(Type.DARK, 24, 255, 80, MoveEffect.CRUNCHSPDEFDROP),
     CURSE(Type.NONE, 16, MoveEffect.CURSE),
@@ -188,7 +188,7 @@ enum class RBYMove
     //    RAGE,
     //    RAIN_DANCE,
     //    RAPID_SPIN,
-    //    RAZOR_LEAF,
+    RAZOR_LEAF(Type.GRASS, 25, 242, 25),    // inc crit
     //    RAZOR_WIND,
     RECOVER(Type.NORMAL, 32, MoveEffect.RECOVER),
     REFLECT(Type.PSYCHIC, 20, MoveEffect.REFLECT),
@@ -217,7 +217,7 @@ enum class RBYMove
     //    SKETCH,
     //    SKY_ATTACK,
     //    SLAM,
-    //    SLASH,
+    SLASH(Type.NORMAL, 20, 255, 70),    // inc crit
     SLEEP_POWDER(Type.GRASS, 24, 191, MoveEffect.SLEEP),
     SLEEP_TALK(Type.NORMAL, 16, MoveEffect.SLEEPTALK),
     SLUDGE(Type.POISON, 20, 255, 65, MoveEffect.PSN40),

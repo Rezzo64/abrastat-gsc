@@ -1,6 +1,6 @@
 #comment
-Snorlax
-growth
+venusaur
+razor_leaf
 
-Snorlax
-growth
+snorlax
+rest

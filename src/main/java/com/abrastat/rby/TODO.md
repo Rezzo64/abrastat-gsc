@@ -16,7 +16,7 @@ secondary effect lowers the opponent's Special one stage.
 
 ---
 
-Status: TODO
+Status: DONE
 
 The base probability of a critical hit is
 (base speed)/512. If the move has a high critical hit
