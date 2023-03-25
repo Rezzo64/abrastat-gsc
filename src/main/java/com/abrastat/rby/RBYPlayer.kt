@@ -9,13 +9,11 @@ import com.abrastat.general.PlayerBehaviour.BehaviourGroup
 import java.util.*
 
 class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
-    private val hasSleepTalk: Int
     private var currentBehaviour: PlayerBehaviour? = null
 
     init {
         name = playerName
         addPokemon(pokemon)
-        hasSleepTalk = currentPokemon!!.hasMove(RBYMove.SLEEP_TALK)
         setBehaviours()
     }
 
@@ -40,13 +38,6 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
 
         // just choose the first move as default in case it's not clear what should be done
         var moveChosen = currentPokemon!!.moves[0]
-        if (hasSleepTalk > -1 && notAboutToWake()) {
-
-            // check if any Sleep Talk PP remains
-            if (currentPokemon!!.getMovePp(currentPokemon!!.hasMove(RBYMove.SLEEP_TALK)) > 0) {
-                return RBYMove.SLEEP_TALK
-            }
-        }
         when (currentBehaviour) {
             PlayerBehaviour.JUST_ATTACK ->  // pre-processing damage calculations to choose the strongest attack
                 moveChosen = getStrongestAttack(opponent.currentPokemon)
@@ -90,49 +81,75 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
         // attribute each attack to a behaviour type & collect each behaviour group
         for (move in currentPokemon!!.moves) {
             when (move) {
-                RBYMove.BEAT_UP, RBYMove.DOUBLE_EDGE, RBYMove.DRILL_PECK, RBYMove.EARTHQUAKE, RBYMove.FLAIL, RBYMove.GIGA_DRAIN, RBYMove.HYDRO_PUMP, RBYMove.MEGAHORN, RBYMove.NIGHT_SHADE, RBYMove.RETURN, RBYMove.REVERSAL, RBYMove.ROLLOUT, RBYMove.SEISMIC_TOSS, RBYMove.SURF, RBYMove.STRUGGLE
+                RBYMove.DOUBLE_EDGE,
+                RBYMove.DRILL_PECK,
+                RBYMove.EARTHQUAKE,
+                RBYMove.HYDRO_PUMP,
+                RBYMove.NIGHT_SHADE,
+                RBYMove.SEISMIC_TOSS,
+                RBYMove.STRUGGLE,
+                RBYMove.SURF,
                 -> behaviourGroups.add(BehaviourGroup.ATTACK)
 
-                RBYMove.MILK_DRINK, RBYMove.RECOVER, RBYMove.REST, RBYMove.SOFTBOILED, RBYMove.SELFDESTRUCT, RBYMove.EXPLOSION, RBYMove.DESTINY_BOND
+                RBYMove.EXPLOSION,
+                RBYMove.RECOVER,
+                RBYMove.REST,
+                RBYMove.SELFDESTRUCT,
+                RBYMove.SOFTBOILED,
                 -> behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
 
-                RBYMove.CURSE, RBYMove.GROWTH, RBYMove.MEDITATE, RBYMove.SHARPEN
+                RBYMove.GROWTH,
+                RBYMove.MEDITATE,
+                RBYMove.SHARPEN,
                 -> behaviourGroups.add(BehaviourGroup.SET_UP)
 
-                RBYMove.ACID_ARMOR, RBYMove.AMNESIA, RBYMove.AGILITY, RBYMove.BARRIER, RBYMove.SWORDS_DANCE
+                RBYMove.ACID_ARMOR,
+                RBYMove.AGILITY,
+                RBYMove.AMNESIA,
+                RBYMove.BARRIER,
+                RBYMove.SWORDS_DANCE,
                 -> behaviourGroups.add(BehaviourGroup.SET_UP_SHARP)
 
-                RBYMove.BELLY_DRUM
-                -> behaviourGroups.add(BehaviourGroup.BELLY)
-
-                RBYMove.HYPNOSIS, RBYMove.LOVELY_KISS, RBYMove.SING, RBYMove.SLEEP_POWDER, RBYMove.STUN_SPORE, RBYMove.THUNDER_WAVE
+                RBYMove.HYPNOSIS,
+                RBYMove.LOVELY_KISS,
+                RBYMove.SING,
+                RBYMove.SLEEP_POWDER,
+                RBYMove.STUN_SPORE,
+                RBYMove.THUNDER_WAVE,
                 -> behaviourGroups.add(BehaviourGroup.STATUS_OPPONENT_NON_VOLATILE)
 
-                RBYMove.ATTRACT, RBYMove.CONFUSE_RAY, RBYMove.SWAGGER
+                RBYMove.CONFUSE_RAY,
                 -> behaviourGroups.add(BehaviourGroup.VOLATILES)
 
-                RBYMove.BODY_SLAM, RBYMove.THUNDERBOLT, RBYMove.ZAP_CANNON, RBYMove.FIRE_BLAST, RBYMove.FIRE_PUNCH, RBYMove.FLAMETHROWER, RBYMove.SACRED_FIRE, RBYMove.BLIZZARD, RBYMove.ICE_BEAM, RBYMove.ICE_PUNCH, RBYMove.SLUDGE_BOMB
+                RBYMove.BLIZZARD,
+                RBYMove.BODY_SLAM,
+                RBYMove.FIRE_BLAST,
+                RBYMove.FIRE_PUNCH,
+                RBYMove.FLAMETHROWER,
+                RBYMove.ICE_BEAM,
+                RBYMove.ICE_PUNCH,
+                RBYMove.THUNDERBOLT,
                 -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STATUS_FISH)
                 }
 
-                RBYMove.CRUNCH, RBYMove.PSYCHIC -> {
+                RBYMove.PSYCHIC,
+                -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STAT_RAISE_DROP_FISH)
                 }
 
-                RBYMove.CROSS_CHOP -> {
+                RBYMove.CRABHAMMER,
+                RBYMove.RAZOR_LEAF,
+                RBYMove.SLASH,
+                -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.FISH_CRIT)
                 }
 
-                RBYMove.THIEF -> {
-                    behaviourGroups.add(BehaviourGroup.ATTACK)
-                    behaviourGroups.add(BehaviourGroup.STEAL)
-                }
-
-                RBYMove.HYPER_BEAM -> {
+                RBYMove.HYPER_BEAM,
+                -> {
                     behaviourGroups.add(BehaviourGroup.GO_FOR_HYPER_BEAM)
                     behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
                 }
@@ -212,8 +229,6 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
             RBYMove.RECOVER
         } else if (currentPokemon!!.hasMove(RBYMove.SOFTBOILED) > -1) {
             RBYMove.SOFTBOILED
-        } else if (currentPokemon!!.hasMove(RBYMove.MILK_DRINK) > -1) {
-            RBYMove.MILK_DRINK
         } else {
             logNoRecoveryMoveFound(currentPokemon!!)
             currentPokemon!!.moves[0]

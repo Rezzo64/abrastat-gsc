@@ -64,8 +64,21 @@ enum class RBYStatusMovesEffects {
                     defendingPokemon.dropStat(Stat.ACCURACY)
                 }
 
-                MoveEffect.OPP_CONFUSION -> {
+                MoveEffect.OPP_ATTACKDROP1 -> {
+                    defendingPokemon.dropStat(Stat.ATTACK)
+                }
+
+                MoveEffect.OPP_ATTACKDROP2 -> {
+                    defendingPokemon.dropStat(Stat.ATTACK)
+                    defendingPokemon.dropStat(Stat.ATTACK)
+                }
+
+                MoveEffect.CONFUSION -> {
                     // CONFUSE RAY
+                }
+
+                MoveEffect.OPP_DEFENSEDROP1 -> {
+                    defendingPokemon.dropStat(Stat.DEFENSE)
                 }
 
                 MoveEffect.OPP_DEFENSEDROP2 -> {
@@ -74,12 +87,21 @@ enum class RBYStatusMovesEffects {
                     defendingPokemon.dropStat(Stat.DEFENSE)
                 }
 
+                MoveEffect.OPP_EVASIONDROP1 -> {
+                    defendingPokemon.dropStat(Stat.EVASION)
+                }
+
                 MoveEffect.OPP_SPECIALDROP1 -> {
                     defendingPokemon.dropStat(Stat.SPECIAL)
                 }
 
                 MoveEffect.OPP_SPEEDDROP1 -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Bubble_Beam_(move)#Generation_I
+                    defendingPokemon.dropStat(Stat.SPEED)
+                }
+
+                MoveEffect.OPP_SPEEDDROP2 -> {
+                    defendingPokemon.dropStat(Stat.SPEED)
                     defendingPokemon.dropStat(Stat.SPEED)
                 }
 
@@ -120,6 +142,10 @@ enum class RBYStatusMovesEffects {
                     cantRestFullHp(attackingPokemon)
                 }
 
+                MoveEffect.SEISMICTOSS -> {
+                    // https://bulbapedia.bulbagarden.net/wiki/Seismic_Toss_(move)#Generation_I
+                }
+
                 MoveEffect.SELF_ATTACKRAISE1 -> {
                     attackingPokemon.raiseStat(Stat.ATTACK)
                 }
@@ -129,9 +155,17 @@ enum class RBYStatusMovesEffects {
                     attackingPokemon.raiseStat(Stat.ATTACK)
                 }
 
+                MoveEffect.SELF_DEFENSERAISE1 -> {
+                    attackingPokemon.raiseStat(Stat.DEFENSE)
+                }
+
                 MoveEffect.SELF_DEFENSERAISE2 -> {
                     attackingPokemon.raiseStat(Stat.DEFENSE)
                     attackingPokemon.raiseStat(Stat.DEFENSE)
+                }
+
+                MoveEffect.SELF_EVASIONRAISE1 -> {
+                    attackingPokemon.raiseStat(Stat.EVASION)
                 }
 
                 MoveEffect.SELF_SPECIALRAISE1 -> {
@@ -150,19 +184,6 @@ enum class RBYStatusMovesEffects {
 
                 MoveEffect.SLEEP -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Spore_(move)#Generation_I_to_V
-                }
-
-                MoveEffect.SLEEPTALK -> {
-                    require(attackingPokemon.moves[3] == RBYMove.SLEEP_TALK) {
-                        "Sleep Talk called, but not found in " +
-                                attackingPokemon + "'s moveset."
-                    }
-                    val randomMove = ThreadLocalRandom.current().nextInt(0, 3)
-                    logAttack(attackingPokemon, attackingPokemon.moves[randomMove])
-                    doAttack(attackingPokemon,
-                            defendingPokemon,
-                            attackingPokemon.moves[randomMove]
-                    )
                 }
 
                 MoveEffect.SUBSTITUTE -> {

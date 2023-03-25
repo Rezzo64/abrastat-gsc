@@ -121,10 +121,10 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
                 return
             }
 
-            // Guaranteed effects go here!
+            // Guaranteed effects
             if (move.effect.chance() == 0) {
                 when (move.effect) {
-                    MoveEffect.RECOIL25, MoveEffect.STRUGGLE -> {
+                    MoveEffect.RECOIL25 -> {
                         val recoil = opponent.lastDamageTaken / 4
                         self.applyDamage(recoil)
                         logRecoil(self, recoil)
@@ -136,7 +136,7 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
             }
             val roll = ThreadLocalRandom.current().nextInt(256)
 
-            // Chance probability attacks go here!
+            // Chance probability attacks
             if (roll < move.effect.chance()) {
                 when (move.effect) {
                     MoveEffect.THUNDER, MoveEffect.PRZ100, MoveEffect.PRZ30, MoveEffect.PRZ10, MoveEffect.PRZ -> {

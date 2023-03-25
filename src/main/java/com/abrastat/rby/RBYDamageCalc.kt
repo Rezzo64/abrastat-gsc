@@ -2,6 +2,7 @@ package com.abrastat.rby
 
 import com.abrastat.general.Messages.Companion.logCriticalHit
 import com.abrastat.general.Messages.Companion.logTypeEffectiveness
+import com.abrastat.general.MoveEffect
 import com.abrastat.rby.RBYTypeEffectiveness.calcEffectiveness
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
@@ -101,9 +102,9 @@ enum class RBYDamageCalc {
         }
 
         private fun critModifier(attack: RBYMove, speed: Int): Int {
-            val incCrit: Array<RBYMove> = arrayOf(RBYMove.SLASH, RBYMove.RAZOR_LEAF, RBYMove.CRABHAMMER)
             var crit: Int = speed
-            if (incCrit.contains(attack)) crit = (speed * 8).coerceAtMost(511)
+            if (attack.effect == MoveEffect.CRITRATE)
+                crit = (speed * 8).coerceAtMost(511)
             return if (critRoll() <= crit) {
                 logCriticalHit()
                 2
