@@ -66,7 +66,7 @@ Rest, its reduction to Attack persists.
 
 ---
 
-Status: TODO
+Status: DONE
 
 If a stage increase to a stat (such as Amnesia adding +2
 stages to the Special stat) would increase that stat to
@@ -88,7 +88,7 @@ effects this does and does not apply to.
 
 ---
 
-Status: TODO
+Status: DONE
 
 Ice deals neutral damage against Fire, Poison deals 2x
 damage against Bug, Bug deals 2x damage against Poison,
