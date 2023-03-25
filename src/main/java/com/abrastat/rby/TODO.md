@@ -111,7 +111,7 @@ isn't knocked out.
 
 ---
 
-Status: TODO
+Status: DONE
 
 If a Pokemon tries to use Recover, Softboiled, or Rest
 while (maxHP - currentHP) % 256 == 255, the move has no

@@ -127,19 +127,28 @@ enum class RBYStatusMovesEffects {
 
                 MoveEffect.RECOVER -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Soft-Boiled_(move)#Generation_I
+                    if ((attackingPokemon.currentHP < attackingPokemon.statHP)
+                            && ((attackingPokemon.statHP - attackingPokemon.currentHP) % 256 != 255)) {
+                        attackingPokemon.applyHeal(attackingPokemon.statHP / 2)
+                    } else {
+                        cantRestFullHp(attackingPokemon)
+                    }
                 }
 
                 MoveEffect.REFLECT -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Reflect_(move)#Generation_I
                 }
 
-                MoveEffect.REST -> if (attackingPokemon.currentHP < attackingPokemon.statHP) {
-                    logRest(attackingPokemon)
-                    attackingPokemon.applyHeal(attackingPokemon.statHP)
-                    attackingPokemon.applyNonVolatileStatus(Status.SLEEP)
-                    attackingPokemon.setSleepCounter(2, 2)
-                } else {
-                    cantRestFullHp(attackingPokemon)
+                MoveEffect.REST -> {
+                    if ((attackingPokemon.currentHP < attackingPokemon.statHP)
+                            && ((attackingPokemon.statHP - attackingPokemon.currentHP) % 256 != 255)) {
+                        logRest(attackingPokemon)
+                        attackingPokemon.applyHeal(attackingPokemon.statHP)
+                        attackingPokemon.applyNonVolatileStatus(Status.SLEEP)
+                        attackingPokemon.setSleepCounter(2, 2)
+                    } else {
+                        cantRestFullHp(attackingPokemon)
+                    }
                 }
 
                 MoveEffect.SEISMICTOSS -> {
