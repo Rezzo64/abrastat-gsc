@@ -1,6 +1,6 @@
 package com.abrastat.general
 
-enum class Status(private val volatility: Volatility, private val target: Target) {
+enum class Status(val volatility: Volatility, private val target: Target) {
     // VOLATILE = Removed by switching
     // NONVOLATILE = Persists through switching
     // Perish Song seems to be the only move which affects both users.
@@ -33,7 +33,7 @@ enum class Status(private val volatility: Volatility, private val target: Target
     TRANSFORM(Volatility.VOLATILE, Target.SELF),
     WRAP(Volatility.VOLATILE, Target.OPPONENT);
 
-    internal enum class Volatility {
+    enum class Volatility {
         VOLATILE, NONVOLATILE
     }
 

@@ -43,31 +43,31 @@ enum class Messages {
 
         @JvmStatic
         fun statusFailed(pokemon: Pokemon, status: Status) {
-            when (status) {
+            messageBuffer = when (status) {
                 Status.FAINT -> return
-                Status.BURN -> messageBuffer = pokemon.species + " is already burned!"
-                Status.FREEZE -> messageBuffer = pokemon.species + " is already frozen!"
-                Status.PARALYSIS -> messageBuffer = pokemon.species + " is already paralysed!"
-                Status.POISON, Status.TOXIC -> messageBuffer = pokemon.species + " is already poisoned!"
-                Status.SLEEP -> messageBuffer = pokemon.species + " is already asleep!"
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = pokemon.species + " is already confused!"
-                Status.ATTRACT -> messageBuffer = pokemon.species + " is already in love!"
-                else -> messageBuffer = "But it failed!"
+                Status.BURN -> pokemon.species + " is already burned!"
+                Status.FREEZE -> pokemon.species + " is already frozen!"
+                Status.PARALYSIS -> pokemon.species + " is already paralysed!"
+                Status.POISON, Status.TOXIC -> pokemon.species + " is already poisoned!"
+                Status.SLEEP -> pokemon.species + " is already asleep!"
+                Status.CONFUSION, Status.FATIGUE -> pokemon.species + " is already confused!"
+                Status.ATTRACT -> pokemon.species + " is already in love!"
+                else -> "But it failed!"
             }
             handleMessage()
         }
 
         @JvmStatic
         fun cantAttack(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.PARALYSIS -> messageBuffer = pokemon.species + " is fully paralysed!"
-                Status.SLEEP -> messageBuffer = pokemon.species + " is fast asleep!"
-                Status.FREEZE -> messageBuffer = pokemon.species + " is frozen solid!"
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = (pokemon.species + " hurt itself in confusion! ("
+            messageBuffer = when (status) {
+                Status.ATTRACT -> pokemon.species + " is immobilised by love!"
+                Status.CONFUSION, Status.FATIGUE -> (pokemon.species + " hurt itself in confusion! ("
                         + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
-
-                Status.ATTRACT -> messageBuffer = pokemon.species + " is immobilised by love!"
-                else -> messageBuffer = pokemon.species + " can't attack because of its " + status + "!"
+                Status.FLINCH -> pokemon.species + " flinched and couldn't move"
+                Status.FREEZE -> pokemon.species + " is frozen solid!"
+                Status.PARALYSIS -> pokemon.species + " is fully paralysed!"
+                Status.SLEEP -> pokemon.species + " is fast asleep!"
+                else -> pokemon.species + " can't attack because of its " + status + "!"
             }
             handleMessage()
         }
@@ -156,45 +156,15 @@ enum class Messages {
 
         @JvmStatic
         fun logNewStatus(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.PARALYSIS -> messageBuffer = pokemon.species + " is paralysed! It may be unable to move!"
-                Status.SLEEP -> messageBuffer = pokemon.species + " has fallen asleep!"
-                Status.FREEZE -> {
-                    messageBuffer = pokemon.species + " was frozen!"
-                    messageBuffer = pokemon.species + " was burned by the attack!"
-                    messageBuffer = pokemon.species + " became confused!"
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.BURN -> {
-                    messageBuffer = pokemon.species + " was burned by the attack!"
-                    messageBuffer = pokemon.species + " became confused!"
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.FATIGUE, Status.CONFUSION -> {
-                    messageBuffer = pokemon.species + " became confused!"
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.POISON -> {
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.TOXIC -> {
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                else -> messageBuffer = pokemon.species + " is afflicted by " + status + "!"
+            messageBuffer = when (status) {
+                Status.PARALYSIS -> pokemon.species + " is paralysed! It may be unable to move!"
+                Status.SLEEP -> pokemon.species + " has fallen asleep!"
+                Status.FREEZE -> pokemon.species + " was frozen!"
+                Status.BURN -> pokemon.species + " was burned by the attack!"
+                Status.FATIGUE, Status.CONFUSION -> pokemon.species + " became confused!"
+                Status.POISON -> pokemon.species + " is poisoned!"
+                Status.TOXIC -> pokemon.species + " is badly poisoned!"
+                else -> pokemon.species + " is afflicted by " + status + "!"
             }
             handleMessage()
         }

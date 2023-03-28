@@ -38,7 +38,7 @@ frozen Pokemon is hit by a Fire type attack.
 
 ---
 
-Status: TODO
+Status: DONE
 
 If a Pokemon is asleep from an effect other than Rest,
 the Pokemon will wake up between turn 1 to turn 7 of

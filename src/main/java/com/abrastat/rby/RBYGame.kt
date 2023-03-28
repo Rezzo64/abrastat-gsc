@@ -48,41 +48,35 @@ class RBYGame(player1: RBYPlayer,
         displayCurrentHP(pokemonPlayerOne!!)
         displayCurrentHP(pokemonPlayerTwo!!)
 
-        // prevents Counter or Mirror Coat from carrying over
-        pokemonPlayerOne.lastDamageTaken = 0
-        pokemonPlayerTwo.lastDamageTaken = 0
+        reset(pokemonPlayerOne)
+        reset(pokemonPlayerTwo)
 
         // IF switch selected
         // IF pursuit also selected
 
         // IF speed priority !=0 move selected (Quick Attack, Protect, Roar)
         if (playerOneIsFaster()) { // true = player1, false = player2
-            RBYTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
-            setLastMoveUsed(movePlayerOne)
-            lastAttacker = pokemonPlayerOne
-            RBYTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
-            setLastMoveUsed(movePlayerTwo)
-            lastAttacker = pokemonPlayerTwo
+            turn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
+            turn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
         } else {
-            RBYTurn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
-            setLastMoveUsed(movePlayerTwo)
-            lastAttacker = pokemonPlayerTwo
-            RBYTurn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
-            setLastMoveUsed(movePlayerOne)
-            lastAttacker = pokemonPlayerOne
+            turn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
+            turn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
         }
     }
 
-    private fun rollFreezeThaw(pokemon: RBYPokemon?) {
-        val roll = ThreadLocalRandom.current().nextInt(256)
-        if (roll < 25) {
-            pokemon!!.removeNonVolatileStatus()
-            statusChanged(pokemon, Status.FREEZE)
-        }
+    // prevents Counter, Mirror Coat, Flinch from carrying over
+    private fun reset(pokemon: RBYPokemon) {
+        pokemon.lastDamageTaken = 0
+        pokemon.removeVolatileStatus(Status.FLINCH)
+    }
+
+    private fun turn(poke1: RBYPokemon, poke2: RBYPokemon, move: RBYMove) {
+        RBYTurn(poke1, poke2, move)
+        setLastMoveUsed(move)
+        lastAttacker = poke1
     }
 
     private fun playerOneIsFaster(): Boolean {
-
         // TODO Quick Attack priority move logic checking
         return if (pokemonPlayerOne!!.statSpe == pokemonPlayerTwo!!.statSpe) ThreadLocalRandom.current().nextBoolean() // random player to go first this turn
         else pokemonPlayerOne.statSpe ==

@@ -317,6 +317,32 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         }
     }
 
+    fun raiseStatSharp(stat: Stat) {
+        when (stat) {
+            Stat.ATTACK -> atkMod = checkSharpModUpperLimit(atkMod, stat)
+            Stat.DEFENSE -> defMod = checkSharpModUpperLimit(defMod, stat)
+            Stat.SPECIALATTACK -> spAMod = checkSharpModUpperLimit(spAMod, stat)
+            Stat.SPECIALDEFENSE -> spDMod = checkSharpModUpperLimit(spDMod, stat)
+            Stat.SPEED -> speMod = checkSharpModUpperLimit(speMod, stat)
+            Stat.SPECIAL -> spMod = checkSharpModUpperLimit(spMod, stat)
+            Stat.ACCURACY -> accMod = checkSharpModUpperLimit(accMod, stat)
+            Stat.EVASION -> evaMod = checkSharpModUpperLimit(evaMod, stat)
+        }
+    }
+
+    fun dropStatSharp(stat: Stat) {
+        when (stat) {
+            Stat.ATTACK -> atkMod = checkSharpModLowerLimit(atkMod, stat)
+            Stat.DEFENSE -> defMod = checkSharpModLowerLimit(defMod, stat)
+            Stat.SPECIALATTACK -> spAMod = checkSharpModLowerLimit(spAMod, stat)
+            Stat.SPECIALDEFENSE -> spDMod = checkSharpModLowerLimit(spDMod, stat)
+            Stat.SPEED -> speMod = checkSharpModLowerLimit(speMod, stat)
+            Stat.SPECIAL -> spMod = checkSharpModLowerLimit(spMod, stat)
+            Stat.ACCURACY -> accMod = checkSharpModLowerLimit(accMod, stat)
+            Stat.EVASION -> evaMod = checkSharpModLowerLimit(evaMod, stat)
+        }
+    }
+
     fun checkModUpperLimit(mod: Int, stat: Stat): Int {
         return if (mod + 1 < 6) {
             logStatRaise(this, stat)
@@ -328,7 +354,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     }
 
     fun checkModLowerLimit(mod: Int, stat: Stat): Int {
-        return if (mod - 1 < -6) {
+        return if (mod - 1 > -6) {
             logStatDrop(this, stat)
             mod - 1
         } else {
@@ -348,7 +374,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     }
 
     fun checkSharpModLowerLimit(mod: Int, stat: Stat): Int {
-        return if (mod - 1 < -6) {
+        return if (mod - 1 > -6) {
             logStatSharplyDrop(this, stat)
             (mod - 2).coerceAtLeast(-6)
         } else {
@@ -454,9 +480,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         when (status) {
             Status.PARALYSIS -> statSpe /= 4
             Status.BURN -> statAtk /= 2
-            else -> {
-                notImplementedYet(status.toString())
-            }
+            else -> notImplementedYet(status.toString())
         }
     }
 

@@ -21,7 +21,6 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
         get() = getPokemon(0) as RBYPokemon?
 
     fun chooseMove(opponent: RBYPlayer): RBYMove {
-        var chosenMove = RBYMove.EMPTY
         if (justUseFirstAttack) { // ignores other moves, use with caution
             return if (currentPokemon!!.getMovePp(0) > 0) {
                 currentPokemon!!.moves[0]
@@ -29,8 +28,7 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 RBYMove.STRUGGLE
             }
         }
-        chosenMove = chooseMoveHelper(opponent)
-        return chosenMove
+        return chooseMoveHelper(opponent)
     }
 
     // each behaviour should exist as its own entity depending on the simulation state
@@ -154,7 +152,7 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                     behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
                 }
 
-                else -> logNoMoveBehaviourFound(currentPokemon!!, move!!)
+                else -> logNoMoveBehaviourFound(currentPokemon!!, move)
             }
         }
         // add all discovered behaviours to Player for utilisation

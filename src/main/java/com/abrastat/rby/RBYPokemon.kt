@@ -17,10 +17,10 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         moves[1] = builder.moves[1]
         moves[2] = builder.moves[2]
         moves[3] = builder.moves[3]
-        movesPp[0] = moves[0]!!.maxPp
-        movesPp[1] = moves[1]!!.maxPp
-        movesPp[2] = moves[2]!!.maxPp
-        movesPp[3] = moves[3]!!.maxPp
+        movesPp[0] = moves[0].maxPp
+        movesPp[1] = moves[1].maxPp
+        movesPp[2] = moves[2].maxPp
+        movesPp[3] = moves[3].maxPp
 
         // TODO implement 'if' statement to override level due to user definition
         // TODO implement 'if' statement to override Stat Experience due to user definition
@@ -237,7 +237,7 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         return calcDamageEstimate(
                 this,
                 opponent!!,
-                move!!,
+                move,
                 true)
     }
 

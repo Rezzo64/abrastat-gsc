@@ -6,8 +6,7 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     // none
     NONE(Target.NONE, 0),
 
-    // guaranteed, alphabetical
-    // Edit > Sort Lines
+    // guaranteed
     ABSORB(Target.OPPONENT, 0),
     ACIDSPDEFDROP(Target.OPPONENT, 0),
     ATTRACT(Target.OPPONENT, 0),
@@ -66,7 +65,6 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     OPP_DEFENSEDROP1(Target.OPPONENT, 0),
     OPP_DEFENSEDROP2(Target.OPPONENT, 0),
     OPP_EVASIONDROP1(Target.OPPONENT, 0),
-    OPP_SPECIALDROP1(Target.OPPONENT, 0),
     OPP_SPEEDDROP1(Target.OPPONENT, 0),
     OPP_SPEEDDROP2(Target.OPPONENT, 0),
     PAYDAY(Target.SELF, 0),
@@ -125,10 +123,11 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     THRASH(Target.SELF, 0),
     TOXIC(Target.OPPONENT, 0),
     TRANSFORM(Target.SELF, 0),
+    TWINNEEDLE(Target.OPPONENT, 0),
     VITALTHROW(Target.SELF, 0),
     WRAP(Target.OPPONENT, 0),
 
-    // chance, alphabetical
+    // chance
     ANCIENTPOWER(Target.SELF, 25),
     BRN10(Target.OPPONENT, 25),
     BRN30(Target.OPPONENT, 76),
@@ -148,14 +147,12 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     PRZ30(Target.OPPONENT, 76),
     PSN20(Target.OPPONENT, 51),
     PSN30(Target.OPPONENT, 76),
-    PSN40(Target.OPPONENT, 102),
     SACREDFIRE(Target.BOTH, 127),
     STOMP(Target.OPPONENT, 76),
     THIEF(Target.OPPONENT, 255),
     THUNDER(Target.OPPONENT, 76),
     TRIATTACK(Target.OPPONENT, 51),
     TRIPLEKICK(Target.OPPONENT, 85),
-    TWINNEEDLE(Target.OPPONENT, 51),
     TWISTER(Target.OPPONENT, 51),
     ;
 
