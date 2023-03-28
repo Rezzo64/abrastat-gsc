@@ -17,6 +17,7 @@ enum class RBYMoveEffects {
             val effect = move.effect
 
             // none
+            // only damaging moves
             if (effect == MoveEffect.NONE) return
             if (effect.target() === MoveEffect.Target.NONE) return
             
@@ -221,6 +222,7 @@ enum class RBYMoveEffects {
                     }
                 }
 
+                // NIGHT_SHADE, SEISMIC_TOSS
                 MoveEffect.SEISMICTOSS -> {
                     guaranteedDamage(defendingPokemon, attackingPokemon.level)
                 }
@@ -302,7 +304,7 @@ enum class RBYMoveEffects {
                 }
 
                 MoveEffect.TOXIC -> {
-                    // TOXIC
+                    applyStatus(defendingPokemon, Status.TOXIC)
                 }
 
                 MoveEffect.TRANSFORM -> {

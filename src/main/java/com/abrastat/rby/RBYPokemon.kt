@@ -241,6 +241,29 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
                 true)
     }
 
+    fun modifiedStat(stat: Stat): Int {
+        return when (stat) {
+            Stat.ATTACK -> modifyStat(statAtk, atkMod)
+            Stat.DEFENSE -> modifyStat(statDef, defMod)
+            Stat.SPEED -> modifyStat(statSpe, speMod)
+            Stat.SPECIAL -> modifyStat(statSp, spMod)
+            else -> 0
+        }
+    }
+
+    private fun modifyStat(stat: Int, modifier: Int): Int {
+        if (modifier == 0) return stat
+        var modifiedStat = floor(multiplier(modifier) * stat.toDouble()).toInt()
+        modifiedStat = modifiedStat.coerceIn(1, 999)
+        return modifiedStat
+    }
+
+    fun multiplier(m: Int): Double {
+        val statModifier: Array<Double> = arrayOf(0.25, 0.28, 0.33,
+                0.4, 0.5, 0.66, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0)
+        return statModifier[m + 6]
+    }
+
 //    override var ivHP: Int
 //        get() = super.ivHP
 //        // these methods are for gen 3+
@@ -261,9 +284,10 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
 
     companion object {
         private fun initOtherStatsFormula(baseStat: Int, ivStat: Int, evStat: Int, level: Int): Int {
+            // https://www.smogon.com/ingame/guides/rby_gsc_stats#howstatswork
             return floor((baseStat + ivStat) * 2
-                    + floor(sqrt(evStat.toDouble()) / 4) * level
-                    / 100).toInt() + 5
+                    + floor((sqrt(evStat.toDouble() - 1) + 1) / 4)
+                    * level / 100).toInt() + 5
         }
     }
 }

@@ -144,7 +144,7 @@ enum class RBYMove
     SAND_ATTACK(Type.NORMAL, 15, 255, MoveEffect.OPP_ACCURACYDROP1),
     SCRATCH(Type.NORMAL, 35, 255, 40),
     SCREECH(Type.NORMAL, 10, 216, MoveEffect.OPP_DEFENSEDROP2),
-    SEISMIC_TOSS(Type.NONE, 20, 255, 1, MoveEffect.SEISMICTOSS),
+    SEISMIC_TOSS(Type.NONE, 20, 255, MoveEffect.SEISMICTOSS),
     SELFDESTRUCT(Type.NORMAL, 5, 255, 260, MoveEffect.SELFDESTRUCT),
     SHARPEN(Type.NORMAL, 30, MoveEffect.SELF_ATTACKRAISE1),
     SING(Type.NORMAL, 15, 140, MoveEffect.SLEEP),
@@ -172,7 +172,7 @@ enum class RBYMove
     SUPER_FANG(Type.NORMAL, 10, 229, MoveEffect.SUPERFANG),
     SUPERSONIC(Type.NORMAL, 20, 140, MoveEffect.CONFUSION),
     SURF(Type.WATER, 15, 255, 95),
-    SWIFT(Type.NORMAL, 20, 255, 60, MoveEffect.SWIFT),
+    SWIFT(Type.NORMAL, 20, Int.MAX_VALUE, 60, MoveEffect.SWIFT),
     SWORDS_DANCE(Type.NORMAL, 30, MoveEffect.SELF_ATTACKRAISE2),
 
     TACKLE(Type.NORMAL, 35, 242, 35),
@@ -217,7 +217,7 @@ enum class RBYMove
         constructor(type: Type, pp: Int, accuracy: Int, moveEffect: MoveEffect) : this(type, pp, accuracy, 0, moveEffect, false)
 
         // Status constructor for moves that DON'T check accuracy
-        constructor(type: Type, pp: Int, moveEffect: MoveEffect) : this(type, pp, 255, 0, moveEffect, false)
+        constructor(type: Type, pp: Int, moveEffect: MoveEffect) : this(type, pp, Int.MAX_VALUE, 0, moveEffect, false)
 
         // override val moveName: String = name
 
@@ -249,10 +249,19 @@ enum class RBYMove
         companion object {
             fun isPhysical(type: Type): Boolean {
                 return when (type) {
-                    Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.ROCK, Type.STEEL, Type.GHOST, Type.BUG, Type.POISON, Type.GROUND, Type.NONE -> true
-                    else -> {
-                        false
-                    }
+                    Type.BUG,
+                    Type.FIGHTING,
+                    Type.FLYING,
+                    Type.GHOST,
+                    Type.GROUND,
+                    Type.NONE,
+                    Type.NORMAL,
+                    Type.POISON,
+                    Type.ROCK,
+                    Type.STEEL,
+                    -> true
+
+                    else -> false
                 }
             }
         }

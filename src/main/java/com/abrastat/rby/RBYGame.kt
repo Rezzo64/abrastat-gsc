@@ -55,7 +55,7 @@ class RBYGame(player1: RBYPlayer,
         // IF pursuit also selected
 
         // IF speed priority !=0 move selected (Quick Attack, Protect, Roar)
-        if (playerOneIsFaster()) { // true = player1, false = player2
+        if (playerOneIsFaster(movePlayerOne.effect, movePlayerTwo.effect)) { // true = player1, false = player2
             turn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
             turn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
         } else {
@@ -76,14 +76,34 @@ class RBYGame(player1: RBYPlayer,
         lastAttacker = poke1
     }
 
-    private fun playerOneIsFaster(): Boolean {
-        // TODO Quick Attack priority move logic checking
-        return if (pokemonPlayerOne!!.statSpe == pokemonPlayerTwo!!.statSpe) ThreadLocalRandom.current().nextBoolean() // random player to go first this turn
-        else pokemonPlayerOne.statSpe ==
-                pokemonPlayerOne.statSpe.coerceAtLeast(pokemonPlayerTwo.statSpe)
+    private fun playerOneIsFaster(me1: MoveEffect, me2: MoveEffect): Boolean {
+        val meq = MoveEffect.QUICKATTACK        // priority 1
+        val mec = MoveEffect.COUNTER            // priority -1
+                                                // else priority 0
+        return if ((me1 == meq && me2 == meq)   // both QUICK_ATTACK
+                || (me1 == mec && me2 == mec))  // both COUNTER
+            playerOneIsFasterUtil()
+        else if (me1 == meq)
+            true
+        else if (me2 == meq)
+            false
+        else if (me1 == mec)
+            false
+        else if (me2 == mec)
+            true
+        else
+            playerOneIsFasterUtil()
     }
 
-    fun someoneFainted(): Boolean {
+    private fun playerOneIsFasterUtil(): Boolean {
+        var speed1 = pokemonPlayerOne!!.modifiedStat(Stat.SPEED)
+        var speed2 = pokemonPlayerTwo!!.modifiedStat(Stat.SPEED)
+
+        return if (speed1 == speed2) ThreadLocalRandom.current().nextBoolean() // random player goes first
+        else speed1 > speed2
+    }
+
+    private fun someoneFainted(): Boolean {
         if (pokemonPlayerOne!!.currentHP == 0) {
             pokemonPlayerOne.removeNonVolatileStatusDebuff()
             pokemonPlayerOne.isFainted

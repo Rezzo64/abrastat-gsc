@@ -3,6 +3,7 @@ package com.abrastat.rby
 import com.abrastat.general.Messages.Companion.logCriticalHit
 import com.abrastat.general.Messages.Companion.logTypeEffectiveness
 import com.abrastat.general.MoveEffect
+import com.abrastat.general.Stat
 import com.abrastat.rby.RBYTypeEffectiveness.calcEffectiveness
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
@@ -51,25 +52,37 @@ enum class RBYDamageCalc {
             val level: Int = attackingPokemon.level
             val basePower: Int = attack.basePower
 
+            // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/damage-calculation
             // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/stat-modifiers
-            var attackStat: Int = if (attack.isPhysical) attackingPokemon.statAtk else attackingPokemon.statSp
-            var defenseStat: Int = if (attack.isPhysical) defendingPokemon.statDef else defendingPokemon.statSp
+            var attackStat: Int
+            var defenseStat: Int
+            var modifiedAttack: Stat
+            var modifiedDefense: Stat
+            if (attack.isPhysical) {
+                attackStat = attackingPokemon.statAtk
+                defenseStat = defendingPokemon.statDef
+                modifiedAttack = Stat.ATTACK
+                modifiedDefense = Stat.DEFENSE
+            } else {
+                attackStat = attackingPokemon.statSp
+                defenseStat = defendingPokemon.statSp
+                modifiedAttack = Stat.SPECIAL
+                modifiedDefense = Stat.SPECIAL
+            }
+            if (crit == 1) {    // no crit
+                attackStat = attackingPokemon.modifiedStat(modifiedAttack)
+                defenseStat = defendingPokemon.modifiedStat(modifiedDefense)
+            } else {            // crit
+                attackStat *= 2
+            }
             if (attackStat > 255 || defenseStat > 255) {
                 attackStat /= 4
                 defenseStat /= 4
             }
-            val attackModifier: Int = if (attack.isPhysical) attackingPokemon.atkMod else attackingPokemon.spMod
-            val defenseModifier: Int = if (attack.isPhysical) defendingPokemon.defMod else defendingPokemon.spMod
-            if (crit == 1) {    // no crit
-                if (attackModifier != 0) attackStat = modify(attackModifier, attackStat)
-                if (defenseModifier != 0) defenseStat = modify(defenseModifier, defenseStat)
-            } else {            // crit
-                attackStat *= 2
-            }
+
             var typeEffectiveness = calcEffectiveness(attack.type,
                     defendingPokemon.types[0],
                     defendingPokemon.types[1])
-
             var damage = damageFormula(level, crit, basePower, attackStat, defenseStat, typeEffectiveness)
             if (attackingPokemon.types.contains(attack.type)) { // type bonus
                 damage = floor(damage * 1.5).toInt()
@@ -93,11 +106,9 @@ enum class RBYDamageCalc {
                 typeEffectiveness: Double): Int {
             // https://bulbapedia.bulbagarden.net/wiki/Damage#Generation_I
             val levelModifier: Double = floor((level * critModifier * 2 / 5).toDouble()) + 2
-            val statModifier: Double = if (defenseStat != 0) {
-                floor(levelModifier * basePower
-                        * 1.coerceAtLeast(attackStat)
-                        / 1.coerceAtLeast(defenseStat))
-            } else 0.0  // divide by 0
+            val statModifier: Double = floor(levelModifier * basePower
+                    * attackStat.coerceAtLeast(1)
+                    / defenseStat.coerceAtLeast(1)) // original crashed dividing by 0
             return ((floor( statModifier / 50) + 2) * typeEffectiveness).toInt()
         }
 
@@ -116,6 +127,7 @@ enum class RBYDamageCalc {
         }
 
         private fun modify(modifier: Int, stat: Int): Int {
+            if (modifier == 0) return stat
             val statModifier: Array<Double> = arrayOf(0.25, 0.28, 0.33,
                     0.4, 0.5, 0.66, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0)
             var modifiedStat = floor(statModifier[modifier + 6] * stat.toDouble()).toInt()

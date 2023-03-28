@@ -10,6 +10,7 @@ import com.abrastat.general.Messages.Companion.statusChanged
 import com.abrastat.general.MoveEffect
 import com.abrastat.general.Status
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.math.floor
 
 class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: RBYMove) {
     init {
@@ -18,12 +19,14 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
             checkStatusEffects(attackingPokemon)
             if (canAttack(attackingPokemon, move)) {
                 logAttack(attackingPokemon, move)
-                if (didAttackMiss(move.accuracy)) {
+                if (didAttackHit(move.accuracy,
+                                attackingPokemon,
+                                defendingPokemon)) {
+                    doAttack(attackingPokemon, defendingPokemon, move)
+                } else {
                     logMissedAttack(attackingPokemon)
                     if (move.effect == MoveEffect.HIGHJUMPKICK)
                         RBYMoveEffects.guaranteedDamage(attackingPokemon, 1)
-                } else {
-                    doAttack(attackingPokemon, defendingPokemon, move)
                 }
                 attackingPokemon.decrementMovePp(move)
             }
@@ -93,9 +96,18 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
             }
         }
 
-        private fun didAttackMiss(accuracy: Int): Boolean {
+        private fun didAttackHit(moveAccuracy: Int,
+                                 attackingPokemon: RBYPokemon,
+                                 defendingPokemon: RBYPokemon): Boolean {
+            if (moveAccuracy == Int.MAX_VALUE) return true
+
+            // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/evade-and-accuracy
+            val accuracyMultiplier = attackingPokemon.multiplier(attackingPokemon.accMod)
+            val evasionMultiplier = defendingPokemon.multiplier(-defendingPokemon.evaMod)
+            val accuracy = floor( floor(moveAccuracy.toDouble()
+                    * accuracyMultiplier) * evasionMultiplier).toInt()
             val roll = ThreadLocalRandom.current().nextInt(256)
-            return accuracy < roll
+            return roll < accuracy  // miss if 255
         }
 
         @JvmStatic
