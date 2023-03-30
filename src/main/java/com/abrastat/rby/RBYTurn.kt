@@ -95,8 +95,9 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
 
         val accuracy = calcAccuracy(attackingPokemon, defendingPokemon, move.accuracy)
         var attackHit = attackHit(accuracy)
-        // if not multi hit move, damage is 0 anyway
+
         val damage = if (attackHit) calcDamage(attackingPokemon, defendingPokemon, move)
+        else if (attackingPokemon.extraHit == 0) 0
         else calcDamage(attackingPokemon, defendingPokemon, move, false)
 
         do {

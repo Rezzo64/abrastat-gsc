@@ -32,7 +32,7 @@ abstract class Species protected constructor(speciesName: String) {
     var weight = 0.0
         private set
     @JvmField
-    val types = arrayOfNulls<Type>(2)
+    val types = arrayOf<Type>(Type.NONE, Type.NONE)
     private val genderRatio = 0.0
 
     init {
@@ -104,7 +104,6 @@ abstract class Species protected constructor(speciesName: String) {
             this.types[1] = Type.valueOf(type1)
         } catch (e: Exception) {
             println("no secondary typing for $species.")
-            this.types[1] = Type.NONE
         }
     }
 

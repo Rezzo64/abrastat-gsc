@@ -1,43 +1,33 @@
 package com.abrastat.rby
 
 import com.abrastat.general.Type
-import com.google.common.collect.HashBasedTable
-import com.google.common.collect.Table
 
 object RBYTypeEffectiveness {
-    // Below table is a 2D representation of a type effectiveness chart.
+    // Below table is a 2D array of a type effectiveness chart.
     // Row = attacking type
     // Column = defending type
     // Value = damage multiplier
-    private var TYPECHART: Table<Type, Type, Double>? = null
+    private var TYPECHART: Array<Array<Double>>
+
     init {
-        TYPECHART = HashBasedTable.create()
-        for (i in 0..18) {
-            for (j in 0..18) {
-                (TYPECHART as HashBasedTable<Type,  Type, Double>).put(
-                        Type.values()[i],
-                        Type.values()[j],  // deduce attacking type vs
-                        // defending type dmg factor
-                        calcEffectivenessHelper(
-                                Type.values()[i],
-                                Type.values()[j]
-                        )
+        val size = Type.values().size
+        TYPECHART = Array(size) { Array(size) { 1.0 } }
+        for (i in 0 until size) {
+            for (j in 0 until size) {
+                TYPECHART[i][j] = calcEffectivenessHelper(
+                    Type.values()[i],
+                    Type.values()[j]
                 )
             }
         }
     }
 
-    /*  This is the entry method to using the type effectiveness chart and outputs
-    *   the effectiveness given an attacking type and two defending types.
-    *   If a Pokémon has no secondary typing, set the secondary type to 'NONE'.
-    */
+    //  This is the entry method to using the type effectiveness chart and outputs
+    //   the effectiveness given an attacking type and two defending types.
     @JvmStatic
-    fun calcEffectiveness(attackingType: Type?, defendingType1: Type?, defendingType2: Type?): Double {
-
-        //TODO fix this warning, maybe even cast it as a 2D array for performance rather than unboxing constantly.
-        return (TYPECHART!![attackingType, defendingType1]!!
-                *
-                TYPECHART!![attackingType, defendingType2]!!)
+    fun calcEffectiveness(attackingType: Type, defendingType1: Type, defendingType2: Type): Double {
+        return (TYPECHART[attackingType.ordinal][defendingType1.ordinal]
+                * TYPECHART[attackingType.ordinal][defendingType2.ordinal])
     }
 
     private fun calcEffectivenessHelper(attackingType: Type, defendingType: Type): Double {
@@ -45,10 +35,8 @@ object RBYTypeEffectiveness {
         val result: Double = when (attackingType) {
             Type.NONE -> 1.0
             Type.BUG -> bugEffectiveness(defendingType)
-            Type.DARK -> 1.0
             Type.DRAGON -> dragonEffectiveness(defendingType)
             Type.ELECTRIC -> electricEffectiveness(defendingType)
-            Type.FAIRY -> 1.0
             Type.FIGHTING -> fightingEffectiveness(defendingType)
             Type.FIRE -> fireEffectiveness(defendingType)
             Type.FLYING -> flyingEffectiveness(defendingType)
@@ -60,8 +48,8 @@ object RBYTypeEffectiveness {
             Type.POISON -> poisonEffectiveness(defendingType)
             Type.PSYCHIC -> psychicEffectiveness(defendingType)
             Type.ROCK -> rockEffectiveness(defendingType)
-            Type.STEEL -> 1.0
             Type.WATER -> waterEffectiveness(defendingType)
+            else -> 1.0
         }
         return result
     }

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+import static java.lang.System.currentTimeMillis;
+
 public class RBYMatchupsMain {
     // this program takes in a text file path
     // the text file must be formatted:
@@ -39,6 +41,8 @@ public class RBYMatchupsMain {
     // Modify Run Configuration
     // and add Program arguments
     public static void main(String[] args) {
+        long startTime = currentTimeMillis();
+
         // TODO make this optional argument
         int simulationCount = 1;
 
@@ -127,6 +131,7 @@ public class RBYMatchupsMain {
         writeCsv(names, matchups);
 
         Messages.gameOver();
+        statistics(startTime);
         System.exit(0);
     }
 
@@ -273,6 +278,18 @@ public class RBYMatchupsMain {
         }
         header.append("\n");
         return header;
+    }
+
+    private static void statistics(@NotNull long startTime) {
+        long endTime = currentTimeMillis();
+        double deltaTime = (endTime - startTime) / 1000.0;
+        int hours = (int) (deltaTime / 3600);
+        int minutes = (int) (deltaTime % 3600) / 60;
+        double seconds = deltaTime % 60.0;
+        System.out.println(
+                "Program ran for " + hours + " hours, "
+                        + minutes + " minutes, " + seconds + " seconds."
+        );
     }
 }
 

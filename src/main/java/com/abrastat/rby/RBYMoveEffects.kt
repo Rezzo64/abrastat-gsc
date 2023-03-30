@@ -107,6 +107,7 @@ class RBYMoveEffects {
                         defendingPokemon.applyVolatileStatus(Status.HAZE)
                 }
 
+                // DIG, FLY
                 MoveEffect.HIDE -> {
 
                 }
@@ -172,9 +173,8 @@ class RBYMoveEffects {
                     applyDamage(defendingPokemon, damage)
                 }
 
-                MoveEffect.QUICKATTACK -> {
-
-                }
+                // implemented in RBYGame
+                MoveEffect.QUICKATTACK -> return
 
                 MoveEffect.RAGE -> {
 
