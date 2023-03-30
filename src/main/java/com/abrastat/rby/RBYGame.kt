@@ -6,7 +6,6 @@ import com.abrastat.general.Messages.Companion.announceTeam
 import com.abrastat.general.Messages.Companion.announceTurn
 import com.abrastat.general.Messages.Companion.displayCurrentHP
 import com.abrastat.general.Messages.Companion.logFainted
-import com.abrastat.general.Messages.Companion.statusChanged
 import java.util.concurrent.ThreadLocalRandom
 
 class RBYGame(player1: RBYPlayer,
@@ -15,52 +14,60 @@ class RBYGame(player1: RBYPlayer,
               p2Behaviour: PlayerBehaviour) : Game {
     var turnNumber = 0
         private set
-    private val pokemonPlayerOne: RBYPokemon?
-    private val pokemonPlayerTwo: RBYPokemon?
+    private val pokemonP1: RBYPokemon
+    private val pokemonP2: RBYPokemon
     var winner = 0 // 0 = draw, 1 = p1, 2 = p2
         private set
     private var lastMoveUsed: RBYMove? = null
     private var lastAttacker: RBYPokemon? = null
 
     init {
-        pokemonPlayerOne = player1.currentPokemon
-        player1.setCurrentBehaviour(p1Behaviour)
-        pokemonPlayerTwo = player2.currentPokemon
-        player2.setCurrentBehaviour(p2Behaviour)
-        announceTeam(player1)
-        announceTeam(player2)
+        pokemonP1 = setup(player1, p1Behaviour)
+        pokemonP2 = setup(player2, p2Behaviour)
 
-        // Messages.announceSwitch(player1, pokemonPlayerOne);
-        // Messages.announceSwitch(player2, pokemonPlayerTwo);
-        while (!someoneFainted()) {
+        // Messages.announceSwitch(player1, pokemonP1);
+        // Messages.announceSwitch(player2, pokemonP2);
+        while (!someoneFainted()) { // TODO player has no non-fainted pokemon remaining
             // test for infinite loops
             if (turnNumber > 1000) break
 
-            val movePlayerOne = player1.chooseMove(player2)
-            val movePlayerTwo = player2.chooseMove(player1)
-            initTurn(movePlayerOne, movePlayerTwo)
+            val moveP1 = player1.chooseMove(player2)
+            val moveP2 = player2.chooseMove(player1)
+            initTurn(moveP1, moveP2)
         }
     }
 
-    fun initTurn(movePlayerOne: RBYMove, movePlayerTwo: RBYMove) {
+    private fun setup(player: RBYPlayer, behaviour: PlayerBehaviour): RBYPokemon {
+        val pokemon = player.currentPokemon ?:
+                throw IllegalArgumentException(
+                        "${player.name} has no Pokemon"
+                )
+
+        player.setCurrentBehaviour(behaviour)
+        pokemon.turn = 0
+        announceTeam(player)
+        return pokemon
+    }
+
+    private fun initTurn(moveP1: RBYMove, moveP2: RBYMove) {
         turnNumber++
         announceTurn(turnNumber)
-        displayCurrentHP(pokemonPlayerOne!!)
-        displayCurrentHP(pokemonPlayerTwo!!)
+        displayCurrentHP(pokemonP1)
+        displayCurrentHP(pokemonP2)
 
-        reset(pokemonPlayerOne)
-        reset(pokemonPlayerTwo)
+        reset(pokemonP1)
+        reset(pokemonP2)
 
         // IF switch selected
         // IF pursuit also selected
 
         // IF speed priority !=0 move selected (Quick Attack, Protect, Roar)
-        if (playerOneIsFaster(movePlayerOne.effect, movePlayerTwo.effect)) { // true = player1, false = player2
-            turn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
-            turn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
+        if (pokemonP1IsFaster(moveP1.effect, moveP2.effect)) { // true = player1, false = player2
+            turn(pokemonP1, pokemonP2, moveP1)
+            turn(pokemonP2, pokemonP1, moveP2)
         } else {
-            turn(pokemonPlayerTwo, pokemonPlayerOne, movePlayerTwo)
-            turn(pokemonPlayerOne, pokemonPlayerTwo, movePlayerOne)
+            turn(pokemonP2, pokemonP1, moveP2)
+            turn(pokemonP1, pokemonP2, moveP1)
         }
     }
 
@@ -76,13 +83,13 @@ class RBYGame(player1: RBYPlayer,
         lastAttacker = poke1
     }
 
-    private fun playerOneIsFaster(me1: MoveEffect, me2: MoveEffect): Boolean {
+    private fun pokemonP1IsFaster(me1: MoveEffect, me2: MoveEffect): Boolean {
         val meq = MoveEffect.QUICKATTACK        // priority 1
         val mec = MoveEffect.COUNTER            // priority -1
                                                 // else priority 0
         return if ((me1 == meq && me2 == meq)   // both QUICK_ATTACK
                 || (me1 == mec && me2 == mec))  // both COUNTER
-            playerOneIsFasterUtil()
+            pokemonP1IsFasterUtil()
         else if (me1 == meq)
             true
         else if (me2 == meq)
@@ -92,72 +99,72 @@ class RBYGame(player1: RBYPlayer,
         else if (me2 == mec)
             true
         else
-            playerOneIsFasterUtil()
+            pokemonP1IsFasterUtil()
     }
 
-    private fun playerOneIsFasterUtil(): Boolean {
-        var speed1 = pokemonPlayerOne!!.modifiedStat(Stat.SPEED)
-        var speed2 = pokemonPlayerTwo!!.modifiedStat(Stat.SPEED)
+    private fun pokemonP1IsFasterUtil(): Boolean {
+        val speed1 = pokemonP1.modifiedStat(Stat.SPEED)
+        val speed2 = pokemonP2.modifiedStat(Stat.SPEED)
 
         return if (speed1 == speed2) ThreadLocalRandom.current().nextBoolean() // random player goes first
         else speed1 > speed2
     }
 
     private fun someoneFainted(): Boolean {
-        if (pokemonPlayerOne!!.currentHP == 0) {
-            pokemonPlayerOne.removeNonVolatileStatusDebuff()
-            pokemonPlayerOne.isFainted
-            logFainted(pokemonPlayerOne)
+        if (pokemonP1.currentHP == 0) {
+            pokemonP1.removeNonVolatileStatusDebuff()
+            pokemonP1.isFainted
+            logFainted(pokemonP1)
         }
-        if (pokemonPlayerTwo!!.currentHP == 0) {
-            pokemonPlayerTwo.removeNonVolatileStatusDebuff()
-            pokemonPlayerTwo.isFainted
-            logFainted(pokemonPlayerTwo)
+        if (pokemonP2.currentHP == 0) {
+            pokemonP2.removeNonVolatileStatusDebuff()
+            pokemonP2.isFainted
+            logFainted(pokemonP2)
         }
         setWinner()
-        return isPokemonFainted(pokemonPlayerOne, pokemonPlayerTwo)
+        return isPokemonFainted(pokemonP1, pokemonP2)
     }
 
-    val pokemonPlayerOneHP: Int
-        get() = pokemonPlayerOne!!.currentHP
-    val pokemonPlayerTwoHP: Int
-        get() = pokemonPlayerTwo!!.currentHP
-    val pokemonPlayerOnePP: IntArray
+    val pokemonP1HP: Int
+        get() = pokemonP1.currentHP
+    val pokemonP2HP: Int
+        get() = pokemonP2.currentHP
+    private val pokemonP1PP: IntArray
         get() = intArrayOf(
-                pokemonPlayerOne!!.moveOnePp,
-                pokemonPlayerOne.moveTwoPp,
-                pokemonPlayerOne.moveThreePp,
-                pokemonPlayerOne.moveFourPp)
-    val pokemonPlayerTwoPP: IntArray
+                pokemonP1.moveOnePp,
+                pokemonP1.moveTwoPp,
+                pokemonP1.moveThreePp,
+                pokemonP1.moveFourPp)
+    private val pokemonP2PP: IntArray
         get() = intArrayOf(
-                pokemonPlayerTwo!!.moveOnePp,
-                pokemonPlayerTwo.moveTwoPp,
-                pokemonPlayerTwo.moveThreePp,
-                pokemonPlayerTwo.moveFourPp)
-    val isStrugglePlayerOne: Boolean
-        get() = pokemonPlayerOne!!.moveOnePp <= 0 && pokemonPlayerOne.moveTwoPp <= 0 && pokemonPlayerOne.moveThreePp <= 0 && pokemonPlayerOne.moveFourPp <= 0
-    val isStrugglePlayerTwo: Boolean
-        get() = pokemonPlayerTwo!!.moveOnePp <= 0 && pokemonPlayerTwo.moveTwoPp <= 0 && pokemonPlayerTwo.moveThreePp <= 0 && pokemonPlayerTwo.moveFourPp <= 0
-    val isBoomedPlayerOne: Boolean
-        get() = if (lastAttacker == pokemonPlayerOne) {
+                pokemonP2.moveOnePp,
+                pokemonP2.moveTwoPp,
+                pokemonP2.moveThreePp,
+                pokemonP2.moveFourPp)
+    val isStruggleP1: Boolean
+        get() = pokemonP1PP[0] <= 0 && pokemonP1PP[1] <= 0 && pokemonP1PP[2] <= 0 && pokemonP1PP[3] <= 0
+    val isStruggleP2: Boolean
+        get() = pokemonP2PP[0] <= 0 && pokemonP2PP[1] <= 0 && pokemonP2PP[2] <= 0 && pokemonP2PP[3] <= 0
+    val isBoomedP1: Boolean
+        get() = if (lastAttacker == pokemonP1) {
             lastMoveUsed == RBYMove.EXPLOSION || lastMoveUsed == RBYMove.SELFDESTRUCT
         } else {
             false
         }
-    val isBoomedPlayerTwo: Boolean
-        get() = if (lastAttacker == pokemonPlayerTwo) {
+    val isBoomedP2: Boolean
+        get() = if (lastAttacker == pokemonP2) {
             lastMoveUsed == RBYMove.EXPLOSION || lastMoveUsed == RBYMove.SELFDESTRUCT
         } else {
             false
         }
 
     private fun setWinner() {
-        winner = if (pokemonPlayerOne!!.nonVolatileStatus === Status.FAINT && pokemonPlayerTwo!!.nonVolatileStatus === Status.FAINT) {
+        winner = if (pokemonP1.nonVolatileStatus === Status.FAINT && pokemonP2.nonVolatileStatus === Status.FAINT) {
             0
-        } else if (pokemonPlayerOne!!.nonVolatileStatus !== Status.FAINT && pokemonPlayerTwo!!.nonVolatileStatus !== Status.FAINT) {
+        } else if (pokemonP1.nonVolatileStatus !== Status.FAINT && pokemonP2.nonVolatileStatus !== Status.FAINT) {
             // test for infinite loop
             0
-        } else if (pokemonPlayerOne!!.nonVolatileStatus === Status.FAINT) {
+        } else if (pokemonP1.nonVolatileStatus === Status.FAINT) {
             2
         } else {
             1

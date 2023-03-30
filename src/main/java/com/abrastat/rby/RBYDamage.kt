@@ -1,22 +1,26 @@
 package com.abrastat.rby
 
+import com.abrastat.general.Messages
 import com.abrastat.general.Messages.Companion.logCriticalHit
 import com.abrastat.general.Messages.Companion.logTypeEffectiveness
 import com.abrastat.general.MoveEffect
 import com.abrastat.general.Stat
+import com.abrastat.general.Status
 import com.abrastat.rby.RBYTypeEffectiveness.calcEffectiveness
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
 
-enum class RBYDamageCalc {
-    INSTANCE;
+class RBYDamage {
     companion object {
         fun calcDamage(
                 attackingPokemon: RBYPokemon,
                 defendingPokemon: RBYPokemon,
-                attack: RBYMove): Int {
+                attack: RBYMove,
+                allowCrits: Boolean = true): Int {
             val speedStat: Int = attackingPokemon.baseSpeed
-            val crit: Int = critModifier(attack, speedStat)
+            val crit: Int = if (allowCrits)
+                critModifier(attack, speedStat)
+            else 1
 
             var damage: Int = calcDamageUtil(attackingPokemon, defendingPokemon, attack, crit)
 
@@ -44,6 +48,25 @@ enum class RBYDamageCalc {
             return damage
         }
 
+        fun calcAccuracy(attackingPokemon: RBYPokemon,
+                         defendingPokemon: RBYPokemon,
+                         moveAccuracy: Int): Int {
+            if (moveAccuracy == Int.MAX_VALUE) return moveAccuracy
+
+            // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/evade-and-accuracy
+            val accuracyMultiplier = attackingPokemon.multiplier(attackingPokemon.accMod)
+            val evasionMultiplier = defendingPokemon.multiplier(-defendingPokemon.evaMod)
+            return floor( floor(moveAccuracy.toDouble()
+                    * accuracyMultiplier) * evasionMultiplier).toInt()
+        }
+
+        fun applyDamage(pokemon: RBYPokemon, rawDamage: Int) {
+            val damage = rawDamage.coerceAtMost(pokemon.currentHP)
+            pokemon.applyDamage(damage)
+            pokemon.lastDamageTaken = damage
+            Messages.logDamageTaken(pokemon, damage)
+        }
+
         private fun calcDamageUtil(
                 attackingPokemon: RBYPokemon,
                 defendingPokemon: RBYPokemon,
@@ -53,11 +76,10 @@ enum class RBYDamageCalc {
             val basePower: Int = attack.basePower
 
             // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/damage-calculation
-            // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/stat-modifiers
             var attackStat: Int
             var defenseStat: Int
-            var modifiedAttack: Stat
-            var modifiedDefense: Stat
+            val modifiedAttack: Stat
+            val modifiedDefense: Stat
             if (attack.isPhysical) {
                 attackStat = attackingPokemon.statAtk
                 defenseStat = defendingPokemon.statDef
@@ -69,12 +91,20 @@ enum class RBYDamageCalc {
                 modifiedAttack = Stat.SPECIAL
                 modifiedDefense = Stat.SPECIAL
             }
-            if (crit == 1) {    // no crit
+
+            if (crit == 1) {        // no crit
                 attackStat = attackingPokemon.modifiedStat(modifiedAttack)
                 defenseStat = defendingPokemon.modifiedStat(modifiedDefense)
-            } else {            // crit
-                attackStat *= 2
-            }
+
+                // https://bulbapedia.bulbagarden.net/wiki/Reflect_(move)#Generation_I
+                // https://bulbapedia.bulbagarden.net/wiki/Light_Screen_(move)#Generation_I
+                if ((attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.REFLECT))
+                        || !attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.LIGHTSCREEN)){
+                    defenseStat *= 2
+                    defenseStat %= 1024
+                }
+            } else attackStat *= 2  // crit
+
             if (attackStat > 255 || defenseStat > 255) {
                 attackStat /= 4
                 defenseStat /= 4
@@ -84,9 +114,9 @@ enum class RBYDamageCalc {
                     defendingPokemon.types[0],
                     defendingPokemon.types[1])
             var damage = damageFormula(level, crit, basePower, attackStat, defenseStat, typeEffectiveness)
-            if (attackingPokemon.types.contains(attack.type)) { // type bonus
+
+            if (attackingPokemon.types.contains(attack.type))   // type bonus
                 damage = floor(damage * 1.5).toInt()
-            }
 
             if (typeEffectiveness != 1.0) {
                 // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
@@ -124,15 +154,6 @@ enum class RBYDamageCalc {
 
         private fun critRoll(): Int {
             return ThreadLocalRandom.current().nextInt(512)
-        }
-
-        private fun modify(modifier: Int, stat: Int): Int {
-            if (modifier == 0) return stat
-            val statModifier: Array<Double> = arrayOf(0.25, 0.28, 0.33,
-                    0.4, 0.5, 0.66, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0)
-            var modifiedStat = floor(statModifier[modifier + 6] * stat.toDouble()).toInt()
-            modifiedStat = modifiedStat.coerceIn(1, 999)
-            return modifiedStat
         }
 
         private fun damageRoll(): Int {

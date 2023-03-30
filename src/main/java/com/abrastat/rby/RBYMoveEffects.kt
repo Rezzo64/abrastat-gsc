@@ -2,18 +2,17 @@ package com.abrastat.rby
 
 import com.abrastat.general.*
 import com.abrastat.general.Messages.Companion.cantRestFullHp
-import com.abrastat.general.Messages.Companion.logDamageTaken
 import com.abrastat.general.Messages.Companion.logRest
+import com.abrastat.rby.RBYDamage.Companion.applyDamage
 import java.util.concurrent.ThreadLocalRandom
 
-enum class RBYMoveEffects {
-    INSTANCE;
+class RBYMoveEffects {
 
     companion object {
         fun secondaryEffect(
                 attackingPokemon: RBYPokemon,
                 defendingPokemon: RBYPokemon,
-                move: Move) {
+                move: RBYMove) {
             val effect = move.effect
 
             // none
@@ -28,14 +27,30 @@ enum class RBYMoveEffects {
             // chance
             val roll = ThreadLocalRandom.current().nextInt(256)
             if (roll < effect.chance())
-                chanceEffect(attackingPokemon, defendingPokemon, move)
+                chanceEffect(defendingPokemon, move)
+        }
+
+        fun missEffect(
+                attackingPokemon: RBYPokemon,
+                move: RBYMove) {
+            when (move.effect) {
+                MoveEffect.DOUBLEATTACK,
+                MoveEffect.MULTIHIT,
+                MoveEffect.TWINNEEDLE,
+                -> lastHit(attackingPokemon)
+
+                // HIGH_JUMP_KICK, JUMP_KICK
+                MoveEffect.HIGHJUMPKICK -> applyDamage(attackingPokemon, 1)
+
+                else -> return
+            }
         }
 
         private fun guaranteedEffect(
                 attackingPokemon: RBYPokemon,
                 defendingPokemon: RBYPokemon,
-                move: Move) {
-            when (val effect = move.effect) {
+                move: RBYMove) {
+            when (move.effect) {
                 // alphabetical
                 // ABSORB, LEECH_LIFE, MEGA_DRAIN
                 MoveEffect.ABSORB -> {
@@ -50,9 +65,7 @@ enum class RBYMoveEffects {
                 }
 
                 // CONFUSE_RAY, SUPERSONIC
-                MoveEffect.CONFUSION -> {
-                    applyStatus(defendingPokemon, Status.CONFUSION)
-                }
+                MoveEffect.CONFUSION -> applyStatus(defendingPokemon, Status.CONFUSION)
 
                 MoveEffect.CONVERSION -> {
 
@@ -62,40 +75,43 @@ enum class RBYMoveEffects {
                     // https://bulbapedia.bulbagarden.net/wiki/Counter_(move)#Generation_I
                 }
 
-                MoveEffect.CRITRATE -> return   // implemented in RBYDamageCalc
-
-                // rename?
-                MoveEffect.DIG,
-                MoveEffect.FLY,
-                -> {
-
-                }
+                // implemented in RBYDamage
+                MoveEffect.CRITRATE -> return
 
                 MoveEffect.DISABLE -> {
 
                 }
 
-                MoveEffect.DOUBLEATTACK -> {
-                    // https://bulbapedia.bulbagarden.net/wiki/Double_Kick_(move)#Generation_I
-                    // TODO substitute?
-                    val setDamage = defendingPokemon.lastDamageTaken
-                    guaranteedDamage(defendingPokemon, setDamage)
-                }
+                // BARRAGE, BONEMERANG, COMET_PUNCH, DOUBLE_KICK, DOUBLESLAP,
+                // FURY_ATTACK, FURY_SWIPES, PIN_MISSILE, SPIKE_CANNON
+                MoveEffect.DOUBLEATTACK,
+                MoveEffect.MULTIHIT,
+                -> lastHit(attackingPokemon)
 
-                MoveEffect.DRAGONRAGE -> {
-                    guaranteedDamage(defendingPokemon, 40)
-                }
+                MoveEffect.DRAGONRAGE -> applyDamage(defendingPokemon, 40)
 
                 MoveEffect.DREAMEATER -> {
 
                 }
 
                 MoveEffect.HAZE -> {
+                    val cannotAttack = (defendingPokemon.nonVolatileStatus == Status.FREEZE
+                            || defendingPokemon.nonVolatileStatus == Status.SLEEP)
+                    reset(attackingPokemon)
+                    reset(defendingPokemon)
+                    if (attackingPokemon.nonVolatileStatus == Status.TOXIC)
+                        attackingPokemon.applyNonVolatileStatus(Status.POISON)
+                    defendingPokemon.removeNonVolatileStatus()
+                    if (cannotAttack && (attackingPokemon.turn > defendingPokemon.turn))
+                        // defending pokemon removed sleep or freeze in same turn
+                        defendingPokemon.applyVolatileStatus(Status.HAZE)
+                }
+
+                MoveEffect.HIDE -> {
 
                 }
 
-                // HIGH_JUMP_KICK, JUMP_KICK
-                MoveEffect.HIGHJUMPKICK -> return   // implemented in RBYTurn
+                MoveEffect.HIGHJUMPKICK -> return
 
                 MoveEffect.HYPERBEAM -> {
 
@@ -105,9 +121,8 @@ enum class RBYMoveEffects {
 
                 }
 
-                MoveEffect.LIGHTSCREEN -> {
-
-                }
+                // implemented in RBYDamage
+                MoveEffect.LIGHTSCREEN -> applyStatus(attackingPokemon, Status.LIGHTSCREEN)
 
                 MoveEffect.METRONOME -> {
 
@@ -125,54 +140,36 @@ enum class RBYMoveEffects {
 
                 }
 
-                // BARRAGE, COMET_PUNCH, DOUBLESLAP, FURY_ATTACK, FURY_SWIPES, PIN_MISSILE, SPIKE_CANNON
-                MoveEffect.MULTIHIT -> {
-
-                }
-
                 // FISSURE, GUILLOTINE, HORN_DRILL
-                MoveEffect.ONEHITKO -> {
-                    guaranteedDamage(defendingPokemon, defendingPokemon.currentHP)
-                }
+                MoveEffect.ONEHITKO -> applyDamage(defendingPokemon, defendingPokemon.currentHP)
 
                 // FLASH, KINESIS, SAND_ATTACK, SMOKESCREEN
-                MoveEffect.OPP_ACCURACYDROP1 -> {
-                    defendingPokemon.dropStat(Stat.ACCURACY)
-                }
+                MoveEffect.OPP_ACCURACYDROP1 -> defendingPokemon.dropStat(Stat.ACCURACY)
 
                 // GROWL
-                MoveEffect.OPP_ATTACKDROP1 -> {
-                    defendingPokemon.dropStat(Stat.ATTACK)
-                }
+                MoveEffect.OPP_ATTACKDROP1 -> defendingPokemon.dropStat(Stat.ATTACK)
 
                 // LEER, TAIL_WHIP
-                MoveEffect.OPP_DEFENSEDROP1 -> {
-                    defendingPokemon.dropStat(Stat.DEFENSE)
-                }
+                MoveEffect.OPP_DEFENSEDROP1 -> defendingPokemon.dropStat(Stat.DEFENSE)
 
                 // SCREECH
-                MoveEffect.OPP_DEFENSEDROP2 -> {
-                    defendingPokemon.dropStatSharp(Stat.DEFENSE)
-                }
+                MoveEffect.OPP_DEFENSEDROP2 -> defendingPokemon.dropStatSharp(Stat.DEFENSE)
 
                 // STRING_SHOT
-                MoveEffect.OPP_SPEEDDROP1 -> {
-                    defendingPokemon.dropStat(Stat.SPEED)
-                }
+                MoveEffect.OPP_SPEEDDROP1 -> defendingPokemon.dropStat(Stat.SPEED)
 
                 // GLARE, STUN_SPORE, THUNDER_WAVE
-                MoveEffect.PRZ -> {
-                    applyStatus(defendingPokemon, Status.PARALYSIS)
-                }
+                MoveEffect.PRZ -> applyStatus(defendingPokemon, Status.PARALYSIS)
 
                 // POISON_GAS, POISON_POWDER
                 MoveEffect.PSN -> {
+                    if (defendingPokemon.types.contains(Type.POISON)) return
                     applyStatus(defendingPokemon, Status.POISON)
                 }
 
                 MoveEffect.PSYWAVE -> {
                     val damage = ThreadLocalRandom.current().nextInt(256)
-                    guaranteedDamage(defendingPokemon, damage)
+                    applyDamage(defendingPokemon, damage)
                 }
 
                 MoveEffect.QUICKATTACK -> {
@@ -201,14 +198,11 @@ enum class RBYMoveEffects {
                     if ((attackingPokemon.currentHP < attackingPokemon.statHP)
                             && ((attackingPokemon.statHP - attackingPokemon.currentHP) % 256 != 255)) {
                         attackingPokemon.applyHeal(attackingPokemon.statHP / 2)
-                    } else {
-                        cantRestFullHp(attackingPokemon)
-                    }
+                    } else cantRestFullHp(attackingPokemon)
                 }
 
-                MoveEffect.REFLECT -> {
-                    // https://bulbapedia.bulbagarden.net/wiki/Reflect_(move)#Generation_I
-                }
+                // implemented in RBYDamage
+                MoveEffect.REFLECT -> applyStatus(attackingPokemon, Status.REFLECT)
 
                 MoveEffect.REST -> {
                     if ((attackingPokemon.currentHP < attackingPokemon.statHP)
@@ -216,72 +210,50 @@ enum class RBYMoveEffects {
                         logRest(attackingPokemon)
                         attackingPokemon.applyHeal(attackingPokemon.statHP)
                         attackingPokemon.applyNonVolatileStatus(Status.SLEEP)
-                        attackingPokemon.setSleepCounter(2, 2)
-                    } else {
-                        cantRestFullHp(attackingPokemon)
-                    }
+                        attackingPokemon.setSleepCounter(1, 1)
+                    } else cantRestFullHp(attackingPokemon)
                 }
 
                 // NIGHT_SHADE, SEISMIC_TOSS
-                MoveEffect.SEISMICTOSS -> {
-                    guaranteedDamage(defendingPokemon, attackingPokemon.level)
-                }
+                MoveEffect.SEISMICTOSS -> applyDamage(defendingPokemon, attackingPokemon.level)
 
                 // EXPLOSION, SELF_DESTRUCT
                 MoveEffect.SELFDESTRUCT -> {
                     // TODO substitute
-                    guaranteedDamage(attackingPokemon, attackingPokemon.currentHP)
+                    applyDamage(attackingPokemon, attackingPokemon.currentHP)
                 }
 
                 // MEDITATE, SHARPEN
-                MoveEffect.SELF_ATTACKRAISE1 -> {
-                    attackingPokemon.raiseStat(Stat.ATTACK)
-                }
+                MoveEffect.SELF_ATTACKRAISE1 -> attackingPokemon.raiseStat(Stat.ATTACK)
 
                 // SWORDS_DANCE
-                MoveEffect.SELF_ATTACKRAISE2 -> {
-                    attackingPokemon.raiseStatSharp(Stat.ATTACK)
-                }
+                MoveEffect.SELF_ATTACKRAISE2 -> attackingPokemon.raiseStatSharp(Stat.ATTACK)
 
                 // DEFENSE_CURL, HARDEN, WITHDRAW
-                MoveEffect.SELF_DEFENSERAISE1 -> {
-                    attackingPokemon.raiseStat(Stat.DEFENSE)
-                }
+                MoveEffect.SELF_DEFENSERAISE1 -> attackingPokemon.raiseStat(Stat.DEFENSE)
 
                 // ACID_ARMOR, BARRIER
-                MoveEffect.SELF_DEFENSERAISE2 -> {
-                    attackingPokemon.raiseStatSharp(Stat.DEFENSE)
-                }
+                MoveEffect.SELF_DEFENSERAISE2 -> attackingPokemon.raiseStatSharp(Stat.DEFENSE)
 
                 // DOUBLE_TEAM, MINIMIZE
-                MoveEffect.SELF_EVASIONRAISE1 -> {
-                    attackingPokemon.raiseStat(Stat.EVASION)
-                }
+                MoveEffect.SELF_EVASIONRAISE1 -> attackingPokemon.raiseStat(Stat.EVASION)
 
                 // GROWTH
-                MoveEffect.SELF_SPECIALRAISE1 -> {
-                    attackingPokemon.raiseStat(Stat.SPECIAL)
-                }
+                MoveEffect.SELF_SPECIALRAISE1 -> attackingPokemon.raiseStat(Stat.SPECIAL)
 
                 // AMNESIA
-                MoveEffect.SELF_SPECIALRAISE2 -> {
-                    attackingPokemon.raiseStatSharp(Stat.SPECIAL)
-                }
+                MoveEffect.SELF_SPECIALRAISE2 -> attackingPokemon.raiseStatSharp(Stat.SPECIAL)
 
                 // AGILITY
-                MoveEffect.SELF_SPEEDRAISE2 -> {
-                    attackingPokemon.raiseStatSharp(Stat.SPEED)
-                }
+                MoveEffect.SELF_SPEEDRAISE2 -> attackingPokemon.raiseStatSharp(Stat.SPEED)
 
                 // HYPNOSIS, LOVELY_KISS, SING, SLEEP_POWDER, SPORE
                 MoveEffect.SLEEP -> {
                     applyStatus(defendingPokemon, Status.SLEEP)
-                    defendingPokemon.setSleepCounter(1, 7)
+                    defendingPokemon.setSleepCounter(0, 7)
                 }
 
-                MoveEffect.SONICBOOM -> {
-                    guaranteedDamage(defendingPokemon, 20)
-                }
+                MoveEffect.SONICBOOM -> applyDamage(defendingPokemon, 20)
 
                 MoveEffect.SUBSTITUTE -> {
                     // SUBSTITUTE
@@ -289,7 +261,7 @@ enum class RBYMoveEffects {
 
                 MoveEffect.SUPERFANG -> {
                     val damage = (defendingPokemon.currentHP / 2).coerceAtLeast(1)
-                    guaranteedDamage(defendingPokemon, damage)
+                    applyDamage(defendingPokemon, damage)
                 }
 
                 MoveEffect.SWIFT -> {
@@ -303,19 +275,18 @@ enum class RBYMoveEffects {
 
                 }
 
-                MoveEffect.TOXIC -> {
-                    applyStatus(defendingPokemon, Status.TOXIC)
-                }
+                MoveEffect.TOXIC -> applyStatus(defendingPokemon, Status.TOXIC)
 
                 MoveEffect.TRANSFORM -> {
                     // https://bulbapedia.bulbagarden.net/wiki/Transform_(move)#Generation_I
                 }
 
                 MoveEffect.TWINNEEDLE -> {
-                    val setDamage = defendingPokemon.lastDamageTaken
-                    guaranteedDamage(defendingPokemon, setDamage)
-                    val roll = ThreadLocalRandom.current().nextInt(256)
-                    if (roll < 51) applyStatus(defendingPokemon, Status.POISON)
+                    // https://pokemondb.net/move/twineedle
+                    if (lastHit(attackingPokemon)) {
+                        val roll = ThreadLocalRandom.current().nextInt(256)
+                        if (roll < 51) applyStatus(defendingPokemon, Status.POISON)
+                    }
                 }
 
                 // BIND, CLAMP, FIRE_SPIN, WRAP
@@ -326,20 +297,23 @@ enum class RBYMoveEffects {
                     // https://bulbapedia.bulbagarden.net/wiki/Bind_(move)#Generation_I
                 }
 
-                else -> unknown(effect)
+                else -> unknown(move.effect)
             }
         }
 
         private fun chanceEffect(
-                attackingPokemon: RBYPokemon,
                 defendingPokemon: RBYPokemon,
-                move: Move) {
-            when (val effect = move.effect) {
+                move: RBYMove) {
+            when (move.effect) {
                 // alphabetical
                 // EMBER, FIRE_PUNCH, FLAMETHROWER, FIRE_BLAST
                 MoveEffect.BRN10,
                 MoveEffect.BRN30,
-                -> applyStatus(defendingPokemon, Status.BURN)
+                -> {
+                    // https://bulbapedia.bulbagarden.net/wiki/Fire_(type)#Generation_I
+                    if (defendingPokemon.types.contains(Type.FIRE)) return
+                    applyStatus(defendingPokemon, Status.BURN)
+                }
 
                 // CONFUSION, PSYBEAM
                 MoveEffect.CONFUSION10 -> applyStatus(defendingPokemon, Status.CONFUSION)
@@ -350,7 +324,11 @@ enum class RBYMoveEffects {
                 -> applyStatus(defendingPokemon, Status.FLINCH) // TODO substitute
 
                 // BLIZZARD, ICE_BEAM, ICE_PUNCH
-                MoveEffect.FRZ10 -> applyStatus(defendingPokemon, Status.FREEZE)
+                MoveEffect.FRZ10 -> {
+                    // https://bulbapedia.bulbagarden.net/wiki/Ice_(type)#Generation_I
+                    if (defendingPokemon.types.contains(Type.ICE)) return
+                    applyStatus(defendingPokemon, Status.FREEZE)
+                }
 
                 // AURORA_BEAM
                 MoveEffect.OPP_ATTACKDROP1_10 -> defendingPokemon.dropStat(Stat.ATTACK)
@@ -367,35 +345,55 @@ enum class RBYMoveEffects {
                 // THUNDER, THUNDERBOLT, THUNDERPUNCH, THUNDERSHOCK, BODY_SLAM, LICK
                 MoveEffect.PRZ10,
                 MoveEffect.PRZ30,
-                -> applyStatus(defendingPokemon, Status.PARALYSIS)
+                -> {
+                    // https://www.smogon.com/forums/threads/normal-types-cannot-be-paralyzed-by-body-slam.3525371/
+                    // https://bulbapedia.bulbagarden.net/wiki/Electric_(type)#Generation_I
+                    if ((move == RBYMove.BODY_SLAM && defendingPokemon.types.contains(Type.NORMAL))
+                            || (move.type == Type.ELECTRIC && defendingPokemon.types.contains(Type.ELECTRIC)))
+                        return  // only non-damaging electric move that paralyzes is THUNDER_WAVE
+                    applyStatus(defendingPokemon, Status.PARALYSIS)
+                }
 
                 // POISON_STING, SLUDGE, SMOG
                 MoveEffect.PSN20,
                 MoveEffect.PSN30,
-                -> applyStatus(defendingPokemon, Status.POISON)
+                -> {
+                    if (defendingPokemon.types.contains(Type.POISON)) return
+                    applyStatus(defendingPokemon, Status.POISON)
+                }
 
-                else -> unknown(effect)
+                else -> unknown(move.effect)
             }
         }
 
-        fun guaranteedDamage(pokemon: RBYPokemon, setDamage: Int) {
-            var damage = setDamage.coerceAtMost(pokemon.currentHP)
-            pokemon.applyDamage(damage)
-            logDamageTaken(pokemon, damage)
-        }
-
-        private fun applyStatus(pokemon: RBYPokemon, status: Status) {
+        private fun applyStatus(pokemon: RBYPokemon, status: Status): Boolean {
             if (status.volatility == Status.Volatility.NONVOLATILE) {
-                if (pokemon.nonVolatileStatus == status) {
+                if (pokemon.nonVolatileStatus != Status.HEALTHY) {
                     Messages.statusFailed(pokemon, status)
-                    return
+                    return false
                 }
 
                 pokemon.applyNonVolatileStatus(status)
                 Messages.logNewStatus(pokemon, status)
-            } else {
-                pokemon.applyVolatileStatus(status)
-            }
+            } else pokemon.applyVolatileStatus(status)
+            return true
+        }
+
+        // damage implemented in RBYTurn
+        private fun lastHit(pokemon: RBYPokemon): Boolean {
+            // TODO if substitute.broken pokemon.extraHit = 0, true
+            return if (pokemon.extraHit > 0) {
+                pokemon.extraHit -= 1
+                true
+            } else false
+        }
+
+        private fun reset(pokemon: RBYPokemon) {
+            pokemon.resetMods()
+            pokemon.clearVolatileStatus()
+            pokemon.resetSleepCounter()
+            pokemon.initStatAtk(pokemon.originalAttack)
+            pokemon.initStatSpe(pokemon.originalSpeed)
         }
 
         private fun unknown(effect: MoveEffect) {

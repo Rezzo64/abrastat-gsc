@@ -4,8 +4,6 @@ import com.abrastat.general.*;
 import com.abrastat.rby.*;
 import org.jetbrains.annotations.NotNull;
 
-//import static com.abrastat.general.Item.*;
-
 public class RBYGameRunner {
     private RBYPlayer player1;
     private RBYPlayer player2;
@@ -84,12 +82,12 @@ public class RBYGameRunner {
             }
 
             this.aggregateTurnCount += game.getTurnNumber(); // sum all final turn counts for averaging later on
-            this.p1AggregateHP += game.getPokemonPlayerOneHP();
-            this.p2AggregateHP += game.getPokemonPlayerTwoHP();
-            this.p1StruggleCount += game.isStrugglePlayerOne() ? 1 : 0;
-            this.p2StruggleCount += game.isStrugglePlayerTwo() ? 1 : 0;
-            this.p1BoomCount += game.isBoomedPlayerOne() ? 1 : 0;
-            this.p2BoomCount += game.isBoomedPlayerTwo() ? 1 : 0;
+            this.p1AggregateHP += game.getPokemonP1HP();
+            this.p2AggregateHP += game.getPokemonP2HP();
+            this.p1StruggleCount += game.isStruggleP1() ? 1 : 0;
+            this.p2StruggleCount += game.isStruggleP2() ? 1 : 0;
+            this.p1BoomCount += game.isBoomedP1() ? 1 : 0;
+            this.p2BoomCount += game.isBoomedP2() ? 1 : 0;
 
             System.out.println(currentResults());
             System.out.println(resultsPercentages(i) + System.lineSeparator());

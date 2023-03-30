@@ -248,7 +248,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         statHP = hp
     }
 
-    protected fun initStatAtk(atk: Int) {
+    fun initStatAtk(atk: Int) {
         statAtk = atk
     }
 
@@ -268,7 +268,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         statSp = sp
     }
 
-    protected fun initStatSpe(spe: Int) {
+    fun initStatSpe(spe: Int) {
         statSpe = spe
     }
 
@@ -431,6 +431,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         spAMod = 0
         spDMod = 0
         speMod = 0
+        spMod  = 0
         accMod = 0
         evaMod = 0
     }

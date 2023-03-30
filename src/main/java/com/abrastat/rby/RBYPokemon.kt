@@ -2,13 +2,21 @@ package com.abrastat.rby
 
 import com.abrastat.general.*
 import com.abrastat.general.Messages.Companion.ppFailedToDeduct
-import com.abrastat.rby.RBYDamageCalc.Companion.calcDamageEstimate
+import com.abrastat.rby.RBYDamage.Companion.calcDamageEstimate
 import kotlin.math.floor
 import kotlin.math.sqrt
 
 class RBYPokemon private constructor(speciesName: String, builder: Builder) : Pokemon(speciesName, builder) {
     override val moves: Array<RBYMove> = Array(4) { RBYMove.EMPTY }
     override val movesPp = IntArray(4)
+
+    // HAZE
+    var originalAttack = 0
+    var originalSpeed = 0
+    var turn = 0
+
+    // DOUBLEATTACK, MULTIHIT, TWINEEDLE
+    var extraHit = -1
 
     init {
         initIVs()
@@ -115,11 +123,11 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
     }
 
     override fun initOtherStats() {
-        initStatAtk(initOtherStatsFormula(baseAttack, ivAtk, evAtk, level))
+        originalAttack = initOtherStatsFormula(baseAttack, ivAtk, evAtk, level)
+        initStatAtk(originalAttack)
         initStatDef(initOtherStatsFormula(baseDefense, ivDef, evDef, level))
-        initStatSpA(initOtherStatsFormula(baseSpecialAttack, ivSpA, evSpA, level))
-        initStatSpD(initOtherStatsFormula(baseSpecialDefense, ivSpD, evSpD, level))
-        initStatSpe(initOtherStatsFormula(baseSpeed, ivSpe, evSpe, level))
+        originalSpeed = initOtherStatsFormula(baseSpeed, ivSpe, evSpe, level)
+        initStatSpe(originalSpeed)
         initStatSp(initOtherStatsFormula(baseSpecial, ivSp, evSp, level))
     }
 
@@ -211,7 +219,6 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
         resetToxicCounter()
         resetConfuseCounter()
         resetDisableCounter()
-        resetPerishCounter()
     }
 
     override fun removeNonVolatileStatusDebuff() {
@@ -259,27 +266,12 @@ class RBYPokemon private constructor(speciesName: String, builder: Builder) : Po
     }
 
     fun multiplier(m: Int): Double {
+        // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/stat-modifiers
         val statModifier: Array<Double> = arrayOf(0.25, 0.28, 0.33,
                 0.4, 0.5, 0.66, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0)
         return statModifier[m + 6]
     }
 
-//    override var ivHP: Int
-//        get() = super.ivHP
-//        // these methods are for gen 3+
-//        public set(ivHP) {
-//            throw UnsupportedOperationException("Trying to manually set HP DVs on a GSC Pokemon.")
-//        }
-//    override var ivSpA: Int
-//        get() = super.ivSpA
-//        public set(ivSpA) {
-//            throw UnsupportedOperationException("Trying to manually set Special Attack DV (only) on a GSC Pokemon.")
-//        }
-//    override var ivSpD: Int
-//        get() = super.ivSpD
-//        public set(ivSpD) {
-//            throw UnsupportedOperationException("Trying to manually set Special Defense DV (only) on a GSC Pokemon.")
-//        }
     override val hiddenPowerType: Type = Type.NONE
 
     companion object {

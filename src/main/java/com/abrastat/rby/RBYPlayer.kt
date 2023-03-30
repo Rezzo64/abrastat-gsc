@@ -169,46 +169,39 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
 
     fun getStrongestAttack(opponent: RBYPokemon?): RBYMove {
         var strongestAttack = RBYMove.EMPTY
-        var currentDamage = -1
-        var strongestDamage = 0
-        var emptyMove = 0
+        var strongestDamage = -1
 
         // cycle through moveslots
         for (i in 0..3) {
-            if (currentPokemon!!.getMovePp(i) < 1) {
-                emptyMove++
+            if (currentPokemon!!.getMovePp(i) < 1) continue
+
+            val currentMove = currentPokemon!!.moves[i]
+
+            if (currentMove.effect === MoveEffect.SELFDESTRUCT) {
+                // non-suicidal move can still be selected
+                if (strongestAttack == RBYMove.EMPTY)
+                    strongestAttack = currentMove
                 continue
             }
-            if (currentPokemon!!.moves[i].effect === MoveEffect.SELFDESTRUCT) {
-                if (strongestAttack == RBYMove.EMPTY) {
-                    // keep strongestDamage as 0 so that a non-suicidal move can still be selected
-                    strongestAttack = currentPokemon!!.moves[i]
-                }
-                continue
-            }
-            if (currentPokemon!!.moves[i].isAttack) {
-                currentDamage = currentPokemon!!.getAttackDamageMaxRoll(
-                        opponent,
-                        currentPokemon!!.moves[i]
-                )
+
+            if (currentMove.isAttack) {
+                val currentDamage = currentPokemon!!
+                        .getAttackDamageMaxRoll(opponent, currentMove)
+
                 if (currentDamage > strongestDamage) {
                     strongestDamage = currentDamage
+                    strongestAttack = currentMove
+                } else if (currentDamage >= opponent!!.currentHP
+                        && currentMove.accuracy > strongestAttack.accuracy) {
+                    // check if there's a move that has better accuracy and can KO in this range
+                    // TODO this only checks max damage roll. Implement something to assess individual damage rolls
+                    strongestAttack = currentMove
                 }
-
-                // check if there's a move that has better accuracy and can KO in this range
-                // TODO this only checks max damage roll. Implement something to assess individual damage rolls
-                if (currentDamage == opponent!!.currentHP
-                        &&
-                        currentPokemon!!.moves[i].accuracy > strongestAttack.accuracy) {
-                    strongestAttack = currentPokemon!!.moves[i]
-                }
-            } else {
-                strongestAttack = currentPokemon!!.moves[i]
-            }
+            } else strongestAttack = currentMove
         }
 
-        // if no strongest move,
-        // use any move with pp
+        // if no strongest move, use any move with pp
+        // in case of bug, might be dead code
         if (strongestAttack == RBYMove.EMPTY) {
             for (i in 0..3) {
                 if (currentPokemon!!.getMovePp(i) > 0) {
@@ -217,7 +210,8 @@ class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
                 }
             }
         }
-        return if (emptyMove == 4) RBYMove.STRUGGLE else strongestAttack // only and always struggle when all moves are out of pp
+        // only and always struggle when all moves are out of pp
+        return if (strongestAttack == RBYMove.EMPTY) RBYMove.STRUGGLE else strongestAttack
     }
 
     private fun chooseRecoveryMove(): RBYMove {

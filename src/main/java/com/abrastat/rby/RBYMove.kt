@@ -43,7 +43,7 @@ enum class RBYMove
     CUT(Type.NORMAL, 30, 242, 50),
 
     DEFENSE_CURL(Type.NORMAL, 40, MoveEffect.SELF_DEFENSERAISE1),
-    DIG(Type.GROUND, 10, 255, 100, MoveEffect.DIG),
+    DIG(Type.GROUND, 10, 255, 100, MoveEffect.HIDE),
     DISABLE(Type.NORMAL, 20, 140, MoveEffect.DISABLE),
     DIZZY_PUNCH(Type.NORMAL, 10, 255, 70),
     DOUBLE_KICK(Type.FIGHTING, 30, 255, 30, MoveEffect.DOUBLEATTACK),
@@ -57,7 +57,7 @@ enum class RBYMove
     EARTHQUAKE(Type.GROUND, 10, 255, 100),
     EGG_BOMB(Type.NORMAL, 10, 191, 100),
     EMBER(Type.FIRE, 25, 255, 40, MoveEffect.BRN10),
-    EMPTY(Type.NONE, 0, MoveEffect.NONE),
+    EMPTY(Type.NONE, 0, 0, MoveEffect.NONE),
     EXPLOSION(Type.NORMAL, 5, 255, 340, MoveEffect.SELFDESTRUCT),   // half def == double power
 
     FIRE_BLAST(Type.FIRE, 5, 216, 120, MoveEffect.BRN30),
@@ -66,7 +66,7 @@ enum class RBYMove
     FISSURE(Type.GROUND, 5, 76, MoveEffect.ONEHITKO),
     FLAMETHROWER(Type.FIRE, 15, 255, 95, MoveEffect.BRN10),
     FLASH(Type.NORMAL, 20, 178, MoveEffect.OPP_ACCURACYDROP1),
-    FLY(Type.FLYING, 15, 242, 70, MoveEffect.FLY),
+    FLY(Type.FLYING, 15, 242, 70, MoveEffect.HIDE),
     FOCUS_ENERGY(Type.NORMAL, 30, MoveEffect.FOCUSENERGY),
     FURY_ATTACK(Type.NORMAL, 20, 216, 15, MoveEffect.MULTIHIT),
     FURY_SWIPES(Type.NORMAL, 15, 204, 10, MoveEffect.MULTIHIT),
@@ -145,7 +145,7 @@ enum class RBYMove
     SCRATCH(Type.NORMAL, 35, 255, 40),
     SCREECH(Type.NORMAL, 10, 216, MoveEffect.OPP_DEFENSEDROP2),
     SEISMIC_TOSS(Type.NONE, 20, 255, MoveEffect.SEISMICTOSS),
-    SELFDESTRUCT(Type.NORMAL, 5, 255, 260, MoveEffect.SELFDESTRUCT),
+    SELFDESTRUCT(Type.NORMAL, 5, 255, 260, MoveEffect.SELFDESTRUCT),    // half def == double power
     SHARPEN(Type.NORMAL, 30, MoveEffect.SELF_ATTACKRAISE1),
     SING(Type.NORMAL, 15, 140, MoveEffect.SLEEP),
     SKULLBASH(Type.NORMAL, 15, 255, 100, MoveEffect.RAZORWIND),
