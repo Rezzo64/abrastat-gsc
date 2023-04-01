@@ -95,10 +95,6 @@ enum class GSCDamageCalc {
                 damage = floor(damage * 1.5).toInt()
             }
             if (typeEffectiveness != 1.0) {
-
-                // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
-                // dirty fix and not optimised, come back and change if performance needs it
-                typeEffectiveness *= 10.0
                 logTypeEffectiveness(typeEffectiveness.toInt())
             }
             damage *= damageRoll()
@@ -142,10 +138,6 @@ enum class GSCDamageCalc {
                 damage = floor(damage * 1.5).toInt()
             }
             if (typeEffectiveness != 1.0) {
-
-                // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
-                // dirty fix and not optimised, come back and change if performance needs it
-                typeEffectiveness *= 10.0
                 logTypeEffectiveness(typeEffectiveness.toInt())
             }
             damage = damage.coerceAtMost(defendingPokemon.currentHP)
@@ -181,10 +173,6 @@ enum class GSCDamageCalc {
                 damage = floor(damage * 1.5).toInt()
             }
             if (typeEffectiveness != 1.0) {
-
-                // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
-                // dirty fix and not optimised, come back and change if performance needs it
-                typeEffectiveness *= 10.0
                 logTypeEffectiveness(typeEffectiveness.toInt())
             }
             damage *= damageRoll()

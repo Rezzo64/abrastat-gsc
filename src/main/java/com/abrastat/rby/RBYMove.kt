@@ -12,6 +12,7 @@ enum class RBYMove
                  override val effect: MoveEffect,
                  override var isAttack: Boolean)
     : Move {
+    // this enum lists all the existing moves in rby
     // http://www.psypokes.com/rby/attacks.php
     ABSORB(Type.GRASS, 20, 255, 20, MoveEffect.ABSORB),
     ACID(Type.POISON, 30, 255, 40, MoveEffect.OPP_DEFENSEDROP1_10),
@@ -57,7 +58,7 @@ enum class RBYMove
     EARTHQUAKE(Type.GROUND, 10, 255, 100),
     EGG_BOMB(Type.NORMAL, 10, 191, 100),
     EMBER(Type.FIRE, 25, 255, 40, MoveEffect.BRN10),
-    EMPTY(Type.NONE, 0, 0, MoveEffect.NONE),
+    EMPTY(Type.NONE, 0, 0, Int.MIN_VALUE, MoveEffect.NONE),
     EXPLOSION(Type.NORMAL, 5, 255, 340, MoveEffect.SELFDESTRUCT),   // half def == double power
 
     FIRE_BLAST(Type.FIRE, 5, 216, 120, MoveEffect.BRN30),
@@ -201,68 +202,46 @@ enum class RBYMove
     WRAP(Type.NORMAL, 20, 229, 15, MoveEffect.WRAP)
     ;
 
-//            private val type: Type
-//            private val maxPp: Int
-//            private val accuracy: Int
-//            private val basePower: Int = 0
-//            private val moveEffect: MoveEffect = MoveEffect.NONE
-//            override var isAttack: Boolean = true
-        // Attack constructor
-        constructor(type: Type, pp: Int, accuracy: Int, basePower: Int, moveEffect: MoveEffect) : this(type, pp, accuracy, basePower, moveEffect, true)
+    // attack with secondary effect
+    constructor(type: Type, pp: Int, accuracy: Int, basePower: Int, moveEffect: MoveEffect):
+            this(type, pp, accuracy, basePower, moveEffect, true)
 
-        // Attack constructor for moves with no secondary effects
-        constructor(type: Type, pp: Int, accuracy: Int, basePower: Int) : this(type, pp, accuracy, basePower, MoveEffect.NONE, true)
+    // attack
+    constructor(type: Type, pp: Int, accuracy: Int, basePower: Int):
+            this(type, pp, accuracy, basePower, MoveEffect.NONE, true)
 
-        // Status constructor for moves that DO check accuracy
-        constructor(type: Type, pp: Int, accuracy: Int, moveEffect: MoveEffect) : this(type, pp, accuracy, 0, moveEffect, false)
+    // move with acc check
+    constructor(type: Type, pp: Int, accuracy: Int, moveEffect: MoveEffect):
+            this(type, pp, accuracy, 0, moveEffect, false)
 
-        // Status constructor for moves that DON'T check accuracy
-        constructor(type: Type, pp: Int, moveEffect: MoveEffect) : this(type, pp, Int.MAX_VALUE, 0, moveEffect, false)
+    // move with no acc check
+    constructor(type: Type, pp: Int, moveEffect: MoveEffect):
+            this(type, pp, Int.MAX_VALUE, 0, moveEffect, false)
 
-        // override val moveName: String = name
+    val isPhysical: Boolean
+        get() = isPhysical(type)
 
-//        override val type: Type = type
+    override fun toString(): String {
+        return super.toString().replace("_", " ")
+    }
 
-//        override fun maxPp(): Int {
-//            return maxPp()
-//        }
+    companion object {
+        fun isPhysical(type: Type): Boolean {
+            return when (type) {
+                Type.BUG,
+                Type.FIGHTING,
+                Type.FLYING,
+                Type.GHOST,
+                Type.GROUND,
+                Type.NONE,
+                Type.NORMAL,
+                Type.POISON,
+                Type.ROCK,
+                Type.STEEL,
+                -> true
 
-//        override fun accuracy(): Int {
-//            return accuracy
-//        }
-
-//        override fun basePower(): Int {
-//            return basePower
-//        }
-
-//        override fun effect(): MoveEffect {
-//            return moveEffect
-//        }
-
-        val isPhysical: Boolean
-            get() = isPhysical(type)
-
-        override fun toString(): String {
-            return super.toString().replace("_", " ")
-        }
-
-        companion object {
-            fun isPhysical(type: Type): Boolean {
-                return when (type) {
-                    Type.BUG,
-                    Type.FIGHTING,
-                    Type.FLYING,
-                    Type.GHOST,
-                    Type.GROUND,
-                    Type.NONE,
-                    Type.NORMAL,
-                    Type.POISON,
-                    Type.ROCK,
-                    Type.STEEL,
-                    -> true
-
-                    else -> false
-                }
+                else -> false
             }
         }
+    }
 }

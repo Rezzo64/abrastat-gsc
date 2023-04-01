@@ -2,154 +2,124 @@ package com.abrastat.runners;
 
 import com.abrastat.general.*;
 import com.abrastat.rby.*;
-import org.jetbrains.annotations.NotNull;
 
 public class RBYGameRunner {
-    private RBYPlayer player1;
-    private RBYPlayer player2;
-    private GameResult gameResult;
+    // this program takes in two teams of pokemon
+    // and the number of simulations to record
+    // the number of wins, losses, and draws
+    private final RBYPlayer player1;
+    private final RBYPlayer player2;
 
-    private int p1WinnerCount = 0, p2WinnerCount = 0, drawCount = 0, aggregateTurnCount = 0,
-            p1AggregateHP, p2AggregateHP, p1StruggleCount, p2StruggleCount, p1BoomCount, p2BoomCount;
-    private int[] p1AggregatePPs, p2AggregatePPs;
-    private int simulationCount = 1000;
+    private int p1WinnerCount = 0,
+            p2WinnerCount = 0,
+            drawCount = 0;
 
-    public RBYGameRunner(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)  {
-        gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
+    public RBYGameRunner(RBYPokemon[] p1Pokemons,
+                         RBYPokemon[] p2Pokemons,
+                         int simulationCount) {
+        player1 = setup("Ash Ketchum", p1Pokemons);
+        player2 = setup("Gary Oak", p2Pokemons);
+
+        // TODO choose behavior
+        //  let AI choose behavior
+
+        simulate(simulationCount, PlayerBehaviour.JUST_ATTACK, PlayerBehaviour.JUST_ATTACK);
     }
 
-    public RBYGameRunner(Pokemon pokemonPlayerOne,
-                                    Pokemon pokemonPlayerTwo,
-                                    int simulationCount) {
-        this.simulationCount = simulationCount;
-        gameRunnerHelper(pokemonPlayerOne, pokemonPlayerTwo);
-//        for (PlayerBehaviour p1Behaviours : player1.getActiveBehaviours()) {
-//            for (PlayerBehaviour p2Behaviours : player2.getActiveBehaviours()) {
-//                this.simulate(simulationCount, p1Behaviours, p2Behaviours);
-//            }
-//        }
-        this.simulate(simulationCount, PlayerBehaviour.JUST_ATTACK, PlayerBehaviour.JUST_ATTACK);
-    }
+    private RBYPlayer setup(String name, RBYPokemon[] pokemons) {
+        if (pokemons.length == 0) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Player must have at least one pokemon"
+            );
+        }
+        if (pokemons.length > 6) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Player can only have up to six pokemon"
+            );
+        }
 
-    public RBYGameRunner(int simulationCount) {
-        this.simulationCount = simulationCount;
-        this.player1.setName("Youngster Joey");
-        this.player2.setName("Bug Catcher Don");
-
-        player1.addPokemon(new RBYPokemon.Builder("snorlax")
-                .moves(RBYMove.BODY_SLAM)
-                .build());
-        player2.addPokemon(new RBYPokemon.Builder("zapdos")
-                .moves(RBYMove.THUNDERBOLT)
-                .build());
-
-        this.simulate(simulationCount, PlayerBehaviour.JUST_ATTACK, PlayerBehaviour.JUST_ATTACK);
-    } // RBYGameRunner
-
-    private void gameRunnerHelper(Pokemon pokemonPlayerOne, Pokemon pokemonPlayerTwo)   {
-        player1 = new RBYPlayer("Youngster Joey", pokemonPlayerOne);
-        player2 = new RBYPlayer("Bug Catcher Don", pokemonPlayerTwo);
-        this.player1.addPokemon(pokemonPlayerOne);
-        this.player2.addPokemon(pokemonPlayerTwo);
-    }
-
-    private void refreshTeams() {
-        player1.getCurrentPokemon().resetStatHp();
-        player1.getCurrentPokemon().resetAllPp();
-        player1.getCurrentPokemon().removeNonVolatileStatus();
-        player2.getCurrentPokemon().resetStatHp();
-        player2.getCurrentPokemon().resetAllPp();
-        player2.getCurrentPokemon().removeNonVolatileStatus();
+        RBYPokemon pokemon1 = pokemons[0];
+        RBYPlayer player = new RBYPlayer(name, pokemon1);
+        for (int i = 1; i < pokemons.length; i++)
+            player.addPokemon(pokemons[i]);
+        return player;
     }
 
     private void simulate(int simulationCount,
                           PlayerBehaviour p1Behaviours,
                           PlayerBehaviour p2Behaviours) {
-
+        RBYGame game = new RBYGame(player1, p1Behaviours, player2, p2Behaviours);
         for (int i = 0; i < simulationCount; i++) {
-            RBYGame game = new RBYGame(player1, p1Behaviours, player2, p2Behaviours);
+            game.main(player1, player2);
 
+            // record results
             switch (game.getWinner()) {
-                case 0:
-                    this.nobodyWins();
-                    break;
-                case 1:
-                    playerOneWins();
-                    break;
-                case 2:
-                    playerTwoWins();
-                    break;
+                case 0: nobodyWins();   break;
+                case 1: p1Wins();       break;
+                case 2: p2Wins();       break;
             }
+            displayResults(i);
 
-            this.aggregateTurnCount += game.getTurnNumber(); // sum all final turn counts for averaging later on
-            this.p1AggregateHP += game.getPokemonP1HP();
-            this.p2AggregateHP += game.getPokemonP2HP();
-            this.p1StruggleCount += game.isStruggleP1() ? 1 : 0;
-            this.p2StruggleCount += game.isStruggleP2() ? 1 : 0;
-            this.p1BoomCount += game.isBoomedP1() ? 1 : 0;
-            this.p2BoomCount += game.isBoomedP2() ? 1 : 0;
-
-            System.out.println(currentResults());
-            System.out.println(resultsPercentages(i) + System.lineSeparator());
+            // return to state 0
             refreshTeams();
         }
     } // simulate
 
-    private @NotNull String resultsPercentages(int simCount) {
-        return "Player 1: " + ((displayP1Wins() * 100f) / (simCount + 1))
-                + "%, Player 2: " + ((displayP2Wins() * 100f) / (simCount + 1))
-                + "%, Draws: " + ((displayDraws() * 100f / (simCount + 1))
-                + "%");
+    private void p1Wins()  {
+        p1WinnerCount++;
     }
 
-    public void incrementTurnCount() {
-        this.aggregateTurnCount++;
+    private void p2Wins() {
+        p2WinnerCount++;
     }
 
-    public void playerOneWins()  {
-        this.p1WinnerCount++;
-    }
-
-    public void playerTwoWins() {
-        this.p2WinnerCount++;
-    }
-
-    public void nobodyWins()    {
+    private void nobodyWins() {
         drawCount++;
     }
 
-    public int displayP1Wins()   {
+    private void displayResults(int simulationCount) {
+        String currentResults = "Player 1: " + displayP1Wins()
+                + ", Player 2: " + displayP2Wins()
+                + ", Draws: " + displayDraws();
+        String resultsPercentage =
+                "Player 1: " + (displayP1Wins() * 100f) / (simulationCount + 1)
+                + "%, Player 2: " + (displayP2Wins() * 100f) / (simulationCount + 1)
+                + "%, Draws: " + (displayDraws() * 100f) / (simulationCount + 1) + "%";
+        System.out.println(currentResults);
+        System.out.println(resultsPercentage
+                + System.lineSeparator());
+    }
+
+    public int displayP1Wins() {
         return p1WinnerCount;
     }
 
-    public int displayP2Wins()  {
+    public int displayP2Wins() {
         return p2WinnerCount;
     }
 
-    public int displayDraws()   {
+    public int displayDraws() {
         return drawCount;
     }
 
-    public @NotNull String currentResults() {
-        return "Player 1: " + displayP1Wins() + ", Player 2: " + displayP2Wins() + ", Draws: " + displayDraws();
+    private void refreshTeams() {
+        refreshPokemon(player1);
+        refreshPokemon(player2);
     }
 
-    public GameResult getResult() {
-        return new GameResult(
-                player1.getCurrentPokemon(),
-                player2.getCurrentPokemon(),
-                p1WinnerCount,
-                p2WinnerCount,
-                drawCount,
-                (aggregateTurnCount / simulationCount),
-                p1AggregateHP,
-                p1AggregatePPs,
-                p2AggregateHP,
-                p2AggregatePPs,
-                p1StruggleCount,
-                p2StruggleCount,
-                p1BoomCount,
-                p2BoomCount
-        );
-    } // GameResult
+    private void refreshPokemon(RBYPlayer player) {
+        for (int i = 0; i < 6; i++) {
+            RBYPokemon pokemon = (RBYPokemon) player.getPokemon(i);
+            if (pokemon != null) {
+                pokemon.clearVolatileStatus();
+                pokemon.removeNonVolatileStatus();
+                pokemon.resetAllCounters();
+                pokemon.resetAllPp();
+                pokemon.resetMods();
+                pokemon.resetStat(Stat.ATTACK);
+                pokemon.resetStat(Stat.SPEED);
+                pokemon.resetStatHp();
+            }
+        }
+    }
 } // RBYGameRunner

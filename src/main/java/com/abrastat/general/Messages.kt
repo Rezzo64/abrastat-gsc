@@ -17,14 +17,15 @@ enum class Messages {
         }
 
         private fun logIssue(pokemon: Pokemon, move: Move) {
-            // TODO write this to a file or something
+            // TODO write this to a file
             // messageBuffer.write();
         }
 
         @JvmStatic
         fun announceTeam(player: Player) {
             val s = StringBuilder(player.name + ": " + System.lineSeparator())
-            for (pokemon in player.currentTeam) {
+            for (i in 0 until 6) {
+                val pokemon = player.getPokemon(i)
                 if (pokemon != null) {
                     s.append(pokemon.species + " ")
                 } else {
@@ -74,26 +75,26 @@ enum class Messages {
 
         @JvmStatic
         fun statusChanged(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.SLEEP -> messageBuffer = pokemon.species + " woke up!"
-                Status.FREEZE -> messageBuffer = pokemon.species + " thawed out!"
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = pokemon.species + " snapped out of its confusion!"
-                else -> messageBuffer = pokemon.species + "is no longer affected by " + status + "!"
+            messageBuffer = when (status) {
+                Status.SLEEP -> pokemon.species + " woke up!"
+                Status.FREEZE -> pokemon.species + " thawed out!"
+                Status.CONFUSION, Status.FATIGUE -> pokemon.species + " snapped out of its confusion!"
+                else -> pokemon.species + "is no longer affected by " + status + "!"
             }
             handleMessage()
         }
 
         fun logEffect(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.BURN -> messageBuffer = (pokemon.species + " is hurt by its burn! ("
+            messageBuffer = when (status) {
+                Status.BURN -> (pokemon.species + " is hurt by its burn! ("
                         + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
 
-                Status.POISON, Status.TOXIC -> messageBuffer = (pokemon.species + " is hurt by poison! ("
+                Status.POISON, Status.TOXIC -> (pokemon.species + " is hurt by poison! ("
                         + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
 
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = pokemon.species + " is confused!"
-                Status.ATTRACT -> messageBuffer = pokemon.species + " is in love with its opponent!"
-                else -> messageBuffer = pokemon.species + " is affected by " + status + "!"
+                Status.CONFUSION, Status.FATIGUE -> pokemon.species + " is confused!"
+                Status.ATTRACT -> pokemon.species + " is in love with its opponent!"
+                else -> pokemon.species + " is affected by " + status + "!"
             }
             handleMessage()
         }
@@ -123,12 +124,12 @@ enum class Messages {
 
         @JvmStatic
         fun logTypeEffectiveness(typeEffectiveness: Int) {
-            if (typeEffectiveness == 0) {
-                messageBuffer = "It didn't affect the opponent!"
-            } else if (typeEffectiveness < 10) {
-                messageBuffer = "It's not very effective..."
-            } else if (typeEffectiveness > 10) {
-                messageBuffer = "It's super effective!"
+            messageBuffer = if (typeEffectiveness == 0) {
+                "It didn't affect the opponent!"
+            } else if (typeEffectiveness < 1) {
+                "It's not very effective..."
+            } else if (typeEffectiveness > 1) {
+                "It's super effective!"
             } else {
                 return
             }
@@ -205,7 +206,7 @@ enum class Messages {
 
         @JvmStatic
         fun logNoMoveBehaviourFound(pokemon: Pokemon, move: Move) {
-            messageBuffer = pokemon.toString() + "'s move " + move + "has no defined behaviour, this move will not be used in battle."
+            messageBuffer = "$pokemon's move $move has no defined behaviour."
             handleMessage()
         }
 

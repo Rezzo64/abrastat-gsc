@@ -52,12 +52,10 @@ public class RBYMatchupsMain {
         if ((args == null) || (args.length == 0)) {
             pokemonPath = "./src/main/resources/rby/matchup/pokemon.txt";
 //            pokemonPath = "./src/main/resources/rby/matchup/pokemon2.txt";   // custom matchups
-        } else {
-            pokemonPath = args[0];
-        }
-        try {
-            pokemonList = scan(pokemonPath);
-        } catch (Exception e) {
+        } else pokemonPath = args[0];
+
+        try { pokemonList = scan(pokemonPath); }
+        catch (Exception e) {
             // make sure argument is path to readable file
             throw new IllegalArgumentException(
                     "Argument must be a path to a text file"
@@ -111,7 +109,10 @@ public class RBYMatchupsMain {
 
         for (int i = 0; i < numPokemon - 1; i++) {
             for (int j = i + 1; j < numPokemon; j++) {
-                RBYGameRunner runner = new RBYGameRunner(pokemons[i], pokemons[j], simulationCount);
+                RBYGameRunner runner = new RBYGameRunner(
+                        new RBYPokemon[]{pokemons[i]},
+                        new RBYPokemon[]{pokemons[j]},
+                        simulationCount);
 
                 // record results
                 matchups[i][j][0] = runner.displayP1Wins();
@@ -164,9 +165,8 @@ public class RBYMatchupsMain {
 
         RBYMove[] m = new RBYMove[moves.length];
         for (int i = 0; i < moves.length; i++) {
-            try {
-                m[i] = RBYMove.valueOf(moves[i]);
-            } catch (IllegalArgumentException e) {
+            try { m[i] = RBYMove.valueOf(moves[i]); }
+            catch (IllegalArgumentException e) {
 //                m[i] = RBYMove.EMPTY;   // testing
                 // make sure the move is spelled correctly
                 // make sure the move is implemented
@@ -248,9 +248,8 @@ public class RBYMatchupsMain {
                     line1.append(data[i][0] - data[i][1]);
                     line2.append(data[i][0]);
                     line3.append(data[i][2]);
-                    if (i != data.length - 1) {
+                    if (i != data.length - 1)
                         lines.forEach(line -> line.append(','));
-                    }
                 }
 
                 lines.forEach(line -> line.append("\n"));
@@ -272,20 +271,18 @@ public class RBYMatchupsMain {
         header.append(',');
         for (int i = 0; i < pokemons.length; i++) {
             header.append(pokemons[i]);
-            if (i != pokemons.length - 1) {
+            if (i != pokemons.length - 1)
                 header.append(',');
-            }
         }
         header.append("\n");
         return header;
     }
 
-    private static void statistics(@NotNull long startTime) {
-        long endTime = currentTimeMillis();
-        double deltaTime = (endTime - startTime) / 1000.0;
-        int hours = (int) (deltaTime / 3600);
-        int minutes = (int) (deltaTime % 3600) / 60;
-        double seconds = deltaTime % 60.0;
+    private static void statistics(long startTime) {
+        double time = (currentTimeMillis() - startTime) / 1000.0;
+        int hours = (int) (time / 3600);
+        int minutes = (int) (time % 3600) / 60;
+        double seconds = time % 60.0;
         System.out.println(
                 "Program ran for " + hours + " hours, "
                         + minutes + " minutes, " + seconds + " seconds."

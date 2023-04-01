@@ -14,7 +14,7 @@ class GSCPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
 
     init {
         name = playerName
-        addPokemon(pokemon)
+        addPokemon(pokemon as Pokemon)
         hasSleepTalk = currentPokemon!!.hasMove(GSCMove.SLEEP_TALK)
         setBehaviours()
     }

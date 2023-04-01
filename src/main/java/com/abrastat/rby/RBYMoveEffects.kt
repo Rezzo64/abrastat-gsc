@@ -7,7 +7,8 @@ import com.abrastat.rby.RBYDamage.Companion.applyDamage
 import java.util.concurrent.ThreadLocalRandom
 
 class RBYMoveEffects {
-
+    // this program implements
+    // move effects of all moves
     companion object {
         fun secondaryEffect(
                 attackingPokemon: RBYPokemon,
@@ -61,7 +62,7 @@ class RBYMoveEffects {
                 }
 
                 MoveEffect.BIDE -> {
-
+                    // https://www.smogon.com/rb/articles/rby_mechanics_guide#bide
                 }
 
                 // CONFUSE_RAY, SUPERSONIC
@@ -97,12 +98,14 @@ class RBYMoveEffects {
                 MoveEffect.HAZE -> {
                     val cannotAttack = (defendingPokemon.nonVolatileStatus == Status.FREEZE
                             || defendingPokemon.nonVolatileStatus == Status.SLEEP)
-                    reset(attackingPokemon)
-                    reset(defendingPokemon)
+
+                    resetPokemon(attackingPokemon)
+                    resetPokemon(defendingPokemon)
                     if (attackingPokemon.nonVolatileStatus == Status.TOXIC)
                         attackingPokemon.applyNonVolatileStatus(Status.POISON)
                     defendingPokemon.removeNonVolatileStatus()
-                    if (cannotAttack && (attackingPokemon.turn > defendingPokemon.turn))
+
+                    if (cannotAttack && attackingPokemon.tookTurn && !defendingPokemon.tookTurn)
                         // defending pokemon removed sleep or freeze in same turn
                         defendingPokemon.applyVolatileStatus(Status.HAZE)
                 }
@@ -112,6 +115,7 @@ class RBYMoveEffects {
 
                 }
 
+                // implemented in miss effects
                 MoveEffect.HIGHJUMPKICK -> return
 
                 MoveEffect.HYPERBEAM -> {
@@ -227,7 +231,11 @@ class RBYMoveEffects {
                 MoveEffect.SELF_ATTACKRAISE1 -> attackingPokemon.raiseStat(Stat.ATTACK)
 
                 // SWORDS_DANCE
-                MoveEffect.SELF_ATTACKRAISE2 -> attackingPokemon.raiseStatSharp(Stat.ATTACK)
+                MoveEffect.SELF_ATTACKRAISE2 -> {
+                    // reset burn-rest bug
+                    attackingPokemon.resetStat(Stat.ATTACK)
+                    attackingPokemon.raiseStatSharp(Stat.ATTACK)
+                }
 
                 // DEFENSE_CURL, HARDEN, WITHDRAW
                 MoveEffect.SELF_DEFENSERAISE1 -> attackingPokemon.raiseStat(Stat.DEFENSE)
@@ -388,12 +396,12 @@ class RBYMoveEffects {
             } else false
         }
 
-        private fun reset(pokemon: RBYPokemon) {
+        fun resetPokemon(pokemon: RBYPokemon) {
             pokemon.resetMods()
             pokemon.clearVolatileStatus()
-            pokemon.resetSleepCounter()
-            pokemon.initStatAtk(pokemon.originalAttack)
-            pokemon.initStatSpe(pokemon.originalSpeed)
+            pokemon.resetAllCounters()
+            pokemon.resetStat(Stat.ATTACK)
+            pokemon.resetStat(Stat.SPEED)
         }
 
         private fun unknown(effect: MoveEffect) {

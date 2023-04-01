@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
 
 class RBYDamage {
+    // this program implements all damage
     companion object {
         fun calcDamage(
                 attackingPokemon: RBYPokemon,
@@ -44,6 +45,15 @@ class RBYDamage {
             var damage: Int = calcDamageUtil(attackingPokemon, defendingPokemon, attack, crit)
 
             // always assumes max damage roll
+            when (attack.effect) {
+                MoveEffect.DOUBLEATTACK,
+                MoveEffect.TWINNEEDLE,
+                -> damage *= 2
+
+                MoveEffect.MULTIHIT -> damage *= 5
+
+                else -> {}
+            }
             damage = damage.coerceAtMost(defendingPokemon.currentHP)
             return damage
         }
@@ -118,12 +128,9 @@ class RBYDamage {
             if (attackingPokemon.types.contains(attack.type))   // type bonus
                 damage = floor(damage * 1.5).toInt()
 
-            if (typeEffectiveness != 1.0) {
-                // nve will be 0 < typeEffectiveness < 1, so multiply by 10 to get around this
-                // dirty fix and not optimised, come back and change if performance needs it
-                typeEffectiveness *= 10.0
-                logTypeEffectiveness(typeEffectiveness.toInt())
-            }
+            if (typeEffectiveness != 1.0)
+                if (attack.isAttack)
+                    logTypeEffectiveness(typeEffectiveness.toInt())
             return damage
         }
 

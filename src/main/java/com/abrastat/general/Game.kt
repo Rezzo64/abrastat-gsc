@@ -1,8 +1,5 @@
 package com.abrastat.general
 
-import com.abrastat.gsc.GSCPokemon
-import com.abrastat.rby.RBYPokemon
-
 interface Game {
     fun getLastMoveUsed(): Move?
     fun setLastMoveUsed(move: Move?)

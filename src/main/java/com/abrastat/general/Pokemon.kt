@@ -73,7 +73,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     var spAMod = 0
     var spDMod = 0
     var speMod = 0
-    var spMod = 0
+    var spMod  = 0
     var accMod = 0
     var evaMod = 0
     var id = 0 // used for retrieving db instance

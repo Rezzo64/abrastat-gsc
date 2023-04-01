@@ -1,6 +1,5 @@
-#comment
-venusaur
-razor_leaf
+wigglytuff
+sing thunder_wave body_slam counter 
 
-snorlax
-rest
+zapdos
+thunderbolt drill_peck thunder_wave agility

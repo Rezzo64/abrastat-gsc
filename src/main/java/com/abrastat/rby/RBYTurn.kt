@@ -16,10 +16,11 @@ import com.abrastat.rby.RBYMoveEffects.Companion.secondaryEffect
 import java.util.concurrent.ThreadLocalRandom
 
 class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: RBYMove) {
+    // this program applies the attack on the opponent
     init {
         // check neither Pokemon is fainted
         if (!isPokemonFainted(attackingPokemon, defendingPokemon)) {
-            attackingPokemon.turn += 1
+            attackingPokemon.tookTurn = true
             checkStatusEffects(attackingPokemon)
             if (canAttack(attackingPokemon, move)) {
                 logAttack(attackingPokemon, move)
@@ -47,7 +48,6 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
 
     private fun canAttack(attackingPokemon: RBYPokemon, move: RBYMove): Boolean {
         if (attackingPokemon.volatileStatus.contains(Status.HAZE)) {
-            attackingPokemon.removeVolatileStatus(Status.HAZE)
             return false
         }
 
@@ -77,9 +77,8 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
             Status.PARALYSIS -> if (roll < 64) {
                 cantAttack(attackingPokemon, Status.PARALYSIS)
                 false
-            } else {
-                true
-            }
+            } else true
+
 
             else -> true
         }
