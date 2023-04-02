@@ -85,19 +85,17 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     var activeBehaviour: PlayerBehaviour = PlayerBehaviour.JUST_ATTACK
 
     // all counters below to be handled incrementally (for consistency)
-    var sleepCounter = 0
-    var toxicCounter = 0
     var confuseCounter = 0
     var disableCounter = 0
     var encoreCounter = 0
     var perishCounter = 0
+    var sleepCounter = 0
+    var toxicCounter = 1
+    // TODO when switch, reset toxic counter,
+    //  toxic status -> poison
 
-    fun applyHeal(healAmount: Int) {
-        if (currentHP + healAmount >= statHP) {
-            currentHP = statHP
-        } else {
-            currentHP += healAmount
-        }
+    fun applyHeal(heal: Int) {
+        currentHP = (currentHP + heal).coerceAtMost(statHP)
     }
 
     fun applyDamage(damage: Int) {
@@ -436,28 +434,12 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         evaMod = 0
     }
 
-    fun decrementSleepCounter() {
-        sleepCounter--
-    }
-
-    fun incrementToxicCounter() {
-        toxicCounter++
-    }
-
-    fun incrementConfuseCounter() {
-        confuseCounter++
-    }
-
-    fun incrementDisableCounter() {
-        disableCounter++
-    }
-
     fun resetSleepCounter() {
         sleepCounter = 0
     }
 
     fun resetToxicCounter() {
-        toxicCounter = 0
+        toxicCounter = 1
     }
 
     fun resetConfuseCounter() {
@@ -472,11 +454,8 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         perishCounter = 0
     }
 
-    fun incrementPerishCounter() {
-        perishCounter++
-    }
-
     abstract fun resetAllCounters()
+
     fun applyNonVolatileStatusDebuff(status: Status) {
         when (status) {
             Status.PARALYSIS -> statSpe /= 4

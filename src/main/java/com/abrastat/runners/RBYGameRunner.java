@@ -2,6 +2,7 @@ package com.abrastat.runners;
 
 import com.abrastat.general.*;
 import com.abrastat.rby.*;
+import kotlin.Pair;
 
 public class RBYGameRunner {
     // this program takes in two teams of pokemon
@@ -119,6 +120,8 @@ public class RBYGameRunner {
                 pokemon.resetStat(Stat.ATTACK);
                 pokemon.resetStat(Stat.SPEED);
                 pokemon.resetStatHp();
+                pokemon.setMultiTurn(new Pair<>(RBYMove.EMPTY, 0));
+                pokemon.setStoredDamage(0);
             }
         }
     }

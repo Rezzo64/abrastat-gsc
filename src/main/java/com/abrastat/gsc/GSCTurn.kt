@@ -48,9 +48,9 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
                     Status.ATTRACT -> roll = ThreadLocalRandom.current().nextInt(256)
                     // TODO roll move fail chance
 
-                    Status.CONFUSION, Status.FATIGUE -> {
+                    Status.CONFUSION -> {
                         roll = ThreadLocalRandom.current().nextInt(256)
-                        attackingPokemon.incrementConfuseCounter()
+                        attackingPokemon.confuseCounter--
                     }
                     // TODO increment counter, roll hurt self chance, check for end chance
 
@@ -82,7 +82,7 @@ class GSCTurn(attackingPokemon: GSCPokemon, defendingPokemon: GSCPokemon, move: 
             return when (attackingPokemon.nonVolatileStatus) {
                 Status.SLEEP -> if (attackingPokemon.sleepCounter > 0) {
                     cantAttack(attackingPokemon, Status.SLEEP)
-                    attackingPokemon.decrementSleepCounter()
+                    attackingPokemon.sleepCounter--
                     move == GSCMove.SLEEP_TALK
                 } else {
                     statusChanged(attackingPokemon, Status.SLEEP)

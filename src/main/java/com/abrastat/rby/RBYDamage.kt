@@ -1,11 +1,8 @@
 package com.abrastat.rby
 
-import com.abrastat.general.Messages
+import com.abrastat.general.*
 import com.abrastat.general.Messages.Companion.logCriticalHit
 import com.abrastat.general.Messages.Companion.logTypeEffectiveness
-import com.abrastat.general.MoveEffect
-import com.abrastat.general.Stat
-import com.abrastat.general.Status
 import com.abrastat.rby.RBYTypeEffectiveness.calcEffectiveness
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
@@ -19,15 +16,17 @@ class RBYDamage {
                 attack: RBYMove,
                 allowCrits: Boolean = true): Int {
             val speedStat: Int = attackingPokemon.baseSpeed
+            val focusEnergy: Boolean = attackingPokemon.volatileStatus.contains(Status.FOCUSENERGY)
             val crit: Int = if (allowCrits)
-                critModifier(attack, speedStat)
+                critModifier(attack, speedStat, focusEnergy)
             else 1
 
             var damage: Int = calcDamageUtil(attackingPokemon, defendingPokemon, attack, crit)
 
             // 84.77% to 100% damage
-            damage *= damageRoll()
+            damage *= if (attack != RBYMove.CONFUSE_DAMAGE) damageRoll() else 255
             damage = floor((damage / 255).toDouble()).toInt()
+
 
             damage = damage.coerceAtMost(defendingPokemon.currentHP)
             return damage
@@ -70,11 +69,22 @@ class RBYDamage {
                     * accuracyMultiplier) * evasionMultiplier).toInt()
         }
 
-        fun applyDamage(pokemon: RBYPokemon, rawDamage: Int) {
+        fun applyDamage(pokemon: RBYPokemon, rawDamage: Int): Int {
+            if (rawDamage == Int.MIN_VALUE) return 0
+
             val damage = rawDamage.coerceAtMost(pokemon.currentHP)
             pokemon.applyDamage(damage)
             pokemon.lastDamageTaken = damage
             Messages.logDamageTaken(pokemon, damage)
+            return damage
+        }
+
+        fun toxicDamage(pokemon: RBYPokemon): Int {
+            val damage = (pokemon.toxicCounter * pokemon.statHP / 16).coerceAtLeast(1)
+            if (pokemon.toxicCounter > 1
+                    || pokemon.nonVolatileStatus == Status.TOXIC)
+                pokemon.toxicCounter++
+            return applyDamage(pokemon, damage)
         }
 
         private fun calcDamageUtil(
@@ -91,7 +101,7 @@ class RBYDamage {
             val modifiedAttack: Stat
             val modifiedDefense: Stat
             if (attack.isPhysical) {
-                attackStat = attackingPokemon.statAtk
+                attackStat = attackingPokemon.originalAttack
                 defenseStat = defendingPokemon.statDef
                 modifiedAttack = Stat.ATTACK
                 modifiedDefense = Stat.DEFENSE
@@ -108,8 +118,9 @@ class RBYDamage {
 
                 // https://bulbapedia.bulbagarden.net/wiki/Reflect_(move)#Generation_I
                 // https://bulbapedia.bulbagarden.net/wiki/Light_Screen_(move)#Generation_I
-                if ((attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.REFLECT))
-                        || !attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.LIGHTSCREEN)){
+                if ((attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.REFLECT)
+                                && attack != RBYMove.CONFUSE_DAMAGE)
+                        || !attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.LIGHTSCREEN)) {
                     defenseStat *= 2
                     defenseStat %= 1024
                 }
@@ -120,17 +131,17 @@ class RBYDamage {
                 defenseStat /= 4
             }
 
-            var typeEffectiveness = calcEffectiveness(attack.type,
+            val typeEffectiveness = calcEffectiveness(attack.type,
                     defendingPokemon.types[0],
                     defendingPokemon.types[1])
             var damage = damageFormula(level, crit, basePower, attackStat, defenseStat, typeEffectiveness)
 
-            if (attackingPokemon.types.contains(attack.type))   // type bonus
+            if (attackingPokemon.types.contains(attack.type)
+                    && attack.type != Type.NONE)
                 damage = floor(damage * 1.5).toInt()
 
-            if (typeEffectiveness != 1.0)
-                if (attack.isAttack)
-                    logTypeEffectiveness(typeEffectiveness.toInt())
+            if (typeEffectiveness != 1.0 && attack.isAttack)
+                logTypeEffectiveness(typeEffectiveness.toInt())
             return damage
         }
 
@@ -149,10 +160,13 @@ class RBYDamage {
             return ((floor( statModifier / 50) + 2) * typeEffectiveness).toInt()
         }
 
-        private fun critModifier(attack: RBYMove, speed: Int): Int {
+        private fun critModifier(attack: RBYMove,
+                                 speed: Int,
+                                 focus: Boolean): Int {
             var crit: Int = speed
+            if (focus) crit = speed / 4
             if (attack.effect == MoveEffect.CRITRATE)
-                crit = (speed * 8).coerceAtMost(511)
+                crit = (crit * 8).coerceAtMost(511)
             return if (critRoll() <= crit) {
                 logCriticalHit()
                 2

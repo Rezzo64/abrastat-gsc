@@ -24,7 +24,7 @@ enum class RBYMove
     BARRAGE(Type.NORMAL, 20, 216, 15, MoveEffect.MULTIHIT),
     BARRIER(Type.PSYCHIC, 30, MoveEffect.SELF_DEFENSERAISE2),
     BIDE(Type.NORMAL, 10, 255, MoveEffect.BIDE),
-    BIND(Type.NORMAL, 20, 216, 15, MoveEffect.WRAP),
+    BIND(Type.NORMAL, 20, 216, 15, MoveEffect.BIND),
     BITE(Type.NORMAL, 25, 255, 60, MoveEffect.FLINCH10),
     BLIZZARD(Type.ICE, 5, 176, 120, MoveEffect.FRZ10),
     BODY_SLAM(Type.NORMAL, 15, 255, 85, MoveEffect.PRZ30),
@@ -33,8 +33,9 @@ enum class RBYMove
     BUBBLE(Type.WATER, 30, 255, 20, MoveEffect.OPP_SPEEDDROP1_10),
     BUBBLE_BEAM(Type.WATER, 20, 255, 65, MoveEffect.OPP_SPEEDDROP1_10),
 
-    CLAMP(Type.WATER, 10, 216,35, MoveEffect.WRAP),
+    CLAMP(Type.WATER, 10, 216,35, MoveEffect.BIND),
     COMET_PUNCH(Type.NORMAL, 15, 216, 18, MoveEffect.MULTIHIT),
+    CONFUSE_DAMAGE(Type.NONE, Int.MAX_VALUE, Int.MAX_VALUE, 40),    // can't be used normally
     CONFUSE_RAY(Type.GHOST, 10, 255, MoveEffect.CONFUSION),
     CONFUSION(Type.PSYCHIC, 25, 255, 50, MoveEffect.CONFUSION10),
     CONSTRICT(Type.NORMAL, 35, 255, 10, MoveEffect.OPP_SPEEDDROP1_10),
@@ -58,12 +59,12 @@ enum class RBYMove
     EARTHQUAKE(Type.GROUND, 10, 255, 100),
     EGG_BOMB(Type.NORMAL, 10, 191, 100),
     EMBER(Type.FIRE, 25, 255, 40, MoveEffect.BRN10),
-    EMPTY(Type.NONE, 0, 0, Int.MIN_VALUE, MoveEffect.NONE),
+    EMPTY(Type.NONE, 0, 0, Int.MIN_VALUE, MoveEffect.NONE), // can't be used normally
     EXPLOSION(Type.NORMAL, 5, 255, 340, MoveEffect.SELFDESTRUCT),   // half def == double power
 
     FIRE_BLAST(Type.FIRE, 5, 216, 120, MoveEffect.BRN30),
     FIRE_PUNCH(Type.FIRE, 15, 255, 75, MoveEffect.BRN10),
-    FIRE_SPIN(Type.WATER, 15, 178,35, MoveEffect.WRAP),
+    FIRE_SPIN(Type.FIRE, 15, 178,35, MoveEffect.BIND),
     FISSURE(Type.GROUND, 5, 76, MoveEffect.ONEHITKO),
     FLAMETHROWER(Type.FIRE, 15, 255, 95, MoveEffect.BRN10),
     FLASH(Type.NORMAL, 20, 178, MoveEffect.OPP_ACCURACYDROP1),
@@ -119,7 +120,7 @@ enum class RBYMove
 
     PAYDAY(Type.NORMAL, 20, 255, 40),   // effect doesn't matter for battle
     PECK(Type.FLYING, 35, 255, 35),
-    PETAL_DANCE(Type.GRASS, 20, 255, 30, MoveEffect.THRASH),
+    PETAL_DANCE(Type.GRASS, 20, 255, 30, MoveEffect.PETALDANCE),
     PIN_MISSILE(Type.BUG, 20, 216, 14, MoveEffect.MULTIHIT),
     POISON_GAS(Type.POISON, 40, 140, MoveEffect.PSN),
     POISON_STING(Type.POISON, 35, 255, 15, MoveEffect.PSN20),
@@ -145,7 +146,7 @@ enum class RBYMove
     SAND_ATTACK(Type.NORMAL, 15, 255, MoveEffect.OPP_ACCURACYDROP1),
     SCRATCH(Type.NORMAL, 35, 255, 40),
     SCREECH(Type.NORMAL, 10, 216, MoveEffect.OPP_DEFENSEDROP2),
-    SEISMIC_TOSS(Type.NONE, 20, 255, MoveEffect.SEISMICTOSS),
+    SEISMIC_TOSS(Type.FIGHTING, 20, 255, MoveEffect.SEISMICTOSS),
     SELFDESTRUCT(Type.NORMAL, 5, 255, 260, MoveEffect.SELFDESTRUCT),    // half def == double power
     SHARPEN(Type.NORMAL, 30, MoveEffect.SELF_ATTACKRAISE1),
     SING(Type.NORMAL, 15, 140, MoveEffect.SLEEP),
@@ -166,7 +167,7 @@ enum class RBYMove
     STOMP(Type.NORMAL, 20, 255, 65, MoveEffect.FLINCH30),
     STRENGTH(Type.NORMAL, 15, 255, 80),
     STRING_SHOT(Type.BUG, 40, 242, MoveEffect.OPP_SPEEDDROP1),
-    STRUGGLE(Type.NONE, 999, 255, 50, MoveEffect.RECOIL25),
+    STRUGGLE(Type.NONE, 999, 255, 50, MoveEffect.RECOIL25), // can't be used normally
     STUN_SPORE(Type.GRASS, 30, 191, MoveEffect.PRZ),
     SUBMISSION(Type.FIGHTING, 20, 204, 80, MoveEffect.RECOIL25),
     SUBSTITUTE(Type.NORMAL, 10, MoveEffect.SUBSTITUTE),
@@ -180,7 +181,7 @@ enum class RBYMove
     TAIL_WHIP(Type.NORMAL, 30, 255, MoveEffect.OPP_DEFENSEDROP1),
     TAKE_DOWN(Type.NORMAL, 20, 216, 90, MoveEffect.RECOIL25),
 //    TELEPORT,   // no effect in trainer battles
-    THRASH(Type.NORMAL, 20, 255, 90, MoveEffect.THRASH),
+    THRASH(Type.NORMAL, 20, 255, 90, MoveEffect.PETALDANCE),
     THUNDER(Type.ELECTRIC, 10, 178, 120, MoveEffect.PRZ10),
     THUNDER_WAVE(Type.ELECTRIC, 20, 255, MoveEffect.PRZ),
     THUNDERBOLT(Type.ELECTRIC, 15, 255, 95, MoveEffect.PRZ10),
@@ -199,7 +200,7 @@ enum class RBYMove
 //    WHIRLWIND,  // no effect in trainer battles
     WING_ATTACK(Type.FLYING, 35, 255, 35),
     WITHDRAW(Type.WATER, 40, MoveEffect.SELF_DEFENSERAISE1),
-    WRAP(Type.NORMAL, 20, 229, 15, MoveEffect.WRAP)
+    WRAP(Type.NORMAL, 20, 229, 15, MoveEffect.BIND)
     ;
 
     // attack with secondary effect

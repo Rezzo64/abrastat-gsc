@@ -1,8 +1,6 @@
 package com.abrastat.general
 
-enum class Messages {
-    INSTANCE;
-
+class Messages {
     companion object {
         private var messageBuffer: String? = null
         private fun handleMessage() { // handle logging from here and whether it's enabled or not
@@ -14,11 +12,6 @@ enum class Messages {
         fun notImplementedYet(o: Any) {
             messageBuffer = "DEBUG: $o not implemented yet. No effect logged."
             handleMessage()
-        }
-
-        private fun logIssue(pokemon: Pokemon, move: Move) {
-            // TODO write this to a file
-            // messageBuffer.write();
         }
 
         @JvmStatic
@@ -51,7 +44,7 @@ enum class Messages {
                 Status.PARALYSIS -> pokemon.species + " is already paralysed!"
                 Status.POISON, Status.TOXIC -> pokemon.species + " is already poisoned!"
                 Status.SLEEP -> pokemon.species + " is already asleep!"
-                Status.CONFUSION, Status.FATIGUE -> pokemon.species + " is already confused!"
+                Status.CONFUSION-> pokemon.species + " is already confused!"
                 Status.ATTRACT -> pokemon.species + " is already in love!"
                 else -> "But it failed!"
             }
@@ -62,9 +55,9 @@ enum class Messages {
         fun cantAttack(pokemon: Pokemon, status: Status) {
             messageBuffer = when (status) {
                 Status.ATTRACT -> pokemon.species + " is immobilised by love!"
-                Status.CONFUSION, Status.FATIGUE -> (pokemon.species + " hurt itself in confusion! ("
-                        + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
-                Status.FLINCH -> pokemon.species + " flinched and couldn't move"
+                Status.BIND -> pokemon.species + " is tangled up!"
+                Status.CONFUSION -> pokemon.species + " is confused!"
+                Status.FLINCH -> pokemon.species + " flinched and couldn't move!"
                 Status.FREEZE -> pokemon.species + " is frozen solid!"
                 Status.PARALYSIS -> pokemon.species + " is fully paralysed!"
                 Status.SLEEP -> pokemon.species + " is fast asleep!"
@@ -78,7 +71,7 @@ enum class Messages {
             messageBuffer = when (status) {
                 Status.SLEEP -> pokemon.species + " woke up!"
                 Status.FREEZE -> pokemon.species + " thawed out!"
-                Status.CONFUSION, Status.FATIGUE -> pokemon.species + " snapped out of its confusion!"
+                Status.CONFUSION -> pokemon.species + " snapped out of its confusion!"
                 else -> pokemon.species + "is no longer affected by " + status + "!"
             }
             handleMessage()
@@ -86,14 +79,20 @@ enum class Messages {
 
         fun logEffect(pokemon: Pokemon, status: Status) {
             messageBuffer = when (status) {
+                Status.ATTRACT -> pokemon.species + " is in love with its opponent!"
+
                 Status.BURN -> (pokemon.species + " is hurt by its burn! ("
+                        + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
+
+                Status.LEECHSEED -> (pokemon.species + " is hurt by leech seed! ("
                         + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
 
                 Status.POISON, Status.TOXIC -> (pokemon.species + " is hurt by poison! ("
                         + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
 
-                Status.CONFUSION, Status.FATIGUE -> pokemon.species + " is confused!"
-                Status.ATTRACT -> pokemon.species + " is in love with its opponent!"
+                Status.CONFUSION-> (pokemon.species + " hurt itself in confusion! ("
+                        + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
+
                 else -> pokemon.species + " is affected by " + status + "!"
             }
             handleMessage()
@@ -101,7 +100,6 @@ enum class Messages {
 
         @JvmStatic
         fun leftoversHeal(pokemon: Pokemon) {
-
             // only display message if there is health actually being restored by leftovers
             if (pokemon.currentHP < pokemon.statHP) {
                 messageBuffer = (pokemon.species + " restored health using its Leftovers! ("
@@ -158,12 +156,13 @@ enum class Messages {
         @JvmStatic
         fun logNewStatus(pokemon: Pokemon, status: Status) {
             messageBuffer = when (status) {
-                Status.PARALYSIS -> pokemon.species + " is paralysed! It may be unable to move!"
-                Status.SLEEP -> pokemon.species + " has fallen asleep!"
-                Status.FREEZE -> pokemon.species + " was frozen!"
+                Status.BIND -> pokemon.species + " was tangled!"
                 Status.BURN -> pokemon.species + " was burned by the attack!"
-                Status.FATIGUE, Status.CONFUSION -> pokemon.species + " became confused!"
+                Status.CONFUSION -> pokemon.species + " became confused!"
+                Status.FREEZE -> pokemon.species + " was frozen!"
+                Status.PARALYSIS -> pokemon.species + " is paralysed! It may be unable to move!"
                 Status.POISON -> pokemon.species + " is poisoned!"
+                Status.SLEEP -> pokemon.species + " has fallen asleep!"
                 Status.TOXIC -> pokemon.species + " is badly poisoned!"
                 else -> pokemon.species + " is afflicted by " + status + "!"
             }
@@ -193,7 +192,7 @@ enum class Messages {
         @JvmStatic
         fun ppFailedToDeduct(pokemon: Pokemon, move: Move) {
             messageBuffer = "Failed to identify the move $move on $pokemon. No PP was deducted."
-            logIssue(pokemon, move)
+            // TODO log issue
             handleMessage()
         }
 
@@ -216,6 +215,12 @@ enum class Messages {
                     + pokemon + ". Instead, using first move ("
                     + pokemon.moves[0] + ").")
             handleMessage()
+        }
+
+        @JvmStatic
+        fun logHeal(pokemon: Pokemon) {
+            messageBuffer = (pokemon.species + " healed ("
+            + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
         }
 
         @JvmStatic

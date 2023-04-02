@@ -14,6 +14,7 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     BEATUP(Target.SELF, 0),
     BELLYDRUM(Target.SELF, 0),
     BIDE(Target.SELF, 0),
+    BIND(Target.OPPONENT, 0),
     CONFUSION(Target.OPPONENT, 0),
     CONVERSION(Target.SELF, 0),
     COUNTER(Target.OPPONENT, 0),
@@ -68,6 +69,7 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     OPP_SPEEDDROP2(Target.OPPONENT, 0),
     PAYDAY(Target.SELF, 0),
     PERISHSONG(Target.BOTH, 0),
+    PETALDANCE(Target.SELF, 0),
     PRESENT(Target.SELF, 0),
     PROTECT(Target.SELF, 0),
     PRZ(Target.OPPONENT, 0),
@@ -119,12 +121,10 @@ enum class MoveEffect(private val target: Target, private val effectChance: Int)
     SWIFT(Target.OPPONENT, 0),
     SYNTHESIS(Target.SELF, 0),
     TELEPORT(Target.SELF, 0),
-    THRASH(Target.SELF, 0),
     TOXIC(Target.OPPONENT, 0),
     TRANSFORM(Target.SELF, 0),
     TWINNEEDLE(Target.OPPONENT, 0),
     VITALTHROW(Target.SELF, 0),
-    WRAP(Target.OPPONENT, 0),
 
     // chance
     ANCIENTPOWER(Target.SELF, 25),

@@ -11,13 +11,16 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
     // and holds different states
     override val moves: Array<RBYMove> = Array(4) { RBYMove.EMPTY }
     override val movesPp = IntArray(4)
-    private var originalAttack = 0
+    var originalAttack = 0
+        private set
     private var originalSpeed = 0
 
-    // useful flags
+    // move states
     var struggle = false
     var tookTurn = false
     var extraHit = -1
+    var multiTurn = Pair(RBYMove.EMPTY, 0)
+    var storedDamage = 0
 
     init {
         initIVs()

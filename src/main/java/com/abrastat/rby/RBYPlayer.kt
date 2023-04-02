@@ -35,7 +35,17 @@ class RBYPlayer(playerName: String, pokemon: RBYPokemon) : Player() {
             }
         }
 
+        // default multi turn move
+        // ignore pp
+        if (currentPokemon.multiTurn.first != RBYMove.EMPTY)
+            return currentPokemon.multiTurn.first
+
+        // hyper beam recharge, in case of bind miss
+        if (currentPokemon.volatileStatus.contains(Status.HYPERBEAM))
+            return RBYMove.HYPER_BEAM
+
         var move = chooseMoveHelper(opponent)
+
 
         // if invalid move, use any move with pp
         if (move == RBYMove.EMPTY) {
@@ -45,10 +55,13 @@ class RBYPlayer(playerName: String, pokemon: RBYPokemon) : Player() {
                     break
                 }
             }
+            if (move == RBYMove.EMPTY) {
+                currentPokemon.struggle = true
+                return RBYMove.STRUGGLE
+            }
         }
 
-        if (move == RBYMove.EMPTY) currentPokemon.struggle = true
-        return if (!currentPokemon.struggle) move else RBYMove.STRUGGLE
+        return move
     }
 
     // each behaviour should exist as its own entity depending on the simulation state

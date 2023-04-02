@@ -90,7 +90,7 @@ class RBYGame(player1: RBYPlayer,
         
         // if switch selected
 
-        if (pokemonP1IsFaster(moveP1.effect, moveP2.effect)) { // true = player1, false = player2
+        if (pokemonP1IsFaster(moveP1.effect, moveP2.effect)) {  // true = player1, false = player2
             turn(pokemonP1, pokemonP2, moveP1)
             if (!someoneFainted())
                 turn(pokemonP2, pokemonP1, moveP2)
@@ -136,8 +136,8 @@ class RBYGame(player1: RBYPlayer,
     }
 
     private fun pokemonP1IsFasterUtil(): Boolean {
-        val speed1 = pokemonP1.modifiedStat(Stat.SPEED)
-        val speed2 = pokemonP2.modifiedStat(Stat.SPEED)
+        val speed1 = pokemonP1.modifiedStat(Stat.SPEED).coerceIn(1, 999)
+        val speed2 = pokemonP2.modifiedStat(Stat.SPEED).coerceIn(1, 999)
 
         return if (speed1 == speed2)
             ThreadLocalRandom.current().nextBoolean()   // random player goes first
