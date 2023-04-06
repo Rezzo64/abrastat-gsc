@@ -31,10 +31,6 @@ class RBYGame(player1: RBYPlayer,
 
     private fun setup(player: RBYPlayer, behaviour: PlayerBehaviour): RBYPokemon {
         val pokemon = player.currentPokemon
-
-        // if pokemon fainted, auto switch to non fainted pokemon
-        // Messages.announceSwitch(player, pokemon);
-
         player.setCurrentBehaviour(behaviour)
         announceTeam(player)
         return pokemon
@@ -44,6 +40,7 @@ class RBYGame(player1: RBYPlayer,
         // any player has no non-fainted pokemon remaining
         // while (!hasPokemon) {  // both players have pokemon left
         // if current pokemon is fainted switch
+        // Messages.announceSwitch(player, pokemon);
 
         while (!someoneFainted()) {
             // test for infinite loops
@@ -52,14 +49,9 @@ class RBYGame(player1: RBYPlayer,
                 break
             }
 
-            // TODO AI interface to choose moves instead
-            // if (PlayerBehavior.AI) {
-            //     moveP1 = AI1
-            //     moveP2 = AI2
-            // else {
+            // some moves are forced
             val moveP1 = player1.chooseMove(player2)
             val moveP2 = player2.chooseMove(player1)
-            // }
             initTurn(moveP1, moveP2)
         }
         // }
@@ -75,6 +67,8 @@ class RBYGame(player1: RBYPlayer,
 
     private fun fainted(pokemon: RBYPokemon) {
         if (pokemon.currentHP == 0) {
+            if (pokemon.transformed)
+                pokemon.unTransform()
             pokemon.resetStat(Stat.ATTACK)
             pokemon.resetStat(Stat.SPEED)
             pokemon.isFainted
@@ -87,38 +81,59 @@ class RBYGame(player1: RBYPlayer,
         announceTurn(turnNumber)
         displayCurrentHP(pokemonP1)
         displayCurrentHP(pokemonP2)
-        
-        // if switch selected
+
+        // if (pokemonP1.multiTurn != RBYMove.EMPTY
+        //         && move.effect != MoveEffect.BIND
+        //         && move.effect != MoveEffect.BIDE)
+        //     unable to switch
+        // else
+        //     if switch selected
+        //         move is RBYMove.EMPTY
+
+        if (pokemonP1.counter)
+            counterable(pokemonP1, pokemonP2, moveP1, moveP2)
+        if (pokemonP2.counter)
+            counterable(pokemonP2, pokemonP1, moveP2, moveP1)
 
         if (pokemonP1IsFaster(moveP1.effect, moveP2.effect)) {  // true = player1, false = player2
             turn(pokemonP1, pokemonP2, moveP1)
-            if (!someoneFainted())
-                turn(pokemonP2, pokemonP1, moveP2)
+            turn(pokemonP2, pokemonP1, moveP2)
         } else {
             turn(pokemonP2, pokemonP1, moveP2)
-            if (!someoneFainted())
-                turn(pokemonP1, pokemonP2, moveP1)
+            turn(pokemonP1, pokemonP2, moveP1)
         }
         
         reset(pokemonP1)
         reset(pokemonP2)
     }
 
-    // prevents Counter, Flinch, Haze, Multi strike from carrying over
-    private fun reset(pokemon: RBYPokemon) {
-        pokemon.lastDamageTaken = 0
-        pokemon.extraHit = 0
-        pokemon.tookTurn = false
-        pokemon.removeVolatileStatus(Status.FLINCH)
-        pokemon.removeVolatileStatus(Status.HAZE)
-    }
-
-    private fun turn(poke1: RBYPokemon,
-                     poke2: RBYPokemon,
-                     move: RBYMove) {
-        RBYTurn(poke1, poke2, move)
-        setLastMoveUsed(move)
-        lastAttacker = poke1
+    // can't refactor to move effects
+    // since we need to know pokemon move
+    // TODO make current move a variable of RBYPokemon
+    private fun counterable(pokemon1: RBYPokemon,
+                            pokemon2: RBYPokemon,
+                            move1: RBYMove,
+                            move2: RBYMove) {
+        if (move1.effect == MoveEffect.COUNTER) {
+            if (move2.effect == MoveEffect.COUNTER) {
+                pokemon1.counterable = false
+                pokemon1.counterDamage = 0
+                return
+            }
+            // still need to store counter damage in
+            // case opponent did not make a move
+            // if counter only looked at the current
+            // turn, counter could use storedDamage
+            if (move2 == RBYMove.EMPTY
+                    || pokemon2.volatileStatus.contains(Status.HYPERBEAM)
+                    || ((move2.effect == MoveEffect.INVULNERABLE
+                    || move2.effect == MoveEffect.RAZORWIND)
+                    && pokemon2.multiTurn.first == RBYMove.EMPTY))
+                return
+        }
+        pokemon1.counterable = (move2.type == Type.NORMAL
+                || move2.type == Type.FIGHTING)
+        pokemon1.counterDamage = 0
     }
 
     private fun pokemonP1IsFaster(me1: MoveEffect, me2: MoveEffect): Boolean {
@@ -142,6 +157,22 @@ class RBYGame(player1: RBYPlayer,
         return if (speed1 == speed2)
             ThreadLocalRandom.current().nextBoolean()   // random player goes first
         else speed1 > speed2
+    }
+
+    private fun turn(poke1: RBYPokemon,
+                     poke2: RBYPokemon,
+                     move: RBYMove) {
+        RBYTurn(poke1, poke2, move)
+        setLastMoveUsed(move)
+        lastAttacker = poke1
+    }
+
+    // prevents Flinch, Haze, Multi strike from carrying over
+    private fun reset(pokemon: RBYPokemon) {
+        pokemon.extraHit = 0
+        pokemon.tookTurn = false
+        if (pokemon.substituteBreak)
+            pokemon.substituteBreak = false
     }
 
     private fun setWinner() {

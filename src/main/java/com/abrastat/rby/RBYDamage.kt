@@ -27,7 +27,6 @@ class RBYDamage {
             damage *= if (attack != RBYMove.CONFUSE_DAMAGE) damageRoll() else 255
             damage = floor((damage / 255).toDouble()).toInt()
 
-
             damage = damage.coerceAtMost(defendingPokemon.currentHP)
             return damage
         }
@@ -41,7 +40,14 @@ class RBYDamage {
                 isCrit: Boolean): Int {
             val crit = if (isCrit) 1 else 2
 
-            var damage: Int = calcDamageUtil(attackingPokemon, defendingPokemon, attack, crit)
+            var damage: Int = when (attack.effect) {
+                MoveEffect.DRAGONRAGE -> 40
+                MoveEffect.PSYWAVE -> attackingPokemon.level * 3 / 2    // misleading?
+                MoveEffect.SEISMICTOSS -> attackingPokemon.level
+                MoveEffect.SONICBOOM -> 20
+                MoveEffect.SUPERFANG -> (defendingPokemon.currentHP / 2).coerceAtLeast(1)
+                else -> calcDamageUtil(attackingPokemon, defendingPokemon, attack, crit)
+            }
 
             // always assumes max damage roll
             when (attack.effect) {
@@ -61,6 +67,8 @@ class RBYDamage {
                          defendingPokemon: RBYPokemon,
                          moveAccuracy: Int): Int {
             if (moveAccuracy == Int.MAX_VALUE) return moveAccuracy
+            if (defendingPokemon.volatileStatus.contains(Status.INVULNERABLE)) return 0
+            if (!attackingPokemon.rageHit) return 1
 
             // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/evade-and-accuracy
             val accuracyMultiplier = attackingPokemon.multiplier(attackingPokemon.accMod)
@@ -69,12 +77,29 @@ class RBYDamage {
                     * accuracyMultiplier) * evasionMultiplier).toInt()
         }
 
-        fun applyDamage(pokemon: RBYPokemon, rawDamage: Int): Int {
-            if (rawDamage == Int.MIN_VALUE) return 0
+        fun applyDamage(pokemon: RBYPokemon,
+                        rawDamage: Int,
+                        ignoreInvulnerability: Boolean = false,
+                        ignoreSubstitute: Boolean = false): Int {
+            if (rawDamage < 0) {
+                pokemon.lastDamageTaken = 0
+                return 0
+            }
+            if (pokemon.volatileStatus.contains(Status.INVULNERABLE)
+                    && !ignoreInvulnerability) {
+                pokemon.lastDamageTaken = 0
+                return 0
+            }
+            if (!ignoreSubstitute && pokemon.substituteHP != 0) {
+                val damage = rawDamage.coerceAtMost(pokemon.substituteHP)
+                pokemon.lastDamageTaken = damage
+                pokemon.substituteBreak = true
+                pokemon.substituteHP -= damage
+                return damage
+            }
 
             val damage = rawDamage.coerceAtMost(pokemon.currentHP)
             pokemon.applyDamage(damage)
-            pokemon.lastDamageTaken = damage
             Messages.logDamageTaken(pokemon, damage)
             return damage
         }
@@ -84,7 +109,7 @@ class RBYDamage {
             if (pokemon.toxicCounter > 1
                     || pokemon.nonVolatileStatus == Status.TOXIC)
                 pokemon.toxicCounter++
-            return applyDamage(pokemon, damage)
+            return applyDamage(pokemon, damage, true, ignoreSubstitute = true)
         }
 
         private fun calcDamageUtil(
@@ -98,29 +123,38 @@ class RBYDamage {
             // https://gamefaqs.gamespot.com/gameboy/367023-pokemon-red-version/faqs/64175/damage-calculation
             var attackStat: Int
             var defenseStat: Int
-            val modifiedAttack: Stat
-            val modifiedDefense: Stat
             if (attack.isPhysical) {
-                attackStat = attackingPokemon.originalAttack
-                defenseStat = defendingPokemon.statDef
-                modifiedAttack = Stat.ATTACK
-                modifiedDefense = Stat.DEFENSE
+                attackStat = if (crit != 1)
+                    attackingPokemon.modifiedStat(Stat.ATTACK)
+                else if (!attackingPokemon.transformed)
+                    attackingPokemon.originalAttack
+                else attackingPokemon.originalStats[0]
+
+                defenseStat = if (crit != 1)
+                    defendingPokemon.modifiedStat(Stat.DEFENSE)
+                else if (!defendingPokemon.transformed)
+                    defendingPokemon.statDef
+                else defendingPokemon.originalStats[1]
             } else {
-                attackStat = attackingPokemon.statSp
-                defenseStat = defendingPokemon.statSp
-                modifiedAttack = Stat.SPECIAL
-                modifiedDefense = Stat.SPECIAL
+                attackStat = if (crit != 1)
+                    attackingPokemon.modifiedStat(Stat.SPECIAL)
+                else if (!attackingPokemon.transformed)
+                    attackingPokemon.statSp
+                else attackingPokemon.originalStats[2]
+
+                defenseStat = if (crit != 1)
+                    defendingPokemon.modifiedStat(Stat.SPECIAL)
+                else if (!defendingPokemon.transformed)
+                    defendingPokemon.statSp
+                else defendingPokemon.originalStats[2]
             }
 
             if (crit == 1) {        // no crit
-                attackStat = attackingPokemon.modifiedStat(modifiedAttack)
-                defenseStat = defendingPokemon.modifiedStat(modifiedDefense)
-
-                // https://bulbapedia.bulbagarden.net/wiki/Reflect_(move)#Generation_I
-                // https://bulbapedia.bulbagarden.net/wiki/Light_Screen_(move)#Generation_I
-                if ((attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.REFLECT)
+                if ((attack.isPhysical
+                                && defendingPokemon.volatileStatus.contains(Status.REFLECT)
                                 && attack != RBYMove.CONFUSE_DAMAGE)
-                        || !attack.isPhysical && defendingPokemon.volatileStatus.contains(Status.LIGHTSCREEN)) {
+                        || (!attack.isPhysical
+                        && defendingPokemon.volatileStatus.contains(Status.LIGHTSCREEN))) {
                     defenseStat *= 2
                     defenseStat %= 1024
                 }
@@ -137,7 +171,8 @@ class RBYDamage {
             var damage = damageFormula(level, crit, basePower, attackStat, defenseStat, typeEffectiveness)
 
             if (attackingPokemon.types.contains(attack.type)
-                    && attack.type != Type.NONE)
+                    && attack.type != Type.NONE
+                    && attack != RBYMove.STRUGGLE)
                 damage = floor(damage * 1.5).toInt()
 
             if (typeEffectiveness != 1.0 && attack.isAttack)

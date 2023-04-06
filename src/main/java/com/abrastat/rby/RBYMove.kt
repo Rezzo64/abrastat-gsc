@@ -23,7 +23,7 @@ enum class RBYMove
 
     BARRAGE(Type.NORMAL, 20, 216, 15, MoveEffect.MULTIHIT),
     BARRIER(Type.PSYCHIC, 30, MoveEffect.SELF_DEFENSERAISE2),
-    BIDE(Type.NORMAL, 10, 255, MoveEffect.BIDE),
+    BIDE(Type.NORMAL, 10, Int.MAX_VALUE, MoveEffect.BIDE),
     BIND(Type.NORMAL, 20, 216, 15, MoveEffect.BIND),
     BITE(Type.NORMAL, 25, 255, 60, MoveEffect.FLINCH10),
     BLIZZARD(Type.ICE, 5, 176, 120, MoveEffect.FRZ10),
@@ -45,7 +45,7 @@ enum class RBYMove
     CUT(Type.NORMAL, 30, 242, 50),
 
     DEFENSE_CURL(Type.NORMAL, 40, MoveEffect.SELF_DEFENSERAISE1),
-    DIG(Type.GROUND, 10, 255, 100, MoveEffect.HIDE),
+    DIG(Type.GROUND, 10, 255, 100, MoveEffect.INVULNERABLE),
     DISABLE(Type.NORMAL, 20, 140, MoveEffect.DISABLE),
     DIZZY_PUNCH(Type.NORMAL, 10, 255, 70),
     DOUBLE_KICK(Type.FIGHTING, 30, 255, 30, MoveEffect.DOUBLEATTACK),
@@ -68,7 +68,7 @@ enum class RBYMove
     FISSURE(Type.GROUND, 5, 76, MoveEffect.ONEHITKO),
     FLAMETHROWER(Type.FIRE, 15, 255, 95, MoveEffect.BRN10),
     FLASH(Type.NORMAL, 20, 178, MoveEffect.OPP_ACCURACYDROP1),
-    FLY(Type.FLYING, 15, 242, 70, MoveEffect.HIDE),
+    FLY(Type.FLYING, 15, 242, 70, MoveEffect.INVULNERABLE),
     FOCUS_ENERGY(Type.NORMAL, 30, MoveEffect.FOCUSENERGY),
     FURY_ATTACK(Type.NORMAL, 20, 216, 15, MoveEffect.MULTIHIT),
     FURY_SWIPES(Type.NORMAL, 15, 204, 10, MoveEffect.MULTIHIT),
@@ -120,7 +120,7 @@ enum class RBYMove
 
     PAYDAY(Type.NORMAL, 20, 255, 40),   // effect doesn't matter for battle
     PECK(Type.FLYING, 35, 255, 35),
-    PETAL_DANCE(Type.GRASS, 20, 255, 30, MoveEffect.PETALDANCE),
+    PETAL_DANCE(Type.GRASS, 20, 255, 70, MoveEffect.PETALDANCE),
     PIN_MISSILE(Type.BUG, 20, 216, 14, MoveEffect.MULTIHIT),
     POISON_GAS(Type.POISON, 40, 140, MoveEffect.PSN),
     POISON_STING(Type.POISON, 35, 255, 15, MoveEffect.PSN20),
@@ -167,7 +167,7 @@ enum class RBYMove
     STOMP(Type.NORMAL, 20, 255, 65, MoveEffect.FLINCH30),
     STRENGTH(Type.NORMAL, 15, 255, 80),
     STRING_SHOT(Type.BUG, 40, 242, MoveEffect.OPP_SPEEDDROP1),
-    STRUGGLE(Type.NONE, 999, 255, 50, MoveEffect.RECOIL25), // can't be used normally
+    STRUGGLE(Type.NORMAL, 999, 255, 50, MoveEffect.RECOIL25), // can't be used normally
     STUN_SPORE(Type.GRASS, 30, 191, MoveEffect.PRZ),
     SUBMISSION(Type.FIGHTING, 20, 204, 80, MoveEffect.RECOIL25),
     SUBSTITUTE(Type.NORMAL, 10, MoveEffect.SUBSTITUTE),

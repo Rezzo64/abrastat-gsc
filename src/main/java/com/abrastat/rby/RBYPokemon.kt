@@ -16,11 +16,25 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
     private var originalSpeed = 0
 
     // move states
-    var struggle = false
-    var tookTurn = false
-    var extraHit = -1
-    var multiTurn = Pair(RBYMove.EMPTY, 0)
-    var storedDamage = 0
+    var counter = false                     // pokemon knows counter    // TODO transform
+    var counterDamage = 0                   // stored counter damage
+    var counterable = false                 // move can be countered
+    var extraHit = 0                        // multiple hits in a turn
+    var multiTurn = Pair(RBYMove.EMPTY, 0)  // multiple turns force move
+    var rageHit = true                      // rage hit first turn
+    var storedDamage = 0                    // stored non counter damage
+    var struggle = false                    // no more moves
+    var substituteBreak = false             // break if sub had any health
+    var substituteHP = 0                    // sub health
+    var tookTurn = false                    // which pokemon was faster
+
+    var transformed = false
+    var originalSpecies: String? = null
+    val originalTypes = arrayOf(Type.NONE, Type.NONE)
+    val originalStats = Array(4) { 0 }
+    val originalStatMods = Array(6) { 0 }
+    val originalMoves = Array(4) { RBYMove.EMPTY }
+    val originalMovesPp = Array(4) { 0 }
 
     init {
         initIVs()
@@ -29,9 +43,12 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
             moves[i] = builder.moves[i]
             movesPp[i] = moves[i].maxPp
         }
+        // if moves ever change, reset flags
+        if (moves.contains(RBYMove.COUNTER))
+            counter = true
 
-        // TODO implement 'if' statement to override level due to user definition
-        // TODO implement 'if' statement to override Stat Experience due to user definition
+        // TODO override level due to user definition
+        // TODO override stat exp due to user definition
         initHPStat()
         initOtherStats()
         startingHP = if (builder.startingHp == 0) statHP else builder.startingHp
@@ -131,15 +148,18 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
         initStatSp(initOtherStatsFormula(baseSpecial, ivSp, evSp, level))
     }
 
+    private fun initOtherStatsFormula(baseStat: Int, ivStat: Int, evStat: Int, level: Int): Int {
+        // https://www.smogon.com/ingame/guides/rby_gsc_stats#howstatswork
+        return floor((baseStat + ivStat) * 2
+                + floor((sqrt(evStat.toDouble() - 1) + 1) / 4)
+                * level / 100).toInt() + 5
+    }
+
     override var moveOnePp: Int
         get() = movesPp[0]
         set(pp) {
             movesPp[0] = pp
         }
-
-    override fun decrementMoveOnePp() {
-        movesPp[0]--
-    }
 
     override var moveTwoPp: Int
         get() = movesPp[1]
@@ -147,29 +167,17 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
             movesPp[1] = pp
         }
 
-    override fun decrementMoveTwoPp() {
-        movesPp[1]--
-    }
-
     override var moveThreePp: Int
         get() = movesPp[2]
         set(pp) {
             movesPp[2] = pp
         }
 
-    override fun decrementMoveThreePp() {
-        movesPp[2]--
-    }
-
     override var moveFourPp: Int
         get() = movesPp[3]
         set(pp) {
             movesPp[3] = pp
         }
-
-    override fun decrementMoveFourPp() {
-        movesPp[3]--
-    }
 
     override fun getMovePp(moveIndex: Int): Int {
         return movesPp[moveIndex]
@@ -183,6 +191,22 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
             moves[3] -> decrementMoveFourPp()
             else -> ppFailedToDeduct(this, move)
         }
+    }
+
+    override fun decrementMoveOnePp() {
+        movesPp[0]--
+    }
+
+    override fun decrementMoveTwoPp() {
+        movesPp[1]--
+    }
+
+    override fun decrementMoveThreePp() {
+        movesPp[2]--
+    }
+
+    override fun decrementMoveFourPp() {
+        movesPp[3]--
     }
 
     fun countEmptyMoves(): Int {
@@ -208,6 +232,21 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
         resetToxicCounter()
         resetConfuseCounter()
         resetDisableCounter()
+    }
+
+    fun resetFlags() {
+        counterDamage = 0
+        counterable = false
+        extraHit = 0
+        lastDamageTaken = 0
+        multiTurn = Pair(RBYMove.EMPTY, 0)
+        rageHit = true
+        storedDamage = 0
+        struggle = false
+        substituteBreak = false
+        substituteHP = 0
+        tookTurn = false
+        if (transformed) unTransform()
     }
 
     override fun removeNonVolatileStatusDebuff() {
@@ -259,14 +298,86 @@ class RBYPokemon constructor(speciesName: String, builder: Builder) : Pokemon(sp
         return statModifier[m + 6]
     }
 
-    override val hiddenPowerType: Type = Type.NONE
+    fun transform(target: RBYPokemon) {
+        // save
+        transformed = true
+        originalSpecies = species
+        originalTypes[0] = types[0]
+        originalTypes[1] = types[1]
+        originalStats[0] = originalAttack
+        originalStats[1] = statDef
+        originalStats[2] = statSp
+        originalStats[3] = originalSpeed
+        originalStatMods[0] = atkMod
+        originalStatMods[1] = defMod
+        originalStatMods[2] = spMod
+        originalStatMods[3] = speMod
+        originalStatMods[4] = accMod
+        originalStatMods[5] = evaMod
+        for (i in 0 until 4) {
+            originalMoves[i] = moves[i]
+            originalMovesPp[i] = movesPp[i]
+        }
 
-    companion object {
-        private fun initOtherStatsFormula(baseStat: Int, ivStat: Int, evStat: Int, level: Int): Int {
-            // https://www.smogon.com/ingame/guides/rby_gsc_stats#howstatswork
-            return floor((baseStat + ivStat) * 2
-                    + floor((sqrt(evStat.toDouble() - 1) + 1) / 4)
-                    * level / 100).toInt() + 5
+        // load
+        species = target.species
+        types[0] = target.types[0]
+        types[1] = target.types[1]
+        originalAttack = target.originalAttack
+        originalSpeed = target.originalSpeed
+        initStatAtk(target.originalAttack)
+        initStatDef(target.statDef)
+        initStatSp(target.statSp)
+        initStatSpe(target.statSpe)
+        atkMod = target.atkMod
+        defMod = target.defMod
+        spMod  = target.spMod
+        speMod = target.speMod
+        accMod = target.accMod
+        evaMod = target.evaMod
+        for (i in 0 until 4) {
+            moves[i] = target.moves[i]
+            if (target.moves[i] != RBYMove.EMPTY)
+                movesPp[i] = 5
         }
     }
+
+    // TODO unTransform when switching
+    fun unTransform() {
+        // load
+        species = originalSpecies
+        types[0] = originalTypes[0]
+        types[1] = originalTypes[1]
+        originalAttack = originalStats[0]
+        originalSpeed = originalStats[3]
+        initStatAtk(originalStats[0])
+        initStatDef(originalStats[1])
+        initStatSp(originalStats[2])
+        initStatSpe(originalStats[3])
+        atkMod = originalStatMods[0]
+        defMod = originalStatMods[1]
+        spMod  = originalStatMods[2]
+        speMod = originalStatMods[3]
+        accMod = originalStatMods[4]
+        evaMod = originalStatMods[5]
+        for (i in 0 until 4) {
+            moves[i] = originalMoves[i]
+            movesPp[i] = originalMovesPp[i]
+        }
+
+        // reset
+        transformed = false
+        originalSpecies = null
+        originalTypes[0] = Type.NONE
+        originalTypes[1] = Type.NONE
+        for (i in 0 until 4) {
+            originalStats[i] = 0
+            originalMoves[i] = RBYMove.EMPTY
+            originalMovesPp[i] = 0
+        }
+        for (i in 0 until 6)
+            originalStatMods[i] = 0
+    }
+
+    override val hiddenPowerType: Type = Type.NONE
 }

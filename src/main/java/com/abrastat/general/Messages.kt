@@ -3,7 +3,8 @@ package com.abrastat.general
 class Messages {
     companion object {
         private var messageBuffer: String? = null
-        private fun handleMessage() { // handle logging from here and whether it's enabled or not
+        private fun handleMessage() {
+            // TODO logging
             println(messageBuffer)
         }
 
@@ -59,6 +60,7 @@ class Messages {
                 Status.CONFUSION -> pokemon.species + " is confused!"
                 Status.FLINCH -> pokemon.species + " flinched and couldn't move!"
                 Status.FREEZE -> pokemon.species + " is frozen solid!"
+                Status.HAZE -> pokemon.species + " is recovering!"
                 Status.PARALYSIS -> pokemon.species + " is fully paralysed!"
                 Status.SLEEP -> pokemon.species + " is fast asleep!"
                 else -> pokemon.species + " can't attack because of its " + status + "!"

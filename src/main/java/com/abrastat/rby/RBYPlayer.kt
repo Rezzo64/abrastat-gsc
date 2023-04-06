@@ -44,8 +44,9 @@ class RBYPlayer(playerName: String, pokemon: RBYPokemon) : Player() {
         if (currentPokemon.volatileStatus.contains(Status.HYPERBEAM))
             return RBYMove.HYPER_BEAM
 
+        // strategic move
+        // TODO manual move
         var move = chooseMoveHelper(opponent)
-
 
         // if invalid move, use any move with pp
         if (move == RBYMove.EMPTY) {
@@ -244,6 +245,8 @@ class RBYPlayer(playerName: String, pokemon: RBYPokemon) : Player() {
         else damage >= currentPokemon.currentHP
     }
 
+    // crits don't use stat boosts
+    // unsure if correct or needed
     private fun opponentCritMayKO(opponent: RBYPlayer): Boolean {
         val damage = opponent.currentPokemon.getAttackDamageCritMaxRoll(
                 this.currentPokemon, opponent.getStrongestAttack(this.currentPokemon))

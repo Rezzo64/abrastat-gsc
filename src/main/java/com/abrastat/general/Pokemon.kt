@@ -144,7 +144,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     }
 
     abstract class Builder<T : Move> protected constructor() {
-        var nickname: String? = null;
+        var nickname: String? = null
         var ivHP = 31
         var ivAtk = 31
         var ivDef = 31
@@ -341,7 +341,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         }
     }
 
-    fun checkModUpperLimit(mod: Int, stat: Stat): Int {
+    private fun checkModUpperLimit(mod: Int, stat: Stat): Int {
         return if (mod + 1 < 6) {
             logStatRaise(this, stat)
             mod + 1
@@ -351,7 +351,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         }
     }
 
-    fun checkModLowerLimit(mod: Int, stat: Stat): Int {
+    private fun checkModLowerLimit(mod: Int, stat: Stat): Int {
         return if (mod - 1 > -6) {
             logStatDrop(this, stat)
             mod - 1
@@ -361,7 +361,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         }
     }
 
-    fun checkSharpModUpperLimit(mod: Int, stat: Stat): Int {
+    private fun checkSharpModUpperLimit(mod: Int, stat: Stat): Int {
         return if (mod + 1 < 6) {
             logStatSharplyRaise(this, stat)
             (mod + 2).coerceAtMost(6)
@@ -371,7 +371,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
         }
     }
 
-    fun checkSharpModLowerLimit(mod: Int, stat: Stat): Int {
+    private fun checkSharpModLowerLimit(mod: Int, stat: Stat): Int {
         return if (mod - 1 > -6) {
             logStatSharplyDrop(this, stat)
             (mod - 2).coerceAtLeast(-6)
@@ -483,6 +483,7 @@ abstract class Pokemon(species: String, builder: Builder<*>) : Species(species) 
     }
 
     companion object {
+        // TODO make work with rby
         private val LOGGER = LoggerFactory.getLogger(GSCPokemon::class.java)
     }
 }

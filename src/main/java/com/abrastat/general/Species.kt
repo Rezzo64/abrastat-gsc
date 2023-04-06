@@ -11,7 +11,6 @@ import javax.json.JsonObject
 abstract class Species protected constructor(speciesName: String) {
     //Json mapper variables
     var species: String? = null
-        private set
     val allowedAbilities = arrayOfNulls<String>(3)
     var baseHp = 0
         private set
@@ -32,7 +31,7 @@ abstract class Species protected constructor(speciesName: String) {
     var weight = 0.0
         private set
     @JvmField
-    val types = arrayOf<Type>(Type.NONE, Type.NONE)
+    val types = arrayOf(Type.NONE, Type.NONE)
     private val genderRatio = 0.0
 
     init {
@@ -45,7 +44,7 @@ abstract class Species protected constructor(speciesName: String) {
             LOGGER.error("Error reading Pokedex file at: {}", pokedex)
         }
         val jsonPokemon = jsonObject!!.getJsonObject(speciesName)
-        setSpecies(speciesName)
+        cleanSpecies(speciesName)
         val jsonAbilities = jsonPokemon.getJsonObject("abilities")
         val jsonBaseStats = jsonPokemon.getJsonObject("baseStats")
         val jsonTypesArray = jsonPokemon.getJsonArray("types")
@@ -57,8 +56,11 @@ abstract class Species protected constructor(speciesName: String) {
         setTypes(jsonTypesArray)
     }
 
-    private fun setSpecies(speciesName: String) {
-        species = speciesName.substring(0, 1).uppercase(Locale.getDefault()) + speciesName.substring(1).lowercase(Locale.getDefault())
+    private fun cleanSpecies(speciesName: String) {
+        species = speciesName.substring(0, 1)
+                .uppercase(Locale.getDefault()) +
+                speciesName.substring(1)
+                        .lowercase(Locale.getDefault())
     }
 
     fun setAllowedAbilities(allowedAbilities: JsonObject) {

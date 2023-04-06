@@ -43,17 +43,17 @@ public class RBYMatchupsMain {
     public static void main(String[] args) {
         long startTime = currentTimeMillis();
 
-        // TODO make this optional argument
+        // read args
+        String pokemonPath = "./src/main/resources/rby/matchup/pokemon.txt";
+//        String pokemonPath = "./src/main/resources/rby/matchup/pokemon2.txt"; // custom matchups
         int simulationCount = 1;
+        if (args.length > 0)
+            pokemonPath = args[0];
+        if (args.length > 1)
+            simulationCount = Integer.parseInt(args[1]);
 
-        // read data
-        String pokemonPath;
+        // parse data
         ArrayList<String> pokemonList;
-        if ((args == null) || (args.length == 0)) {
-            pokemonPath = "./src/main/resources/rby/matchup/pokemon.txt";
-//            pokemonPath = "./src/main/resources/rby/matchup/pokemon2.txt";   // custom matchups
-        } else pokemonPath = args[0];
-
         try { pokemonList = scan(pokemonPath); }
         catch (Exception e) {
             // make sure argument is path to readable file
