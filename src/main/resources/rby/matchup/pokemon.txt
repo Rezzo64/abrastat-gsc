@@ -41,16 +41,16 @@ blastoise
 surf blizzard earthquake rest 
 
 butterfree
-sleep_powder stun_spore psychic psywave 
+psychic substitute flash stun_spore
 
 chansey
 thunderbolt ice_beam softboiled thunder_wave
 
 charizard
-fire_blast earthquake swords_dance body_slam 
+hyper_beam earthquake slash swords_dance
 
 clefable
-blizzard body_slam hyper_beam thunderbolt 
+body_slam blizzard thunderbolt thunder_wave
 
 cloyster
 clamp blizzard rest explosion 
@@ -65,7 +65,7 @@ dodrio
 body_slam drill_peck hyper_beam agility 
 
 dragonite
-agility wrap hyper_beam surf 
+thunder_wave wrap hyper_beam blizzard 
 
 dugtrio
 earthquake rock_slide slash toxic
@@ -119,7 +119,7 @@ jynx
 lovely_kiss blizzard psychic rest 
 
 kabutops
-hyper_beam blizzard swords_dance slash
+hyper_beam slash surf swords_dance
 
 kangaskhan
 body_slam hyper_beam earthquake surf 
@@ -164,7 +164,7 @@ nidoking
 thunderbolt blizzard earthquake body_slam 
 
 nidoqueen
-earthquake blizzard thunderbolt toxic 
+earthquake blizzard thunderbolt body_slam
 
 ninetales
 fire_blast fire_spin body_slam confuse_ray
@@ -200,7 +200,7 @@ raichu
 thunderbolt surf thunder_wave submission
 
 rapidash
-fire_blast fire_spin hyper_beam agility 
+fire_blast fire_spin hyper_beam body_slam 
 
 raticate
 super_fang hyper_beam body_slam blizzard 
@@ -230,7 +230,7 @@ starmie
 recover thunder_wave blizzard psychic 
 
 tangela
-sleep_powder stun_spore bind body_slam 
+mega_drain body_slam stun_spore growth 
 
 tauros
 body_slam hyper_beam blizzard earthquake 
@@ -242,13 +242,13 @@ vaporeon
 surf blizzard body_slam rest 
 
 venomoth
-sleep_powder stun_spore psychic mega_drain 
+psychic solar_beam toxic stun_spore
 
 venusaur
 sleep_powder swords_dance hyper_beam razor_leaf
 
 victreebel
-sleep_powder wrap stun_spore 
+sleep_powder wrap stun_spore razor_leaf
 
 vileplume
 sleep_powder stun_spore mega_drain body_slam 
