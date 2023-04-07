@@ -182,7 +182,7 @@ persian
 hyper_beam bubble_beam thunderbolt slash
 
 pidgeot
-double_edge hyper_beam mirror_move agility 
+double_edge hyper_beam agility
 
 pinsir
 swords_dance hyper_beam submission slash

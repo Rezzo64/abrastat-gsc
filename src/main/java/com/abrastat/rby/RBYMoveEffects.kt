@@ -15,7 +15,7 @@ class RBYMoveEffects {
     // move effects of all moves
 
     // move effects not implemented:
-    // conversion, disable, metronome, mimic, mirror move, transform
+    // conversion, disable, metronome, mimic, mirror move
     companion object {
         fun secondaryEffect(
                 attackingPokemon: RBYPokemon,
@@ -167,6 +167,7 @@ class RBYMoveEffects {
                 }
 
                 MoveEffect.CONVERSION -> {
+                    // https://bulbapedia.bulbagarden.net/wiki/Conversion_(move)#Generation_I
                     TODO()
                 }
 
@@ -185,6 +186,7 @@ class RBYMoveEffects {
                 MoveEffect.CRITRATE -> return
 
                 MoveEffect.DISABLE -> {
+                    // https://bulbapedia.bulbagarden.net/wiki/Disable_(move)#Generation_I
                     TODO()
                 }
 

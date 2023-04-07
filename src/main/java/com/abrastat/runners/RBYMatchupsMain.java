@@ -212,6 +212,8 @@ public class RBYMatchupsMain {
     // probably some way to refactor this
     private static void writeCsv(String @NotNull [] pokemons, int @NotNull [][][] matchups) {
         // lossesCsv is transpose of winsCsv
+        // TODO if matchup folder too large
+        //  move to results subfolder
         File winLossCsv = new File("./src/main/resources/rby/matchup/win-loss.csv");
         File winsCsv = new File("./src/main/resources/rby/matchup/wins.csv");
         File drawsCsv = new File("./src/main/resources/rby/matchup/draws.csv");

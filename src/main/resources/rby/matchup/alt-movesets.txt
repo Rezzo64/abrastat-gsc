@@ -1,16 +1,17 @@
-#Contains several possible alternative movesets. Default movesets are highest.
+# Contains several possible alternative move sets.
+# Default movesets are highest.
 #
-#Suspects:
-#butterfree
-#chansey
-#charizard
-#clefable
-#kabutops
-#omastar
-#seaking
-#venomoth
+# Suspects:
+# butterfree
+# chansey
+# charizard
+# clefable
+# kabutops
+# omastar
+# seaking
+# venomoth
 #
-#The default movesets for suspects should be tested or verified.
+# The default move sets for suspects should be tested or verified.
 
 arcanine
 agility body_slam hyper_beam fire_blast

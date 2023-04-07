@@ -44,10 +44,12 @@ class RBYGame(player1: RBYPlayer,
 
         while (!someoneFainted()) {
             // test for infinite loops
+            /*
             if (turnNumber > 1000) {
                 winner = 0
                 break
             }
+            */
 
             // some moves are forced
             val moveP1 = player1.chooseMove(player2)
