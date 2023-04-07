@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+import static java.lang.System.currentTimeMillis;
+
 public class RBYMatchupsMain {
     // this program takes in a text file path
     // the text file must be formatted:
@@ -39,23 +41,23 @@ public class RBYMatchupsMain {
     // Modify Run Configuration
     // and add Program arguments
     public static void main(String[] args) {
-        // TODO make this optional argument
-        int simulationCount = 1;
+        long startTime = currentTimeMillis();
 
-        // read data
-        String pokemonPath;
-        ArrayList<String> pokemonList;
-        if ((args == null) || (args.length == 0)) {
-            pokemonPath = "./src/main/resources/rby/matchup/pokemon.txt";
-//            pokemonPath = "./src/main/resources/rby/matchup/pokemon2.txt";   // custom matchups
-        } else {
+        // read args
+        String pokemonPath = "./src/main/resources/rby/matchup/pokemon.txt";
+//        String pokemonPath = "./src/main/resources/rby/matchup/pokemon2.txt"; // custom matchups
+        int simulationCount = 1;
+        if (args.length > 0)
             pokemonPath = args[0];
-        }
-        try {
-            pokemonList = scan(pokemonPath);
-        } catch (Exception e) {
+        if (args.length > 1)
+            simulationCount = Integer.parseInt(args[1]);
+
+        // parse data
+        ArrayList<String> pokemonList;
+        try { pokemonList = scan(pokemonPath); }
+        catch (Exception e) {
             // make sure argument is path to readable file
-            throw new InputMismatchException(
+            throw new IllegalArgumentException(
                     "Argument must be a path to a text file"
             );
         }
@@ -66,13 +68,13 @@ public class RBYMatchupsMain {
             // make sure all pokemon have move sets
             // if an even number of pokemon don't have a move set,
             // this exception will not be thrown
-            throw new InputMismatchException(
+            throw new IllegalArgumentException(
                     "Every Pokemon must have a move set"
             );
         }
         if (numPokemon < 2) {
             // make sure there are at least two sets of pokemon and moves
-            throw new InputMismatchException(
+            throw new IllegalArgumentException(
                     "Number of Pokemon must be at least 2"
             );
         }
@@ -107,7 +109,10 @@ public class RBYMatchupsMain {
 
         for (int i = 0; i < numPokemon - 1; i++) {
             for (int j = i + 1; j < numPokemon; j++) {
-                RBYGameRunner runner = new RBYGameRunner(pokemons[i], pokemons[j], simulationCount);
+                RBYGameRunner runner = new RBYGameRunner(
+                        new RBYPokemon[]{pokemons[i]},
+                        new RBYPokemon[]{pokemons[j]},
+                        simulationCount);
 
                 // record results
                 matchups[i][j][0] = runner.displayP1Wins();
@@ -127,6 +132,7 @@ public class RBYMatchupsMain {
         writeCsv(names, matchups);
 
         Messages.gameOver();
+        statistics(startTime);
         System.exit(0);
     }
 
@@ -159,15 +165,14 @@ public class RBYMatchupsMain {
 
         RBYMove[] m = new RBYMove[moves.length];
         for (int i = 0; i < moves.length; i++) {
-            try {
-                m[i] = RBYMove.valueOf(moves[i]);
-            } catch (IllegalArgumentException e) {
-                m[i] = RBYMove.EMPTY;   // testing
+            try { m[i] = RBYMove.valueOf(moves[i]); }
+            catch (IllegalArgumentException e) {
+//                m[i] = RBYMove.EMPTY;   // testing
                 // make sure the move is spelled correctly
                 // make sure the move is implemented
-//                throw new IllegalArgumentException(
-//                        "Move " + moves[i] + " does not exist or is not implemented"
-//                );
+                throw new IllegalArgumentException(
+                        "Move " + moves[i] + " does not exist or is not implemented"
+                );
             }
         }
         return m;
@@ -185,6 +190,8 @@ public class RBYMatchupsMain {
             // make sure all pokemon have move sets
             // if a move set is shown,
             // an even number of pokemon may not have a move set
+            // if even number of consecutive pokemon do not have move set,
+            // this exception will not be thrown
             throw new NullPointerException(
                     "Pokemon " + species + " does not exist"
             );
@@ -205,6 +212,8 @@ public class RBYMatchupsMain {
     // probably some way to refactor this
     private static void writeCsv(String @NotNull [] pokemons, int @NotNull [][][] matchups) {
         // lossesCsv is transpose of winsCsv
+        // TODO if matchup folder too large
+        //  move to results subfolder
         File winLossCsv = new File("./src/main/resources/rby/matchup/win-loss.csv");
         File winsCsv = new File("./src/main/resources/rby/matchup/wins.csv");
         File drawsCsv = new File("./src/main/resources/rby/matchup/draws.csv");
@@ -241,9 +250,8 @@ public class RBYMatchupsMain {
                     line1.append(data[i][0] - data[i][1]);
                     line2.append(data[i][0]);
                     line3.append(data[i][2]);
-                    if (i != data.length - 1) {
+                    if (i != data.length - 1)
                         lines.forEach(line -> line.append(','));
-                    }
                 }
 
                 lines.forEach(line -> line.append("\n"));
@@ -265,12 +273,22 @@ public class RBYMatchupsMain {
         header.append(',');
         for (int i = 0; i < pokemons.length; i++) {
             header.append(pokemons[i]);
-            if (i != pokemons.length - 1) {
+            if (i != pokemons.length - 1)
                 header.append(',');
-            }
         }
         header.append("\n");
         return header;
+    }
+
+    private static void statistics(long startTime) {
+        double time = (currentTimeMillis() - startTime) / 1000.0;
+        int hours = (int) (time / 3600);
+        int minutes = (int) (time % 3600) / 60;
+        double seconds = time % 60.0;
+        System.out.println(
+                "Program ran for " + hours + " hours, "
+                        + minutes + " minutes, " + seconds + " seconds."
+        );
     }
 }
 

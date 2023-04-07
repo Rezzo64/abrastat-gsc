@@ -1,11 +1,10 @@
 package com.abrastat.general
 
-enum class Messages {
-    INSTANCE;
-
+class Messages {
     companion object {
         private var messageBuffer: String? = null
-        private fun handleMessage() { // handle logging from here and whether it's enabled or not
+        private fun handleMessage() {
+            // TODO logging
             println(messageBuffer)
         }
 
@@ -16,15 +15,11 @@ enum class Messages {
             handleMessage()
         }
 
-        private fun logIssue(pokemon: Pokemon, move: Move) {
-            // TODO write this to a file or something
-            // messageBuffer.write();
-        }
-
         @JvmStatic
         fun announceTeam(player: Player) {
             val s = StringBuilder(player.name + ": " + System.lineSeparator())
-            for (pokemon in player.currentTeam) {
+            for (i in 0 until 6) {
+                val pokemon = player.getPokemon(i)
                 if (pokemon != null) {
                     s.append(pokemon.species + " ")
                 } else {
@@ -43,64 +38,70 @@ enum class Messages {
 
         @JvmStatic
         fun statusFailed(pokemon: Pokemon, status: Status) {
-            when (status) {
+            messageBuffer = when (status) {
                 Status.FAINT -> return
-                Status.BURN -> messageBuffer = pokemon.species + " is already burned!"
-                Status.FREEZE -> messageBuffer = pokemon.species + " is already frozen!"
-                Status.PARALYSIS -> messageBuffer = pokemon.species + " is already paralysed!"
-                Status.POISON, Status.TOXIC -> messageBuffer = pokemon.species + " is already poisoned!"
-                Status.SLEEP -> messageBuffer = pokemon.species + " is already asleep!"
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = pokemon.species + " is already confused!"
-                Status.ATTRACT -> messageBuffer = pokemon.species + " is already in love!"
-                else -> messageBuffer = "But it failed!"
+                Status.BURN -> pokemon.species + " is already burned!"
+                Status.FREEZE -> pokemon.species + " is already frozen!"
+                Status.PARALYSIS -> pokemon.species + " is already paralysed!"
+                Status.POISON, Status.TOXIC -> pokemon.species + " is already poisoned!"
+                Status.SLEEP -> pokemon.species + " is already asleep!"
+                Status.CONFUSION-> pokemon.species + " is already confused!"
+                Status.ATTRACT -> pokemon.species + " is already in love!"
+                else -> "But it failed!"
             }
             handleMessage()
         }
 
         @JvmStatic
         fun cantAttack(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.PARALYSIS -> messageBuffer = pokemon.species + " is fully paralysed!"
-                Status.SLEEP -> messageBuffer = pokemon.species + " is fast asleep!"
-                Status.FREEZE -> messageBuffer = pokemon.species + " is frozen solid!"
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = (pokemon.species + " hurt itself in confusion! ("
-                        + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
-
-                Status.ATTRACT -> messageBuffer = pokemon.species + " is immobilised by love!"
-                else -> messageBuffer = pokemon.species + " can't attack because of its " + status + "!"
+            messageBuffer = when (status) {
+                Status.ATTRACT -> pokemon.species + " is immobilised by love!"
+                Status.BIND -> pokemon.species + " is tangled up!"
+                Status.CONFUSION -> pokemon.species + " is confused!"
+                Status.FLINCH -> pokemon.species + " flinched and couldn't move!"
+                Status.FREEZE -> pokemon.species + " is frozen solid!"
+                Status.HAZE -> pokemon.species + " is recovering!"
+                Status.PARALYSIS -> pokemon.species + " is fully paralysed!"
+                Status.SLEEP -> pokemon.species + " is fast asleep!"
+                else -> pokemon.species + " can't attack because of its " + status + "!"
             }
             handleMessage()
         }
 
         @JvmStatic
         fun statusChanged(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.SLEEP -> messageBuffer = pokemon.species + " woke up!"
-                Status.FREEZE -> messageBuffer = pokemon.species + " thawed out!"
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = pokemon.species + " snapped out of its confusion!"
-                else -> messageBuffer = pokemon.species + "is no longer affected by " + status + "!"
+            messageBuffer = when (status) {
+                Status.SLEEP -> pokemon.species + " woke up!"
+                Status.FREEZE -> pokemon.species + " thawed out!"
+                Status.CONFUSION -> pokemon.species + " snapped out of its confusion!"
+                else -> pokemon.species + "is no longer affected by " + status + "!"
             }
             handleMessage()
         }
 
         fun logEffect(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.BURN -> messageBuffer = (pokemon.species + " is hurt by its burn! ("
+            messageBuffer = when (status) {
+                Status.ATTRACT -> pokemon.species + " is in love with its opponent!"
+
+                Status.BURN -> (pokemon.species + " is hurt by its burn! ("
                         + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
 
-                Status.POISON, Status.TOXIC -> messageBuffer = (pokemon.species + " is hurt by poison! ("
+                Status.LEECHSEED -> (pokemon.species + " is hurt by leech seed! ("
                         + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
 
-                Status.CONFUSION, Status.FATIGUE -> messageBuffer = pokemon.species + " is confused!"
-                Status.ATTRACT -> messageBuffer = pokemon.species + " is in love with its opponent!"
-                else -> messageBuffer = pokemon.species + " is affected by " + status + "!"
+                Status.POISON, Status.TOXIC -> (pokemon.species + " is hurt by poison! ("
+                        + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
+
+                Status.CONFUSION-> (pokemon.species + " hurt itself in confusion! ("
+                        + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
+
+                else -> pokemon.species + " is affected by " + status + "!"
             }
             handleMessage()
         }
 
         @JvmStatic
         fun leftoversHeal(pokemon: Pokemon) {
-
             // only display message if there is health actually being restored by leftovers
             if (pokemon.currentHP < pokemon.statHP) {
                 messageBuffer = (pokemon.species + " restored health using its Leftovers! ("
@@ -123,12 +124,12 @@ enum class Messages {
 
         @JvmStatic
         fun logTypeEffectiveness(typeEffectiveness: Int) {
-            if (typeEffectiveness == 0) {
-                messageBuffer = "It didn't affect the opponent!"
-            } else if (typeEffectiveness < 10) {
-                messageBuffer = "It's not very effective..."
-            } else if (typeEffectiveness > 10) {
-                messageBuffer = "It's super effective!"
+            messageBuffer = if (typeEffectiveness == 0) {
+                "It didn't affect the opponent!"
+            } else if (typeEffectiveness < 1) {
+                "It's not very effective..."
+            } else if (typeEffectiveness > 1) {
+                "It's super effective!"
             } else {
                 return
             }
@@ -156,45 +157,16 @@ enum class Messages {
 
         @JvmStatic
         fun logNewStatus(pokemon: Pokemon, status: Status) {
-            when (status) {
-                Status.PARALYSIS -> messageBuffer = pokemon.species + " is paralysed! It may be unable to move!"
-                Status.SLEEP -> messageBuffer = pokemon.species + " has fallen asleep!"
-                Status.FREEZE -> {
-                    messageBuffer = pokemon.species + " was frozen!"
-                    messageBuffer = pokemon.species + " was burned by the attack!"
-                    messageBuffer = pokemon.species + " became confused!"
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.BURN -> {
-                    messageBuffer = pokemon.species + " was burned by the attack!"
-                    messageBuffer = pokemon.species + " became confused!"
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.FATIGUE, Status.CONFUSION -> {
-                    messageBuffer = pokemon.species + " became confused!"
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.POISON -> {
-                    messageBuffer = pokemon.species + " is poisoned!"
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                Status.TOXIC -> {
-                    messageBuffer = pokemon.species + " is badly poisoned!"
-                    messageBuffer = pokemon.species + " is afflicted by " + status + "!"
-                }
-
-                else -> messageBuffer = pokemon.species + " is afflicted by " + status + "!"
+            messageBuffer = when (status) {
+                Status.BIND -> pokemon.species + " was tangled!"
+                Status.BURN -> pokemon.species + " was burned by the attack!"
+                Status.CONFUSION -> pokemon.species + " became confused!"
+                Status.FREEZE -> pokemon.species + " was frozen!"
+                Status.PARALYSIS -> pokemon.species + " is paralysed! It may be unable to move!"
+                Status.POISON -> pokemon.species + " is poisoned!"
+                Status.SLEEP -> pokemon.species + " has fallen asleep!"
+                Status.TOXIC -> pokemon.species + " is badly poisoned!"
+                else -> pokemon.species + " is afflicted by " + status + "!"
             }
             handleMessage()
         }
@@ -222,7 +194,7 @@ enum class Messages {
         @JvmStatic
         fun ppFailedToDeduct(pokemon: Pokemon, move: Move) {
             messageBuffer = "Failed to identify the move $move on $pokemon. No PP was deducted."
-            logIssue(pokemon, move)
+            // TODO log issue
             handleMessage()
         }
 
@@ -235,7 +207,7 @@ enum class Messages {
 
         @JvmStatic
         fun logNoMoveBehaviourFound(pokemon: Pokemon, move: Move) {
-            messageBuffer = pokemon.toString() + "'s move " + move + "has no defined behaviour, this move will not be used in battle."
+            messageBuffer = "$pokemon's move $move has no defined behaviour."
             handleMessage()
         }
 
@@ -245,6 +217,12 @@ enum class Messages {
                     + pokemon + ". Instead, using first move ("
                     + pokemon.moves[0] + ").")
             handleMessage()
+        }
+
+        @JvmStatic
+        fun logHeal(pokemon: Pokemon) {
+            messageBuffer = (pokemon.species + " healed ("
+            + pokemon.currentHP + "/" + pokemon.statHP + " HP)")
         }
 
         @JvmStatic

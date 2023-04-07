@@ -12,332 +12,237 @@ enum class RBYMove
                  override val effect: MoveEffect,
                  override var isAttack: Boolean)
     : Move {
-    ABSORB(Type.GRASS, 32, 255, 20, MoveEffect.ABSORB),
-    ACID(Type.POISON, 48, 255, 40, MoveEffect.ACIDSPDEFDROP),
-    ACID_ARMOR(Type.POISON, 61, MoveEffect.SELF_DEFENSERAISE2),
-    //    AEROBLAST,
-    AGILITY(Type.PSYCHIC, 48, MoveEffect.SELF_SPEEDRAISE2),
-    AMNESIA(Type.PSYCHIC, 32, MoveEffect.SELF_SPDEFRAISE2),
-    //    ANCIENTPOWER,
-    ATTRACT(Type.NORMAL, 24, 255, MoveEffect.ATTRACT),
-    //    AURORA_BEAM,
+    // this enum lists all the existing moves in rby
+    // http://www.psypokes.com/rby/attacks.php
+    ABSORB(Type.GRASS, 20, 255, 20, MoveEffect.ABSORB),
+    ACID(Type.POISON, 30, 255, 40, MoveEffect.OPP_DEFENSEDROP1_10),
+    ACID_ARMOR(Type.POISON, 40, MoveEffect.SELF_DEFENSERAISE2),
+    AGILITY(Type.PSYCHIC, 30, MoveEffect.SELF_SPEEDRAISE2),
+    AMNESIA(Type.PSYCHIC, 20, MoveEffect.SELF_SPECIALRAISE2),
+    AURORA_BEAM(Type.ICE, 20, 255, 65, MoveEffect.OPP_ATTACKDROP1_10),
 
-    //    BARRAGE,
-    BARRIER(Type.PSYCHIC, 48, MoveEffect.SELF_DEFENSERAISE2),
-    //    BATON_PASS,
-    BEAT_UP(Type.DARK, 16, 255, 10, MoveEffect.BEATUP),
-    BELLY_DRUM(Type.NORMAL, 16, MoveEffect.BELLYDRUM),
-    //    BIDE,
-    //    BIND,
-    //    BITE,
-    BLIZZARD(Type.ICE, 8, 176, 120, MoveEffect.FRZ10),
-    BODY_SLAM(Type.NORMAL, 24, 255, 85, MoveEffect.PRZ30),
-    //    BONE_CLUB,
-    //    BONE_RUSH,
-    //    BONEMERANG,
-    //    BUBBLE,
-    //    BUBBLEBEAM,
+    BARRAGE(Type.NORMAL, 20, 216, 15, MoveEffect.MULTIHIT),
+    BARRIER(Type.PSYCHIC, 30, MoveEffect.SELF_DEFENSERAISE2),
+    BIDE(Type.NORMAL, 10, Int.MAX_VALUE, MoveEffect.BIDE),
+    BIND(Type.NORMAL, 20, 216, 15, MoveEffect.BIND),
+    BITE(Type.NORMAL, 25, 255, 60, MoveEffect.FLINCH10),
+    BLIZZARD(Type.ICE, 5, 176, 120, MoveEffect.FRZ10),
+    BODY_SLAM(Type.NORMAL, 15, 255, 85, MoveEffect.PRZ30),
+    BONE_CLUB(Type.GROUND, 20, 216, 65, MoveEffect.FLINCH10),
+    BONEMERANG(Type.GROUND, 10, 229, 50, MoveEffect.DOUBLEATTACK),
+    BUBBLE(Type.WATER, 30, 255, 20, MoveEffect.OPP_SPEEDDROP1_10),
+    BUBBLE_BEAM(Type.WATER, 20, 255, 65, MoveEffect.OPP_SPEEDDROP1_10),
 
-    CHARM(Type.NORMAL, 32, 255, MoveEffect.OPP_ATTACKDROP2),
-    //    CLAMP,
-    //    COMET_PUNCH,
-    CONFUSE_RAY(Type.GHOST, 16, 255, MoveEffect.OPP_CONFUSION),
-    //    CONFUSION,
-    //    CONSTRICT,
-    //    CONVERSION,
-    //    CONVERSION2,
-    //    COTTON_SPORE,
-    //    COUNTER,
-    //    CRABHAMMER,
-    CROSS_CHOP(Type.FIGHTING, 8, 204, 100, MoveEffect.CRITRATE),
-    CRUNCH(Type.DARK, 24, 255, 80, MoveEffect.CRUNCHSPDEFDROP),
-    CURSE(Type.NONE, 16, MoveEffect.CURSE),
-    //    CUT,
+    CLAMP(Type.WATER, 10, 216,35, MoveEffect.BIND),
+    COMET_PUNCH(Type.NORMAL, 15, 216, 18, MoveEffect.MULTIHIT),
+    CONFUSE_DAMAGE(Type.NONE, Int.MAX_VALUE, Int.MAX_VALUE, 40),    // can't be used normally
+    CONFUSE_RAY(Type.GHOST, 10, 255, MoveEffect.CONFUSION),
+    CONFUSION(Type.PSYCHIC, 25, 255, 50, MoveEffect.CONFUSION10),
+    CONSTRICT(Type.NORMAL, 35, 255, 10, MoveEffect.OPP_SPEEDDROP1_10),
+    CONVERSION(Type.NORMAL, 30, MoveEffect.CONVERSION),
+    COUNTER(Type.FIGHTING, 20, 255, MoveEffect.COUNTER),
+    CRABHAMMER(Type.WATER, 10, 229, 100, MoveEffect.CRITRATE),
+    CUT(Type.NORMAL, 30, 242, 50),
 
-    //    DEFENSE_CURL,
-    DESTINY_BOND(Type.GHOST, 8, 0, MoveEffect.DESTINYBOND),
-    //    DETECT,
-    //    DIG,
-    //    DISABLE,
-    //    DIZZY_PUNCH,
-    //    DOUBLE_KICK,
-    //    DOUBLE_TEAM,
-    DOUBLE_EDGE(Type.NORMAL, 24, 255, 100, MoveEffect.RECOIL25),
-    //    DOUBLESLAP,
-    //    DRAGON_RAGE,
-    //    DRAGONBREATH,
-    DREAM_EATER(Type.PSYCHIC, 24, 255, 100, MoveEffect.DREAMEATER),
-    DRILL_PECK(Type.FLYING, 32, 255, 80),
-    DYNAMICPUNCH(Type.FIGHTING, 8, 127, 100, MoveEffect.CONFUSE100),
+    DEFENSE_CURL(Type.NORMAL, 40, MoveEffect.SELF_DEFENSERAISE1),
+    DIG(Type.GROUND, 10, 255, 100, MoveEffect.INVULNERABLE),
+    DISABLE(Type.NORMAL, 20, 140, MoveEffect.DISABLE),
+    DIZZY_PUNCH(Type.NORMAL, 10, 255, 70),
+    DOUBLE_KICK(Type.FIGHTING, 30, 255, 30, MoveEffect.DOUBLEATTACK),
+    DOUBLE_TEAM(Type.NORMAL, 15, MoveEffect.SELF_EVASIONRAISE1),
+    DOUBLE_EDGE(Type.NORMAL, 15, 255, 100, MoveEffect.RECOIL25),
+    DOUBLESLAP(Type.NORMAL, 10, 216, 15, MoveEffect.MULTIHIT),
+    DRAGON_RAGE(Type.DRAGON, 10, 255, MoveEffect.DRAGONRAGE),
+    DREAM_EATER(Type.PSYCHIC, 15, 255, 100, MoveEffect.DREAMEATER),
+    DRILL_PECK(Type.FLYING, 20, 255, 80),
 
-    EARTHQUAKE(Type.GROUND, 16, 255, 100),
-    //    EGG_BOMB,
-    //    EMBER,
-    EMPTY(Type.NONE, 0, MoveEffect.NONE),
-    ENCORE(Type.NORMAL, 8, 255, MoveEffect.ENCORE),
-    //    ENDURE,
-    EXPLOSION(Type.NORMAL, 8, 255, 170, MoveEffect.SELFDESTRUCT),
-    //    EXTREMESPEED,
+    EARTHQUAKE(Type.GROUND, 10, 255, 100),
+    EGG_BOMB(Type.NORMAL, 10, 191, 100),
+    EMBER(Type.FIRE, 25, 255, 40, MoveEffect.BRN10),
+    EMPTY(Type.NONE, 0, 0, Int.MIN_VALUE, MoveEffect.NONE), // can't be used normally
+    EXPLOSION(Type.NORMAL, 5, 255, 340, MoveEffect.SELFDESTRUCT),   // half def == double power
 
-    //    FAINT_ATTACK,
-    //    FALSE_SWIPE,
-    FIRE_BLAST(Type.FIRE, 8, 216, 120, MoveEffect.BRN30),
-    FIRE_PUNCH(Type.FIRE, 24, 255, 75, MoveEffect.BRN10),
-    //    FIRE_SPIN,
-    //    FISSURE,
-    FLAIL(Type.NORMAL, 24, 255, 1, MoveEffect.FLAIL),
-    //    FLAME_WHEEL,
-    FLAMETHROWER(Type.FIRE, 24, 255, 95, MoveEffect.BRN10),
-    //    FLASH,
-    //    FLY,
-    FOCUS_ENERGY(Type.NORMAL, 48, MoveEffect.FOCUSENERGY),
-    //    FORESIGHT,
-    //    FRUSTRATION,
-    //    FURY_ATTACK,
-    //    FURY_CUTTER,
-    //    FURY_SWIPES,
-    FUTURE_SIGHT(Type.PSYCHIC, 24, 229, 80, MoveEffect.FUTURESIGHT),
+    FIRE_BLAST(Type.FIRE, 5, 216, 120, MoveEffect.BRN30),
+    FIRE_PUNCH(Type.FIRE, 15, 255, 75, MoveEffect.BRN10),
+    FIRE_SPIN(Type.FIRE, 15, 178,35, MoveEffect.BIND),
+    FISSURE(Type.GROUND, 5, 76, MoveEffect.ONEHITKO),
+    FLAMETHROWER(Type.FIRE, 15, 255, 95, MoveEffect.BRN10),
+    FLASH(Type.NORMAL, 20, 178, MoveEffect.OPP_ACCURACYDROP1),
+    FLY(Type.FLYING, 15, 242, 70, MoveEffect.INVULNERABLE),
+    FOCUS_ENERGY(Type.NORMAL, 30, MoveEffect.FOCUSENERGY),
+    FURY_ATTACK(Type.NORMAL, 20, 216, 15, MoveEffect.MULTIHIT),
+    FURY_SWIPES(Type.NORMAL, 15, 204, 10, MoveEffect.MULTIHIT),
 
-    GIGA_DRAIN(Type.GRASS, 8, 255, 60, MoveEffect.ABSORB),
-    //    GLARE,
-    GROWL(Type.NORMAL, 32, 255, MoveEffect.OPP_ATTACKDROP1),
-    GROWTH(Type.NORMAL, 61, MoveEffect.SELF_SPATKRAISE1),
-    //    GUILLOTINE,
-    //    GUST,
+    GLARE(Type.NORMAL, 30, 191, MoveEffect.PRZ),
+    GROWL(Type.NORMAL, 40, 255, MoveEffect.OPP_ATTACKDROP1),
+    GROWTH(Type.NORMAL, 40, MoveEffect.SELF_SPECIALRAISE1),
+    GUILLOTINE(Type.NORMAL, 5, 76, MoveEffect.ONEHITKO),
+    GUST(Type.NORMAL, 35, 255, 40),
 
-    //    HARDEN,
-    //    HAZE,
-    //    HEADBUTT,
-    //    HEAL_BELL,
-    //    HI_JUMP_KICK,
-    //    HIDDEN_POWER,
-    //    HORN_ATTACK,
-    //    HORN_DRILL,
-    HYDRO_PUMP(Type.WATER, 8, 204, 120),
-    HYPER_BEAM(Type.NORMAL, 8, 229, 150, MoveEffect.HYPERBEAM),
-    //    HYPER_FANG,
-    HYPNOSIS(Type.PSYCHIC, 32, 153, MoveEffect.SLEEP),
+    HARDEN(Type.NORMAL, 30, MoveEffect.SELF_DEFENSERAISE1),
+    HAZE(Type.ICE, 30, MoveEffect.HAZE),
+    HEADBUTT(Type.NORMAL, 15, 255, 70, MoveEffect.FLINCH30),
+    HIGH_JUMP_KICK(Type.FIGHTING, 20, 229, 85, MoveEffect.HIGHJUMPKICK),
+    HORN_ATTACK(Type.NORMAL, 25, 255, 65),
+    HORN_DRILL(Type.NORMAL, 5, 76, MoveEffect.ONEHITKO),
+    HYDRO_PUMP(Type.WATER, 5, 204, 120),
+    HYPER_BEAM(Type.NORMAL, 5, 229, 150, MoveEffect.HYPERBEAM),
+    HYPER_FANG(Type.NORMAL, 15, 229, 80, MoveEffect.FLINCH10),
+    HYPNOSIS(Type.PSYCHIC, 20, 153, MoveEffect.SLEEP),
 
-    ICE_BEAM(Type.ICE, 16, 255, 95, MoveEffect.FRZ10),
-    ICE_PUNCH(Type.ICE, 24, 255, 75, MoveEffect.FRZ10),
-    //    ICY_WIND,
-    //    IRON_TAIL,
+    ICE_BEAM(Type.ICE, 10, 255, 95, MoveEffect.FRZ10),
+    ICE_PUNCH(Type.ICE, 15, 255, 75, MoveEffect.FRZ10),
 
-    //    JUMP_KICK,
+    JUMP_KICK(Type.FIGHTING, 20, 242, 70, MoveEffect.HIGHJUMPKICK),
 
-    //    KARATE_CHOP,
-    //    KINESIS,
+    KARATE_CHOP(Type.NORMAL, 25, 255, 55, MoveEffect.CRITRATE),
+    KINESIS(Type.PSYCHIC, 15, 204, MoveEffect.OPP_ACCURACYDROP1),
 
-    //    LEECH_LIFE,
-    //    LEECH_SEED,
-    //    LEER,
-    //    LICK,
-    //    LIGHT_SCREEN,
-    //    LOCK_ON,
-    LOVELY_KISS(Type.NORMAL, 191, MoveEffect.SLEEP),
-    //    LOW_KICK,
+    LEECH_LIFE(Type.BUG, 15, 255, 20, MoveEffect.ABSORB),
+    LEECH_SEED(Type.GRASS, 10, 229, MoveEffect.LEECHSEED),
+    LEER(Type.NORMAL, 30, 255, MoveEffect.OPP_DEFENSEDROP1),
+    LICK(Type.GHOST, 30, 255, 20, MoveEffect.PRZ30),
+    LIGHT_SCREEN(Type.PSYCHIC, 30, MoveEffect.LIGHTSCREEN),
+    LOVELY_KISS(Type.NORMAL, 10, 191, MoveEffect.SLEEP),
+    LOW_KICK(Type.FIGHTING, 20, 229, 50, MoveEffect.FLINCH30),
 
-    //    MACH_PUNCH,
-    //    MAGNITUDE,
-    //    MEAN_LOOK,
-    MEDITATE(Type.PSYCHIC, 61, MoveEffect.SELF_ATTACKRAISE1),
-    //    MEGA_DRAIN,
-    //    MEGA_KICK,
-    //    MEGA_PUNCH,
-    MEGAHORN(Type.BUG, 16, 216, 120),
-    //    METAL_CLAW,
-    //    METRONOME,
-    MILK_DRINK(Type.NORMAL, 16, MoveEffect.RECOVER),
-    //    MIMIC,
-    //    MIND_READER,
-    //    MINIMIZE,
-    //    MIRROR_COAT,
-    //    MIRROR_MOVE,
-    //    MIST,
-    //    MOONLIGHT,
-    //    MORNING_SUN,
-    //    MUD_SLAP,
+    MEDITATE(Type.PSYCHIC, 30, MoveEffect.SELF_ATTACKRAISE1),
+    MEGA_DRAIN(Type.GRASS, 10, 255, 40, MoveEffect.ABSORB),
+    MEGA_KICK(Type.NORMAL, 5, 191, 120),
+    MEGA_PUNCH(Type.NORMAL, 20, 216, 80),
+    METRONOME(Type.NORMAL, 10, MoveEffect.METRONOME),
+    MIMIC(Type.NORMAL, 10, 255, MoveEffect.MIMIC),
+    MINIMIZE(Type.NORMAL, 20, MoveEffect.SELF_EVASIONRAISE1),
+    MIRROR_MOVE(Type.FLYING, 20, MoveEffect.MIRRORMOVE),
+    MIST(Type.ICE, 30, MoveEffect.MIST),
 
-    NIGHT_SHADE(Type.NONE, 24, 255, 1, MoveEffect.SEISMICTOSS),
-    NIGHTMARE(Type.GHOST, 24, 255, MoveEffect.NIGHTMARE),
+    NIGHT_SHADE(Type.GHOST, 15, 255, MoveEffect.SEISMICTOSS),
 
-    //    OCTAZOOKA,
-    //    OUTRAGE,
+    PAYDAY(Type.NORMAL, 20, 255, 40),   // effect doesn't matter for battle
+    PECK(Type.FLYING, 35, 255, 35),
+    PETAL_DANCE(Type.GRASS, 20, 255, 70, MoveEffect.PETALDANCE),
+    PIN_MISSILE(Type.BUG, 20, 216, 14, MoveEffect.MULTIHIT),
+    POISON_GAS(Type.POISON, 40, 140, MoveEffect.PSN),
+    POISON_STING(Type.POISON, 35, 255, 15, MoveEffect.PSN20),
+    POISON_POWDER(Type.POISON, 35, 191, MoveEffect.PSN),
+    POUND(Type.NORMAL, 35, 255, 40),
+    PSYBEAM(Type.PSYCHIC, 20, 255, 65, MoveEffect.CONFUSION10),
+    PSYCHIC(Type.PSYCHIC, 10, 255, 90, MoveEffect.OPP_SPECIALDROP1_30),
+    PSYWAVE(Type.PSYCHIC, 15, 204, MoveEffect.PSYWAVE),
 
-    //    PAIN_SPLIT,
-    //    PAYDAY,
-    //    PECK,
-    //    PERISH_SONG,
-    //    PETAL_DANCE,
-    //    PIN_MISSILE,
-    //    POISON_GAS,
-    //    POISON_STING,
-    //    POISON_POWDER,
-    //    POUND,
-    //    POWDER_SNOW,
-    PRESENT(Type.NORMAL, 24, 229, 1, MoveEffect.PRESENT),
-    PROTECT(Type.NORMAL, 16, MoveEffect.PROTECT),
-    //    PSYBEAM,
-    //    PSYCHUP,
-    PSYCHIC(Type.PSYCHIC, 16, 255, 90, MoveEffect.PSYCHICSPDEFDROP),
-    //    PSYWAVE,
-    //    PURSUIT,
+    QUICK_ATTACK(Type.NORMAL, 30, 255, 40, MoveEffect.QUICKATTACK),
 
-    //    QUICK_ATTACK,
+    RAGE(Type.NORMAL, 20, 255, 20, MoveEffect.RAGE),
+    RAZOR_LEAF(Type.GRASS, 25, 242, 25, MoveEffect.CRITRATE),
+    RAZOR_WIND(Type.NORMAL, 10, 191, 80, MoveEffect.RAZORWIND),
+    RECOVER(Type.NORMAL, 20, MoveEffect.RECOVER),
+    REFLECT(Type.PSYCHIC, 20, MoveEffect.REFLECT),
+    REST(Type.PSYCHIC, 10, MoveEffect.REST),
+//    ROAR,   // no effect in trainer battles
+    ROCK_SLIDE(Type.ROCK, 10, 229, 75),
+    ROCK_THROW(Type.ROCK, 15, 165, 50),
+    ROLLING_KICK(Type.FIGHTING, 15, 216, 60, MoveEffect.FLINCH30),
 
-    //    RAGE,
-    //    RAIN_DANCE,
-    //    RAPID_SPIN,
-    //    RAZOR_LEAF,
-    //    RAZOR_WIND,
-    RECOVER(Type.NORMAL, 32, MoveEffect.RECOVER),
-    //    REFLECT,
-    REST(Type.PSYCHIC, 16, MoveEffect.REST),
-    RETURN(Type.NORMAL, 32, 255, 102, MoveEffect.RETURN),
-    REVERSAL(Type.FIGHTING, 24, 255, 1, MoveEffect.FLAIL),
-    //    ROAR,
-    ROCK_SLIDE(Type.ROCK, 16, 229, 75, MoveEffect.NONE),
-    //    ROCK_SMASH,
-    //    ROCK_THROW,
-    //    ROLLING_KICK,
-    ROLLOUT(Type.ROCK, 32, 229, 30, MoveEffect.ROLLOUT),
+    SAND_ATTACK(Type.NORMAL, 15, 255, MoveEffect.OPP_ACCURACYDROP1),
+    SCRATCH(Type.NORMAL, 35, 255, 40),
+    SCREECH(Type.NORMAL, 10, 216, MoveEffect.OPP_DEFENSEDROP2),
+    SEISMIC_TOSS(Type.FIGHTING, 20, 255, MoveEffect.SEISMICTOSS),
+    SELFDESTRUCT(Type.NORMAL, 5, 255, 260, MoveEffect.SELFDESTRUCT),    // half def == double power
+    SHARPEN(Type.NORMAL, 30, MoveEffect.SELF_ATTACKRAISE1),
+    SING(Type.NORMAL, 15, 140, MoveEffect.SLEEP),
+    SKULLBASH(Type.NORMAL, 15, 255, 100, MoveEffect.RAZORWIND),
+    SKY_ATTACK(Type.FLYING, 5, 229, 140, MoveEffect.RAZORWIND),
+    SLAM(Type.NORMAL, 20, 191, 80),
+    SLASH(Type.NORMAL, 20, 255, 70, MoveEffect.CRITRATE),
+    SLEEP_POWDER(Type.GRASS, 15, 191, MoveEffect.SLEEP),
+    SLUDGE(Type.POISON, 20, 255, 65, MoveEffect.PSN30),
+    SMOG(Type.POISON, 20, 255, 20, MoveEffect.PSN30),
+    SMOKESCREEN(Type.NORMAL, 20, 255, MoveEffect.OPP_ACCURACYDROP1),
+    SOFTBOILED(Type.NORMAL, 10, MoveEffect.RECOVER),
+    SOLAR_BEAM(Type.GRASS, 20, 255, 120, MoveEffect.RAZORWIND),
+    SONICBOOM(Type.NORMAL, 20, 229, MoveEffect.SONICBOOM),
+    SPIKE_CANNON(Type.NORMAL, 15, 255, 20, MoveEffect.MULTIHIT),
+    SPLASH(Type.NORMAL, 40, MoveEffect.NONE),
+    SPORE(Type.GRASS, 15, 255, MoveEffect.SLEEP),
+    STOMP(Type.NORMAL, 20, 255, 65, MoveEffect.FLINCH30),
+    STRENGTH(Type.NORMAL, 15, 255, 80),
+    STRING_SHOT(Type.BUG, 40, 242, MoveEffect.OPP_SPEEDDROP1),
+    STRUGGLE(Type.NORMAL, 999, 255, 50, MoveEffect.RECOIL25), // can't be used normally
+    STUN_SPORE(Type.GRASS, 30, 191, MoveEffect.PRZ),
+    SUBMISSION(Type.FIGHTING, 20, 204, 80, MoveEffect.RECOIL25),
+    SUBSTITUTE(Type.NORMAL, 10, MoveEffect.SUBSTITUTE),
+    SUPER_FANG(Type.NORMAL, 10, 229, MoveEffect.SUPERFANG),
+    SUPERSONIC(Type.NORMAL, 20, 140, MoveEffect.CONFUSION),
+    SURF(Type.WATER, 15, 255, 95),
+    SWIFT(Type.NORMAL, 20, Int.MAX_VALUE, 60, MoveEffect.SWIFT),
+    SWORDS_DANCE(Type.NORMAL, 30, MoveEffect.SELF_ATTACKRAISE2),
 
-    SACRED_FIRE(Type.FIRE, 8, 242, 100, MoveEffect.SACREDFIRE),
-    SAFEGUARD(Type.NORMAL, 40, MoveEffect.SAFEGUARD),
-    //    SAND_ATTACK,
-    //    SANDSTORM,
-    //    SCARY_FACE,
-    //    SCRATCH,
-    //    SCREECH,
-    SEISMIC_TOSS(Type.NONE, 32, 255, 1, MoveEffect.SEISMICTOSS),
-    SELFDESTRUCT(Type.NORMAL, 8, 255, 130, MoveEffect.SELFDESTRUCT),
-    SHADOW_BALL(Type.GHOST, 24, 255, 80, MoveEffect.CRUNCHSPDEFDROP),
-    SHARPEN(Type.NORMAL, 48, MoveEffect.SELF_ATTACKRAISE1),
-    SING(Type.NORMAL, 24, 140, MoveEffect.SLEEP),
-    //    SKETCH,
-    //    SKY_ATTACK,
-    //    SLAM,
-    //    SLASH,
-    SLEEP_POWDER(Type.GRASS, 24, 191, MoveEffect.SLEEP),
-    SLEEP_TALK(Type.NORMAL, 16, MoveEffect.SLEEPTALK),
-    //    SLUDGE,
-    SLUDGE_BOMB(Type.POISON, 16, 255, MoveEffect.PSN30),
-    //    SMOG,
-    //    SMOKESCREEN,
-    //    SNORE,
-    SOFTBOILED(Type.NORMAL, 16, MoveEffect.RECOVER),
-    //    SOLARBEAM,
-    //    SONICBOOM,
-    //    SPARK,
-    //    SPIDER_WEB,
-    //    SPIKE_CANNON,
-    //    SPIKES,
-    //    SPITE,
-    //    SPLASH,
-    //    SPORE,
-    //    STEEL_WING,
-    //    STOMP,
-    //    STRENGTH,
-    //    STRING_SHOT,
-    STRUGGLE(Type.NONE, 999, 255, 50, MoveEffect.STRUGGLE),
-    STUN_SPORE(Type.GRASS, 48, 191, MoveEffect.SLEEP),
-    //    SUBMISSION,
-    SUBSTITUTE(Type.NORMAL, 16, MoveEffect.SUBSTITUTE),
-    //    SUNNY_DAY,
-    //    SUPER_FANG,
-    //    SUPERSONIC,
-    SURF(Type.WATER, 24, 255, 95),
-    SWAGGER(Type.NORMAL, 24, 229, MoveEffect.SWAGGER),
-    //    SWEET_KISS,
-    //    SWEET_SCENT,
-    //    SWIFT,
-    SWORDS_DANCE(Type.NORMAL, 48, MoveEffect.SELF_ATTACKRAISE2),
-    //    SYNTHESIS,
+    TACKLE(Type.NORMAL, 35, 242, 35),
+    TAIL_WHIP(Type.NORMAL, 30, 255, MoveEffect.OPP_DEFENSEDROP1),
+    TAKE_DOWN(Type.NORMAL, 20, 216, 90, MoveEffect.RECOIL25),
+//    TELEPORT,   // no effect in trainer battles
+    THRASH(Type.NORMAL, 20, 255, 90, MoveEffect.PETALDANCE),
+    THUNDER(Type.ELECTRIC, 10, 178, 120, MoveEffect.PRZ10),
+    THUNDER_WAVE(Type.ELECTRIC, 20, 255, MoveEffect.PRZ),
+    THUNDERBOLT(Type.ELECTRIC, 15, 255, 95, MoveEffect.PRZ10),
+    THUNDERPUNCH(Type.ELECTRIC, 15, 255, 75, MoveEffect.PRZ10),
+    THUNDERSHOCK(Type.ELECTRIC, 30, 255, 40, MoveEffect.PRZ10),
+    TOXIC(Type.POISON, 10, 216, MoveEffect.TOXIC),
+    TRANSFORM(Type.NORMAL, 10, MoveEffect.TRANSFORM),
+    TRI_ATTACK(Type.NORMAL, 10, 255, 80),
+    TWINEEDLE(Type.BUG, 20, 255, 25, MoveEffect.TWINNEEDLE),
 
-    //    TACKLE,
-    //    TAIL_WHIP,
-    //    TAKE_DOWN,
-    //    TELEPORT,
-    THIEF(Type.DARK, 16, 255, 40, MoveEffect.THIEF),
-    //    THRASH,
-    //THUNDER,
-    THUNDER_WAVE(Type.ELECTRIC, 32, 255, MoveEffect.PRZ),
-    THUNDERBOLT(Type.ELECTRIC, 24, 255, 95, MoveEffect.PRZ10),
-    //    THUNDERPUNCH,
-    //    THUNDERSHOCK,
-    TOXIC(Type.POISON, 16, 255, MoveEffect.TOXIC),
-    //    TRANSFORM,
-    //    TRI_ATTACK,
-    //    TRIPLE_KICK,
-    //    TWINNEEDLE,
-    //    TWISTER,
+    VICEGRIP(Type.NORMAL, 30, 255, 55),
+    VINE_WHIP(Type.GRASS, 10, 255, 35),
 
-    //    VICEGRIP,
-    //    VINE_WHIP,
-    //    VITAL_THROW,
+    WATER_GUN(Type.WATER, 25, 255, 40),
+    WATERFALL(Type.WATER, 15, 255, 80),
+//    WHIRLWIND,  // no effect in trainer battles
+    WING_ATTACK(Type.FLYING, 35, 255, 35),
+    WITHDRAW(Type.WATER, 40, MoveEffect.SELF_DEFENSERAISE1),
+    WRAP(Type.NORMAL, 20, 229, 15, MoveEffect.BIND)
+    ;
 
-    //    WATER_GUN,
-    //    WATERFALL,
-    //    WHIRLPOOL,
-    //    WHIRLWIND,
-    //    WING_ATTACK,
-    //    WRAP,
-    
-    ZAP_CANNON(Type.ELECTRIC, 8, 127, 100, MoveEffect.PRZ100);
+    // attack with secondary effect
+    constructor(type: Type, pp: Int, accuracy: Int, basePower: Int, moveEffect: MoveEffect):
+            this(type, pp, accuracy, basePower, moveEffect, true)
 
-//            private val type: Type
-//            private val maxPp: Int
-//            private val accuracy: Int
-//            private val basePower: Int = 0
-//            private val moveEffect: MoveEffect = MoveEffect.NONE
-//            override var isAttack: Boolean = true
-        // Attack constructor
-        constructor(type: Type, pp: Int, accuracy: Int, basePower: Int, moveEffect: MoveEffect) : this(type, pp, accuracy, basePower, moveEffect, true)
+    // attack
+    constructor(type: Type, pp: Int, accuracy: Int, basePower: Int):
+            this(type, pp, accuracy, basePower, MoveEffect.NONE, true)
 
-        // Attack constructor for moves with no secondary effects
-        constructor(type: Type, pp: Int, accuracy: Int, basePower: Int) : this(type, pp, accuracy, basePower, MoveEffect.NONE, true)
+    // move with acc check
+    constructor(type: Type, pp: Int, accuracy: Int, moveEffect: MoveEffect):
+            this(type, pp, accuracy, 0, moveEffect, false)
 
-        // Status constructor for moves that DO check accuracy
-        constructor(type: Type, pp: Int, accuracy: Int, moveEffect: MoveEffect) : this(type, pp, accuracy, 0, moveEffect, false)
+    // move with no acc check
+    constructor(type: Type, pp: Int, moveEffect: MoveEffect):
+            this(type, pp, Int.MAX_VALUE, 0, moveEffect, false)
 
-        // Status constructor for moves that DON'T check accuracy
-        constructor(type: Type, pp: Int, moveEffect: MoveEffect) : this(type, pp, 0, 0, moveEffect, false)
+    val isPhysical: Boolean
+        get() = isPhysical(type)
 
-        // override val moveName: String = name
+    override fun toString(): String {
+        return super.toString().replace("_", " ")
+    }
 
-//        override val type: Type = type
+    companion object {
+        fun isPhysical(type: Type): Boolean {
+            return when (type) {
+                Type.BUG,
+                Type.FIGHTING,
+                Type.FLYING,
+                Type.GHOST,
+                Type.GROUND,
+                Type.NONE,
+                Type.NORMAL,
+                Type.POISON,
+                Type.ROCK,
+                Type.STEEL,
+                -> true
 
-//        override fun maxPp(): Int {
-//            return maxPp()
-//        }
-
-//        override fun accuracy(): Int {
-//            return accuracy
-//        }
-
-//        override fun basePower(): Int {
-//            return basePower
-//        }
-
-//        override fun effect(): MoveEffect {
-//            return moveEffect
-//        }
-
-        val isPhysical: Boolean
-            get() = isPhysical(type)
-
-        override fun toString(): String {
-            return super.toString().replace("_", " ")
-        }
-
-        companion object {
-            fun isPhysical(type: Type): Boolean {
-                return when (type) {
-                    Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.ROCK, Type.STEEL, Type.GHOST, Type.BUG, Type.POISON, Type.GROUND, Type.NONE -> true
-                    else -> {
-                        false
-                    }
-                }
+                else -> false
             }
         }
+    }
 }

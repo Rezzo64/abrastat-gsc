@@ -11,7 +11,6 @@ import javax.json.JsonObject
 abstract class Species protected constructor(speciesName: String) {
     //Json mapper variables
     var species: String? = null
-        private set
     val allowedAbilities = arrayOfNulls<String>(3)
     var baseHp = 0
         private set
@@ -25,12 +24,14 @@ abstract class Species protected constructor(speciesName: String) {
         private set
     var baseSpeed = 0
         private set
+    var baseSpecial = 0
+        private set
     var height = 0.0
         private set
     var weight = 0.0
         private set
     @JvmField
-    val types = arrayOfNulls<Type>(2)
+    val types = arrayOf(Type.NONE, Type.NONE)
     private val genderRatio = 0.0
 
     init {
@@ -43,7 +44,7 @@ abstract class Species protected constructor(speciesName: String) {
             LOGGER.error("Error reading Pokedex file at: {}", pokedex)
         }
         val jsonPokemon = jsonObject!!.getJsonObject(speciesName)
-        setSpecies(speciesName)
+        cleanSpecies(speciesName)
         val jsonAbilities = jsonPokemon.getJsonObject("abilities")
         val jsonBaseStats = jsonPokemon.getJsonObject("baseStats")
         val jsonTypesArray = jsonPokemon.getJsonArray("types")
@@ -55,8 +56,11 @@ abstract class Species protected constructor(speciesName: String) {
         setTypes(jsonTypesArray)
     }
 
-    private fun setSpecies(speciesName: String) {
-        species = speciesName.substring(0, 1).uppercase(Locale.getDefault()) + speciesName.substring(1).lowercase(Locale.getDefault())
+    private fun cleanSpecies(speciesName: String) {
+        species = speciesName.substring(0, 1)
+                .uppercase(Locale.getDefault()) +
+                speciesName.substring(1)
+                        .lowercase(Locale.getDefault())
     }
 
     fun setAllowedAbilities(allowedAbilities: JsonObject) {
@@ -72,6 +76,12 @@ abstract class Species protected constructor(speciesName: String) {
         baseSpecialAttack = baseStats.getInt("special_attack")
         baseSpecialDefense = baseStats.getInt("special_defense")
         baseSpeed = baseStats.getInt("speed")
+        baseSpecial = if (baseStats.isNull("special")) 0 else
+            when (baseStats.getString("special")) {
+                "special_attack" -> baseSpecialAttack
+                "special_defense" -> baseSpecialDefense
+                else -> 0
+            }
     }
 
     private fun setHeight(jsonHeight: JsonObject) {
@@ -96,7 +106,6 @@ abstract class Species protected constructor(speciesName: String) {
             this.types[1] = Type.valueOf(type1)
         } catch (e: Exception) {
             println("no secondary typing for $species.")
-            this.types[1] = Type.NONE
         }
     }
 

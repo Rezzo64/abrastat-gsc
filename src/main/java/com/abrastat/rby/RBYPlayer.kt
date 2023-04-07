@@ -3,227 +3,267 @@ package com.abrastat.rby
 import com.abrastat.general.*
 import com.abrastat.general.Messages.Companion.logCurrentBehaviour
 import com.abrastat.general.Messages.Companion.logNoMoveBehaviourFound
-import com.abrastat.general.Messages.Companion.logNoRecoveryMoveFound
 import com.abrastat.general.Messages.Companion.notImplementedYet
 import com.abrastat.general.PlayerBehaviour.BehaviourGroup
-import java.util.*
+import kotlin.math.floor
 
-class RBYPlayer(playerName: String?, pokemon: Pokemon?) : Player() {
-    private val hasSleepTalk: Int
+class RBYPlayer(playerName: String, pokemon: RBYPokemon) : Player() {
+    // this program takes in a pokemon and
+    // chooses moves based on current strategy
     private var currentBehaviour: PlayerBehaviour? = null
 
     init {
         name = playerName
-        addPokemon(pokemon)
-        hasSleepTalk = currentPokemon!!.hasMove(RBYMove.SLEEP_TALK)
+        addPokemon(pokemon as Pokemon)
         setBehaviours()
     }
 
-    override val currentPokemon: RBYPokemon?
-        get() = getPokemon(0) as RBYPokemon?
+    override val currentPokemon: RBYPokemon
+        get() = getPokemon(0) as RBYPokemon
 
     fun chooseMove(opponent: RBYPlayer): RBYMove {
-        var chosenMove = RBYMove.EMPTY
-        if (justUseFirstAttack) { // ignores other moves, use with caution
-            return if (currentPokemon!!.getMovePp(0) > 0) {
-                currentPokemon!!.moves[0]
-            } else {
+        // default no move
+        if (currentPokemon.struggle) return RBYMove.STRUGGLE
+
+        // default one move
+        if (justUseFirstAttack) {
+            return if (currentPokemon.getMovePp(0) > 0)
+                currentPokemon.moves[0]
+            else {
+                currentPokemon.struggle = true
                 RBYMove.STRUGGLE
             }
         }
-        chosenMove = chooseMoveHelper(opponent)
-        return chosenMove
+
+        // default multi turn move
+        // ignore pp
+        if (currentPokemon.multiTurn.first != RBYMove.EMPTY)
+            return currentPokemon.multiTurn.first
+
+        // hyper beam recharge, in case of bind miss
+        if (currentPokemon.volatileStatus.contains(Status.HYPERBEAM))
+            return RBYMove.HYPER_BEAM
+
+        // strategic move
+        // TODO manual move
+        var move = chooseMoveHelper(opponent)
+
+        // if invalid move, use any move with pp
+        if (move == RBYMove.EMPTY) {
+            for (i in 0..3) {
+                if (currentPokemon.getMovePp(i) > 0) {
+                    move = currentPokemon.moves[i]
+                    break
+                }
+            }
+            if (move == RBYMove.EMPTY) {
+                currentPokemon.struggle = true
+                return RBYMove.STRUGGLE
+            }
+        }
+
+        return move
     }
 
     // each behaviour should exist as its own entity depending on the simulation state
-    fun chooseMoveHelper(opponent: RBYPlayer): RBYMove {
+    private fun chooseMoveHelper(opponent: RBYPlayer): RBYMove {
+        // choose move based on strategy
+        // pre-computation
+        val strongestAttack = getStrongestAttack(opponent.currentPokemon)
+//        val canDebuff = opponent.currentPokemon.nonVolatileStatus === Status.HEALTHY
 
-        // just choose the first move as default in case it's not clear what should be done
-        var moveChosen = currentPokemon!!.moves[0]
-        if (hasSleepTalk > -1 && notAboutToWake()) {
+        var moveChosen = RBYMove.EMPTY
 
-            // check if any Sleep Talk PP remains
-            if (currentPokemon!!.getMovePp(currentPokemon!!.hasMove(RBYMove.SLEEP_TALK)) > 0) {
-                return RBYMove.SLEEP_TALK
-            }
-        }
         when (currentBehaviour) {
-            PlayerBehaviour.JUST_ATTACK ->  // pre-processing damage calculations to choose the strongest attack
-                moveChosen = getStrongestAttack(opponent.currentPokemon)
+            PlayerBehaviour.JUST_ATTACK ->
+                moveChosen = strongestAttack
 
-            PlayerBehaviour.RECOVER_SAFELY -> if (!opponentCritMayKO(opponent)) {
-            } else {
-                moveChosen = chooseRecoveryMove()
+            PlayerBehaviour.RECOVER_SAFELY -> {
+                moveChosen = if (opponentCritMayKO(opponent))
+                    chooseRecoveryMove()
+                else strongestAttack
             }
 
-            PlayerBehaviour.RECOVER_RISKILY -> if (!opponentMayKO(opponent)) {
-            } else {
-                moveChosen = chooseRecoveryMove()
-            }
-
-            PlayerBehaviour.FISH_FOR_PARALYSIS -> if (opponent.currentPokemon!!.nonVolatileStatus === Status.HEALTHY) {
+            PlayerBehaviour.RECOVER_RISKILY -> {
+                moveChosen = if (opponentMayKO(opponent))
+                    chooseRecoveryMove()
+                else strongestAttack
             }
 
             else -> {
                 notImplementedYet(currentBehaviour.toString())
             }
         }
+
         return moveChosen
     }
 
-    fun setCurrentBehaviour(behaviour: PlayerBehaviour?) {
-        logCurrentBehaviour(this, behaviour!!)
+    fun setCurrentBehaviour(behaviour: PlayerBehaviour) {
+        logCurrentBehaviour(this, behaviour)
         currentBehaviour = behaviour
-        currentPokemon!!.activeBehaviour = behaviour
+        currentPokemon.activeBehaviour = behaviour  // unsure if needed
     }
 
     override fun setBehaviours() {
-        if (currentPokemon!!.countEmptyMoves() == 3) {
+        if (currentPokemon.countEmptyMoves() == 3) {
             justUseFirstAttack = true
             return
         }
 
-        // Firstly, disable mindlessly attacking with the strongest move
         justUseFirstAttack = false
         val behaviourGroups = HashSet<BehaviourGroup>()
 
+        // TODO add other moves, unsure how strategies work
         // attribute each attack to a behaviour type & collect each behaviour group
-        for (move in currentPokemon!!.moves) {
+        for (move in currentPokemon.moves) {
             when (move) {
-                RBYMove.BEAT_UP, RBYMove.DOUBLE_EDGE, RBYMove.DRILL_PECK, RBYMove.EARTHQUAKE, RBYMove.FLAIL, RBYMove.GIGA_DRAIN, RBYMove.HYDRO_PUMP, RBYMove.MEGAHORN, RBYMove.NIGHT_SHADE, RBYMove.RETURN, RBYMove.REVERSAL, RBYMove.ROLLOUT, RBYMove.SEISMIC_TOSS, RBYMove.SURF, RBYMove.STRUGGLE
+                RBYMove.DOUBLE_EDGE,
+                RBYMove.DRILL_PECK,
+                RBYMove.EARTHQUAKE,
+                RBYMove.HYDRO_PUMP,
+                RBYMove.NIGHT_SHADE,
+                RBYMove.SEISMIC_TOSS,
+                RBYMove.STRUGGLE,
+                RBYMove.SURF,
                 -> behaviourGroups.add(BehaviourGroup.ATTACK)
 
-                RBYMove.MILK_DRINK, RBYMove.RECOVER, RBYMove.REST, RBYMove.SOFTBOILED, RBYMove.SELFDESTRUCT, RBYMove.EXPLOSION, RBYMove.DESTINY_BOND
+                RBYMove.EXPLOSION,
+                RBYMove.RECOVER,
+                RBYMove.REST,
+                RBYMove.SELFDESTRUCT,
+                RBYMove.SOFTBOILED,
                 -> behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
 
-                RBYMove.CURSE, RBYMove.GROWTH, RBYMove.MEDITATE, RBYMove.SHARPEN
+                RBYMove.GROWTH,
+                RBYMove.MEDITATE,
+                RBYMove.SHARPEN,
                 -> behaviourGroups.add(BehaviourGroup.SET_UP)
 
-                RBYMove.ACID_ARMOR, RBYMove.AMNESIA, RBYMove.AGILITY, RBYMove.BARRIER, RBYMove.SWORDS_DANCE
+                RBYMove.ACID_ARMOR,
+                RBYMove.AGILITY,
+                RBYMove.AMNESIA,
+                RBYMove.BARRIER,
+                RBYMove.SWORDS_DANCE,
                 -> behaviourGroups.add(BehaviourGroup.SET_UP_SHARP)
 
-                RBYMove.BELLY_DRUM
-                -> behaviourGroups.add(BehaviourGroup.BELLY)
-
-                RBYMove.HYPNOSIS, RBYMove.LOVELY_KISS, RBYMove.SING, RBYMove.SLEEP_POWDER, RBYMove.STUN_SPORE, RBYMove.THUNDER_WAVE
+                RBYMove.HYPNOSIS,
+                RBYMove.LOVELY_KISS,
+                RBYMove.SING,
+                RBYMove.SLEEP_POWDER,
+                RBYMove.STUN_SPORE,
+                RBYMove.THUNDER_WAVE,
                 -> behaviourGroups.add(BehaviourGroup.STATUS_OPPONENT_NON_VOLATILE)
 
-                RBYMove.ATTRACT, RBYMove.CONFUSE_RAY, RBYMove.SWAGGER
+                RBYMove.CONFUSE_RAY,
                 -> behaviourGroups.add(BehaviourGroup.VOLATILES)
 
-                RBYMove.BODY_SLAM, RBYMove.THUNDERBOLT, RBYMove.ZAP_CANNON, RBYMove.FIRE_BLAST, RBYMove.FIRE_PUNCH, RBYMove.FLAMETHROWER, RBYMove.SACRED_FIRE, RBYMove.BLIZZARD, RBYMove.ICE_BEAM, RBYMove.ICE_PUNCH, RBYMove.SLUDGE_BOMB
+                RBYMove.BLIZZARD,
+                RBYMove.BODY_SLAM,
+                RBYMove.FIRE_BLAST,
+                RBYMove.FIRE_PUNCH,
+                RBYMove.FLAMETHROWER,
+                RBYMove.ICE_BEAM,
+                RBYMove.ICE_PUNCH,
+                RBYMove.THUNDERBOLT,
                 -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STATUS_FISH)
                 }
 
-                RBYMove.CRUNCH, RBYMove.PSYCHIC -> {
+                RBYMove.PSYCHIC,
+                -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.STAT_RAISE_DROP_FISH)
                 }
 
-                RBYMove.CROSS_CHOP -> {
+                RBYMove.CRABHAMMER,
+                RBYMove.RAZOR_LEAF,
+                RBYMove.SLASH,
+                -> {
                     behaviourGroups.add(BehaviourGroup.ATTACK)
                     behaviourGroups.add(BehaviourGroup.FISH_CRIT)
                 }
 
-                RBYMove.THIEF -> {
-                    behaviourGroups.add(BehaviourGroup.ATTACK)
-                    behaviourGroups.add(BehaviourGroup.STEAL)
-                }
-
-                RBYMove.HYPER_BEAM -> {
+                RBYMove.HYPER_BEAM,
+                -> {
                     behaviourGroups.add(BehaviourGroup.GO_FOR_HYPER_BEAM)
                     behaviourGroups.add(BehaviourGroup.KO_RESPONSE)
                 }
 
-                else -> logNoMoveBehaviourFound(currentPokemon!!, move!!)
+                else -> logNoMoveBehaviourFound(currentPokemon, move)
             }
         }
-        // add all discovered behaviours to Player for utilisation
-        for (group in behaviourGroups) {
-            activeBehaviours.addAll(Arrays.asList(*group.behaviours))
-        }
+
+        for (group in behaviourGroups)
+            activeBehaviours.addAll(listOf(*group.behaviours))
     }
 
-    private fun notAboutToWake(): Boolean {
-        return if (currentPokemon!!.nonVolatileStatus === Status.SLEEP) {
-            currentPokemon!!.sleepCounter > 0
-        } else false
-    }
 
-    fun getStrongestAttack(opponent: RBYPokemon?): RBYMove {
+    // TODO maybe refactor move helper functions in separate companion object
+    private fun getStrongestAttack(opponent: RBYPokemon): RBYMove {
         var strongestAttack = RBYMove.EMPTY
-        var currentDamage = -1
-        var strongestDamage = 0
-        var emptyMove = 0
+        var strongestDamage = -1
 
         // cycle through moveslots
         for (i in 0..3) {
-            if (currentPokemon!!.getMovePp(i) < 1) {
-                emptyMove++
+            // skip EMPTY
+            if (currentPokemon.getMovePp(i) < 1) continue
+
+            val currentMove = currentPokemon.moves[i]
+            if (currentMove.effect === MoveEffect.SELFDESTRUCT) {
+                // non-suicidal move can still be selected
+                if (strongestAttack == RBYMove.EMPTY)
+                    strongestAttack = currentMove
                 continue
             }
-            if (currentPokemon!!.moves[i].effect === MoveEffect.SELFDESTRUCT) {
-                if (strongestAttack == RBYMove.EMPTY) {
-                    // keep strongestDamage as 0 so that a non-suicidal move can still be selected
-                    strongestAttack = currentPokemon!!.moves[i]
-                }
-                continue
-            }
-            if (currentPokemon!!.moves[i].isAttack) {
-                currentDamage = currentPokemon!!.getAttackDamageMaxRoll(
-                        opponent,
-                        currentPokemon!!.moves[i]
-                )
+
+            if (currentMove.isAttack) {
+                val currentDamage = currentPokemon
+                        .getAttackDamageMaxRoll(opponent, currentMove)
                 if (currentDamage > strongestDamage) {
                     strongestDamage = currentDamage
+                    strongestAttack = currentMove
+                } else if (currentDamage >= opponent.currentHP
+                        && currentMove.accuracy > strongestAttack.accuracy) {
+                    // TODO this only checks max damage roll
+                    //  Implement something to assess individual damage rolls
+                    strongestAttack = currentMove
                 }
-
-                // check if there's a move that has better accuracy and can KO in this range
-                // TODO this only checks max damage roll. Implement something to assess individual damage rolls
-                if (currentDamage == opponent!!.currentHP
-                        &&
-                        currentPokemon!!.moves[i].accuracy > strongestAttack.accuracy) {
-                    strongestAttack = currentPokemon!!.moves[i]
-                }
-            } else {
-                strongestAttack = currentPokemon!!.moves[i]
             }
         }
-        return if (emptyMove == 4) RBYMove.STRUGGLE else strongestAttack // only and always struggle when all moves are out of pp
-    }
 
-    private fun chooseRecoveryMove(): RBYMove {
-        return if (currentPokemon!!.hasMove(RBYMove.REST) > -1) {
-            RBYMove.REST
-        } else if (currentPokemon!!.hasMove(RBYMove.RECOVER) > -1) {
-            RBYMove.RECOVER
-        } else if (currentPokemon!!.hasMove(RBYMove.SOFTBOILED) > -1) {
-            RBYMove.SOFTBOILED
-        } else if (currentPokemon!!.hasMove(RBYMove.MILK_DRINK) > -1) {
-            RBYMove.MILK_DRINK
-        } else {
-            logNoRecoveryMoveFound(currentPokemon!!)
-            currentPokemon!!.moves[0]
-        }
+        return strongestAttack
     }
 
     private fun opponentMayKO(opponent: RBYPlayer): Boolean {
-        val damage = opponent.currentPokemon!!.getAttackDamageMaxRoll(
-                currentPokemon,
-                opponent.getStrongestAttack(currentPokemon))
+        val damage = opponent.currentPokemon.getAttackDamageMaxRoll(
+                this.currentPokemon, opponent.getStrongestAttack(this.currentPokemon))
 
         // double the risk if slower, in order to recover early
-        return if (currentPokemon!!.statSpe < opponent.currentPokemon!!.statSpe) damage >= 2 * currentPokemon!!.currentHP else damage >= currentPokemon!!.currentHP
+        return if (currentPokemon.statSpe < opponent.currentPokemon.statSpe)
+            damage >= 2 * currentPokemon.currentHP
+        else damage >= currentPokemon.currentHP
     }
 
+    // crits don't use stat boosts
+    // unsure if correct or needed
     private fun opponentCritMayKO(opponent: RBYPlayer): Boolean {
-        val damage = opponent.currentPokemon!!.getAttackDamageCritMaxRoll(
-                currentPokemon,
-                opponent.getStrongestAttack(currentPokemon))
+        val damage = opponent.currentPokemon.getAttackDamageCritMaxRoll(
+                this.currentPokemon, opponent.getStrongestAttack(this.currentPokemon))
 
         // 1.5* the risk if slower in order to recover early. Back-to-back crits are exceedingly unlikely
-        return if (currentPokemon!!.statSpe < opponent.currentPokemon!!.statSpe) damage >= Math.floor(1.5 * currentPokemon!!.currentHP) else damage >= currentPokemon!!.currentHP
+        return if (currentPokemon.statSpe < opponent.currentPokemon.statSpe)
+            damage >= floor(1.5 * currentPokemon.currentHP)
+        else damage >= currentPokemon.currentHP
+    }
+
+    private fun chooseRecoveryMove(): RBYMove {
+        return if (currentPokemon.validMove(RBYMove.REST))
+            RBYMove.REST
+        else if (currentPokemon.validMove(RBYMove.RECOVER))
+            RBYMove.RECOVER
+        else if (currentPokemon.validMove(RBYMove.SOFTBOILED))
+            RBYMove.SOFTBOILED
+        else RBYMove.EMPTY
     }
 }
