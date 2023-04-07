@@ -1,0 +1,197 @@
+#Contains several possible alternative movesets. Default movesets are highest.
+#
+#Suspects:
+#butterfree
+#chansey
+#charizard
+#clefable
+#kabutops
+#omastar
+#seaking
+#venomoth
+#
+#The default movesets for suspects should be tested or verified.
+
+arcanine
+agility body_slam hyper_beam fire_blast
+rest body_slam hyper_beam fire_blast
+
+articuno
+blizzard agility double_edge hyper_beam
+blizzard agility rest hyper_beam
+blizzard agility rest double_edge
+blizzard agility ice_beam hyper_beam
+
+blastoise
+surf blizzard earthquake rest
+surf blizzard body_slam rest
+surf ice_beam body_slam rest
+surf ice_beam toxic rest
+surf blizzard toxic rest
+hydro_pump ice_beam body_slam rest
+hydro_pump ice_beam toxic rest
+hydro_pump blizzard body_slam rest
+hydro_pump blizzard toxic rest
+hydro_pump blizzard earthquake rest
+
+butterfree
+psychic substitute flash stun_spore
+sleep_powder stun_spore psychic psywave
+
+chansey
+thunderbolt ice_beam soft_boiled thunder_wave
+seismic_toss thunder_wave soft_boiled reflect
+reflect ice_beam soft_boiled thunder_wave
+ice_beam thunder_wave soft_boiled sing
+seismic_toss thunder_wave soft_boiled light_screen
+seismic_toss thunder_wave soft_boiled sing
+sing ice_beam soft_boiled counter
+sing seismic_toss soft_boiled counter
+
+charizard
+fire_blast earthquake swords_dance body_slam 
+hyper_beam earthquake slash swords_dance
+fire_spin fire_blast earthquake slash
+fire_spin fire_blast earthquake swords_dance
+fire_spin fire_blast earthquake toxic
+earthquake hyper_beam fire_spin swords_dance
+
+clefable
+body_slam blizzard thunderbolt thunder_wave
+blizzard body_slam hyper_beam thunderbolt 
+mega_kick hyper_beam blizzard thunder_wave
+blizzard thunderbolt sing thunder_wave
+body_slam hyper_beam thunderbolt thunder_wave
+
+dragonite
+thunder_wave wrap hyper_beam blizzard 
+agility wrap blizzard thunder_wave
+agility wrap blizzard hyper_beam
+agility wrap blizzard body_slam
+agility wrap blizzard thunderbolt
+agility wrap hyper_beam surf 
+wrap blizzard body_slam thunder_wave
+
+exeggutor
+sleep_powder psychic explosion double_edge
+sleep_powder psychic explosion stun_spore
+sleep_powder psychic explosion mega_drain
+sleep_powder psychic explosion hyper_beam
+
+gyarados
+hydro_pump thunderbolt body_slam hyper_beam 
+hyper_beam body_slam blizzard thunderbolt
+hydro_pump blizzard body_slam hyper_beam
+body_slam blizzard hydro_pump thunderbolt
+
+hypno
+hypnosis thunder_wave psychic seismic_toss
+rest thunder_wave psychic seismic_toss 
+hypnosis thunder_wave psychic rest
+
+kabutops
+hyper_beam slash surf swords_dance
+hyper_beam body_slam surf swords_dance
+hyper_beam blizzard slash swords_dance
+slash body_slam surf rest
+
+kangaskhan
+body_slam hyper_beam earthquake surf 
+body_slam hyper_beam earthquake rock_slide
+body_slam hyper_beam earthquake counter
+body_slam hyper_beam earthquake blizzard
+
+lapras
+blizzard thunderbolt hyper_beam sing 
+blizzard thunderbolt body_slam rest
+blizzard thunderbolt body_slam sing
+blizzard thunderbolt body_slam hyper_beam
+blizzard thunderbolt hyper_beam confuse_ray
+blizzard thunderbolt body_slam confuse_ray
+
+machamp
+low_kick body_slam hyper_beam earthquake
+submission body_slam hyper_beam earthquake 
+earthquake body_slam rock_slide submission
+low_kick earthquake body_slam rock_slide
+
+mrmime
+psychic thunderbolt thunder_wave seismic_toss 
+psychic thunderbolt thunder_wave counter
+
+nidoqueen
+earthquake blizzard thunderbolt body_slam
+earthquake blizzard thunderbolt toxic 
+earthquake blizzard thunderbolt fire_blast
+
+omastar
+surf blizzard body_slam rest 
+hydro_pump blizzard body_slam rest
+hydro_pump ice_beam body_slam rest
+
+persian
+slash hyper_beam thunderbolt bubble_beam
+slash hyper_beam thunderbolt toxic
+
+pinsir
+hyper_beam slash submission swords_dance
+hyper_beam slash bind swords_dance
+hyper_beam body_slam submission swords_dance
+hyper_beam body_slam bind swords_dance
+hyper_beam bind submission swords_dance
+
+rapidash
+fire_blast fire_spin hyper_beam body_slam
+fire_blast fire_spin hyper_beam agility 
+fire_blast fire_spin hyper_beam toxic
+fire_blast fire_spin body_slam toxic
+
+sandslash
+earthquake swords_dance hyper_beam substitute
+earthquake swords_dance hyper_beam rock_slide
+earthquake swords_dance hyper_beam body_slam
+earthquake swords_dance hyper_beam submission
+
+seaking
+double_edge blizzard hyper_beam agility
+double_edge hyper_beam surf agility
+double_edge surf rest agility
+double_edge blizzard rest agility
+hyper_beam surf rest agility
+hyper_beam blizzard rest agility
+
+snorlax
+body_slam reflect rest ice_beam 
+body_slam hyper_beam self_destruct earthquake
+body_slam blizzard rest amnesia
+body_slam reflect rest earthquake
+body_slam reflect rest self_destruct
+body_slam reflect rest hyper_beam
+
+tangela
+mega_drain body_slam stun_spore growth
+sleep_powder stun_spore bind body_slam 
+
+venomoth
+psychic solar_beam toxic stun_spore
+sleep_powder stun_spore psychic mega_drain
+
+venusaur
+razor_leaf hyper_beam swords_dance sleep_powder
+razor_leaf body_slam hyper_beam leech_seed
+razor_leaf body_slam sleep_powder toxic
+
+victreebel
+sleep_powder wrap stun_spore razor_leaf
+razor_leaf wrap hyper_beam stun_spore
+sleep_powder wrap razor_leaf hyper_beam
+sleep_powder swords_dance hyper_beam wrap
+sleep_powder swords_dance hyper_beam razor_leaf
+stun_spore swords_dance hyper_beam wrap
+stun_spore swords_dance hyper_beam razor_leaf
+
+vileplume
+sleep_powder stun_spore mega_drain body_slam
+sleep_powder swords_dance mega_drain body_slam
+sleep_powder stun_spore mega_drain hyper_beam
+sleep_powder swords_dance mega_drain hyper_beam
