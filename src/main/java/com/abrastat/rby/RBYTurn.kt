@@ -81,6 +81,7 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
                         attackingPokemon.multiTurn = Pair(RBYMove.EMPTY, 0)
                 }
             } else {
+                attackingPokemon.removeVolatileStatus(Status.CONFUSION)
                 attackingPokemon.resetConfuseCounter()
                 statusChanged(attackingPokemon, Status.CONFUSION)
             }
@@ -157,6 +158,7 @@ class RBYTurn(attackingPokemon: RBYPokemon, defendingPokemon: RBYPokemon, move: 
                     attackingPokemon.sleepCounter--
                 } else {
                     // Can't attack on waking turn in gen 1
+                    attackingPokemon.removeNonVolatileStatus()
                     statusChanged(attackingPokemon, Status.SLEEP)
                 }
             }
