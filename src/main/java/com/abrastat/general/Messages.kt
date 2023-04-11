@@ -1,5 +1,7 @@
 package com.abrastat.general
 
+import com.abrastat.rby.RBYMove
+
 class Messages {
     companion object {
         private var messageBuffer: String? = null
@@ -193,6 +195,7 @@ class Messages {
 
         @JvmStatic
         fun ppFailedToDeduct(pokemon: Pokemon, move: Move) {
+            if (move == RBYMove.STRUGGLE) return
             messageBuffer = "Failed to identify the move $move on $pokemon. No PP was deducted."
             // TODO log issue
             handleMessage()
