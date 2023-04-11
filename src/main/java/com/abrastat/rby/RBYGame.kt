@@ -37,6 +37,7 @@ class RBYGame(player1: RBYPlayer,
     }
 
     fun main(player1: RBYPlayer, player2: RBYPlayer) {
+        turnNumber = 0
         // any player has no non-fainted pokemon remaining
         // while (!hasPokemon) {  // both players have pokemon left
         // if current pokemon is fainted switch
@@ -62,13 +63,20 @@ class RBYGame(player1: RBYPlayer,
     }
 
     private fun someoneFainted(): Boolean {
+        // Ditto vs Gengar
+        if (pokemonP1.types.contains(Type.GHOST)
+                && pokemonP2.types.contains(Type.GHOST)
+                && pokemonP1.struggle
+                && pokemonP2.struggle)
+            return true
         fainted(pokemonP1)
         fainted(pokemonP2)
         return isPokemonFainted(pokemonP1, pokemonP2)
     }
 
     private fun fainted(pokemon: RBYPokemon) {
-        if (pokemon.currentHP == 0) {
+        if (pokemon.currentHP == 0
+                || pokemon.nonVolatileStatus == Status.FREEZE) {
             if (pokemon.transformed)
                 pokemon.unTransform()
             pokemon.resetStat(Stat.ATTACK)

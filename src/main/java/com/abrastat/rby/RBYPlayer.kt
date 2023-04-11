@@ -105,10 +105,13 @@ class RBYPlayer(playerName: String, pokemon: RBYPokemon) : Player() {
     }
 
     override fun setBehaviours() {
+        // Ditto
+        /*
         if (currentPokemon.countEmptyMoves() == 3) {
             justUseFirstAttack = true
             return
         }
+         */
 
         justUseFirstAttack = false
         val behaviourGroups = HashSet<BehaviourGroup>()

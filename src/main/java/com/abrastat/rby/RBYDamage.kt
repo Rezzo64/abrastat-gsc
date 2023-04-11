@@ -23,12 +23,18 @@ class RBYDamage {
 
             var damage: Int = calcDamageUtil(attackingPokemon, defendingPokemon, attack, crit)
 
+            val typeEffectiveness = calcEffectiveness(attack.type,
+                    defendingPokemon.types[0],
+                    defendingPokemon.types[1])
+
+            if (typeEffectiveness != 1.0 && attack.isAttack)
+                logTypeEffectiveness(typeEffectiveness.toInt())
+
             // 84.77% to 100% damage
             damage *= if (attack != RBYMove.CONFUSE_DAMAGE) damageRoll() else 255
             damage = floor((damage / 255).toDouble()).toInt()
 
-            damage = damage.coerceAtMost(defendingPokemon.currentHP)
-            return damage
+            return damage.coerceAtMost(defendingPokemon.currentHP)
         }
 
         // used for pre-processing
@@ -39,6 +45,14 @@ class RBYDamage {
                 attack: RBYMove,
                 isCrit: Boolean): Int {
             val crit = if (isCrit) 1 else 2
+
+            // some attacks bypass immunity,
+            // but the pokemon is immune more than not
+            val typeEffectiveness = calcEffectiveness(attack.type,
+                    defendingPokemon.types[0],
+                    defendingPokemon.types[1])
+            if (typeEffectiveness == 0.0)
+                return 0
 
             var damage: Int = when (attack.effect) {
                 MoveEffect.DRAGONRAGE -> 40
@@ -59,8 +73,7 @@ class RBYDamage {
 
                 else -> {}
             }
-            damage = damage.coerceAtMost(defendingPokemon.currentHP)
-            return damage
+            return damage.coerceAtMost(defendingPokemon.currentHP)
         }
 
         fun calcAccuracy(attackingPokemon: RBYPokemon,
@@ -154,7 +167,7 @@ class RBYDamage {
                                 && defendingPokemon.volatileStatus.contains(Status.REFLECT)
                                 && attack != RBYMove.CONFUSE_DAMAGE)
                         || (!attack.isPhysical
-                        && defendingPokemon.volatileStatus.contains(Status.LIGHTSCREEN))) {
+                                && defendingPokemon.volatileStatus.contains(Status.LIGHTSCREEN))) {
                     defenseStat *= 2
                     defenseStat %= 1024
                 }
@@ -175,8 +188,6 @@ class RBYDamage {
                     && attack != RBYMove.STRUGGLE)
                 damage = floor(damage * 1.5).toInt()
 
-            if (typeEffectiveness != 1.0 && attack.isAttack)
-                logTypeEffectiveness(typeEffectiveness.toInt())
             return damage
         }
 
