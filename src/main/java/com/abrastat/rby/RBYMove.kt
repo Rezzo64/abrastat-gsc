@@ -138,7 +138,7 @@ enum class RBYMove
     RECOVER(Type.NORMAL, 20, MoveEffect.RECOVER),
     REFLECT(Type.PSYCHIC, 20, MoveEffect.REFLECT),
     REST(Type.PSYCHIC, 10, MoveEffect.REST),
-//    ROAR,   // no effect in trainer battles
+    ROAR(Type.NORMAL, 20, MoveEffect.NONE),   // no effect in trainer battles
     ROCK_SLIDE(Type.ROCK, 10, 229, 75),
     ROCK_THROW(Type.ROCK, 15, 165, 50),
     ROLLING_KICK(Type.FIGHTING, 15, 216, 60, MoveEffect.FLINCH30),
@@ -180,7 +180,7 @@ enum class RBYMove
     TACKLE(Type.NORMAL, 35, 242, 35),
     TAIL_WHIP(Type.NORMAL, 30, 255, MoveEffect.OPP_DEFENSEDROP1),
     TAKE_DOWN(Type.NORMAL, 20, 216, 90, MoveEffect.RECOIL25),
-//    TELEPORT,   // no effect in trainer battles
+    TELEPORT(Type.PSYCHIC, 20, MoveEffect.NONE),   // no effect in trainer battles
     THRASH(Type.NORMAL, 20, 255, 90, MoveEffect.PETALDANCE),
     THUNDER(Type.ELECTRIC, 10, 178, 120, MoveEffect.PRZ10),
     THUNDER_WAVE(Type.ELECTRIC, 20, 255, MoveEffect.PRZ),
@@ -197,7 +197,7 @@ enum class RBYMove
 
     WATER_GUN(Type.WATER, 25, 255, 40),
     WATERFALL(Type.WATER, 15, 255, 80),
-//    WHIRLWIND,  // no effect in trainer battles
+    WHIRLWIND(Type.NORMAL, 20, MoveEffect.NONE),  // no effect in trainer battles
     WING_ATTACK(Type.FLYING, 35, 255, 35),
     WITHDRAW(Type.WATER, 40, MoveEffect.SELF_DEFENSERAISE1),
     WRAP(Type.NORMAL, 20, 229, 15, MoveEffect.BIND)
